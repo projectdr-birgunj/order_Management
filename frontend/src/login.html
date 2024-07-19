@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OrderFlow - Login</title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <a href="index.html"
+        ><img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="logo"
+      /></a>
+      <h1>Login</h1>
+    </header>
+    <main>
+      <section>
+        <h2>Admin Login</h2>
+        <form id="loginForm" onsubmit="return validateLogin()">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required />
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+
+          <input type="submit" value="Login" />
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 OrderFlow</p>
+    </footer>
+    <script>
+      function validateLogin() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === "cashAdmin" && password === "cash100") {
+          window.location.href = "cashier.html";
+          return false;
+        } else if (username === "waiterAdmin" && password === "waiter99") {
+          window.location.href = "waiter.html";
+          return false;
+        } else if (username === "chiefAdmin" && password === "chief98") {
+          window.location.href = "chef.html";
+          return false;
+        } else {
+          alert("Invalid username or password");
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>

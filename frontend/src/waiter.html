@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OrderFlow - Waiter</title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="../photos/orderflowlogo.png"
+        alt="OrderFlow Logo"
+        class="logo"
+      />
+      <h1>Waiter - Dining Tables</h1>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </header>
+    <main>
+      <section>
+        <h2>Select a Dining Table</h2>
+        <div class="table-buttons">
+          <button class="table-btn" onclick="showModal(1)">1</button>
+          <button class="table-btn" onclick="showModal(2)">2</button>
+          <button class="table-btn" onclick="showModal(3)">3</button>
+          <button class="table-btn" onclick="showModal(4)">4</button>
+          <button class="table-btn" onclick="showModal(5)">5</button>
+          <button class="table-btn" onclick="showModal(6)">6</button>
+          <button class="table-btn" onclick="showModal(7)">7</button>
+          <button class="table-btn" onclick="showModal(8)">8</button>
+          <button class="table-btn" onclick="showModal(9)">9</button>
+          <button class="table-btn" onclick="showModal(10)">10</button>
+          <button class="table-btn" onclick="showModal(11)">11</button>
+          <button class="table-btn" onclick="showModal(12)">12</button>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 OrderFlow</p>
+    </footer>
+    <!-- Modal HTML -->
+    <div id="orderModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="modal-logo"
+        />
+        <h2>Table <span id="tableNumber"></span></h2>
+        <div class="food-list">
+          <div class="food-item">
+            <span>CHICKEN MOMO WITH TOMATO PICKEL</span>
+            <span>(Nepali style chicken dumpling)</span>
+            <span>Price: RS. 690</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>VEGETABLE MOMO</span>
+            <span>(Nepali style vegetable dumpling)</span>
+            <span>Price: RS. 914</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>CHICKEN SPRING ROLLS</span>
+            <span
+              >(Home made rice paper rolled with vegetables and chicken served
+              with hot & sweet sauce)</span
+            >
+            <span>Price: RS. 851</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>VEGETABLE SPRING ROLLS</span>
+            <span
+              >(Home made rice paper rolled with vegetables, hot and sweet
+              sauce)</span
+            >
+            <span>Price: RS. 926</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>FISH FINGER WITH TARTER SAUCE</span>
+            <span
+              >(Bread crumb coated fried fish with chips and tartar sauce)</span
+            >
+            <span>Price: RS. 690</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>VEGETABLE PAKODA</span>
+            <span
+              >(Indian spiced battered fried vegetable served with mint
+              sauce)</span
+            >
+            <span>Price: RS. 851</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>PANEER PAKODA</span>
+            <span
+              >(Indian spiced battered fried vegetable served with mint
+              sauce)</span
+            >
+            <span>Price: RS. 926</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>CHICKEN TIKKA</span>
+            <span>(Indian spiced grilled chicken)</span>
+            <span>Price: RS. 963</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>CHICKEN CHILLI</span>
+            <span
+              >(Crispy batter fried chicken tossed in hot garlic and soy
+              sauce)</span
+            >
+            <span>Price: RS. 851</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>CHILLI PANEER</span>
+            <span
+              >(Indian spiced battered fried paneer served with mint
+              sauce)</span
+            >
+            <span>Price: RS. 578</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>FRENCH FRIES</span>
+            <span>(Finger fried Potatoes)</span>
+            <span>Price: RS. 435</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+          <div class="food-item">
+            <span>MASALA PEANUT</span>
+            <span
+              >(Peanut mixed with diced Red Onion, Coriander, Green Chilly and
+              Chaat Masala)</span
+            >
+            <span>Price: RS. 690</span>
+            <button class="add-to-cart-btn">Add to Cart</button>
+          </div>
+        </div>
+        <div class="dine-options">
+          <label
+            ><input type="radio" name="dineOption" value="dinein" checked />
+            Dine In</label
+          >
+          <label
+            ><input type="radio" name="dineOption" value="takeout" /> Take
+            Out</label
+          >
+        </div>
+        <button class="confirm-btn">Confirm</button>
+        <p style="margin-top: 10px; font-style: italic; color: #888">
+          It is a new order.
+        </p>
+        <!-- Message Section -->
+
+        <div class="message-section">
+          <label for="orderMessage">Write a message:</label>
+
+          <textarea
+            id="orderMessage"
+            name="orderMessage"
+            rows="4"
+            placeholder="Type your message here..."
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function logout() {
+        window.location.href = "index.html";
+      }
+
+      function showModal(tableNumber) {
+        document.getElementById("tableNumber").innerText = tableNumber;
+        document.getElementById("orderModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("orderModal").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
