@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../css/receive_order.css" />
+    <title>Add Row Example</title>
+  </head>
+  <body>
+    <header>
+      <img
+        src="../photos/orderflowlogo.png"
+        alt="OrderFlow Logo"
+        class="logo"
+      />
+      <h1>Waiter - Dining Tables</h1>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </header>
+    <form id="myForm">
+      <table id="formTable" class="formTable">
+        <tr>
+          <th>Item Name</th>
+          <th>Quantity</th>
+          <th>Note</th>
+          <th>Dine-In</th>
+          <th>Action</th>
+        </tr>
+        <tr>
+          <td><input type="text" name="item_name[]" /></td>
+          <td>
+            <input type="number" class="tableQuantity" name="quantity[]" />
+          </td>
+          <td><input type="text" name="note[]" /></td>
+          <td>
+            <input type="text" name="dineIn[]" placeholder="Yes" />
+          </td>
+        </tr>
+      </table>
+      <button type="button" id="addRowBtn">Add Row</button>
+
+      <button type="button" id="submit">Submit</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("addRowBtn")
+        .addEventListener("click", function () {
+          // Get the table element
+          console.log("addRowBtn called");
+          var table = document.getElementById("formTable");
+
+          // Create a new row
+          var newRow = table.insertRow();
+
+          // Create new cells for the row
+          var cell1 = newRow.insertCell(0);
+          var cell2 = newRow.insertCell(1);
+          var cell3 = newRow.insertCell(2);
+          var cell4 = newRow.insertCell(3);
+          var cell5 = newRow.insertCell(4);
+
+          // Add input elements to the cells
+          cell1.innerHTML = '<input type="text" name="item_name[]" />';
+          cell2.innerHTML = '<input type="number" name="quantity[]" />';
+          cell3.innerHTML = '<input type="text" name="note[]" />';
+          cell4.innerHTML =
+            '<input type="text" name="dine-In[] value="Yes" placeholder="Yes" />';
+          cell5.innerHTML =
+            '<button type="button" class="deleteRowBtn">Delete</button>';
+          cell5
+            .querySelector(".deleteRowBtn")
+            .addEventListener("click", function () {
+              console.log("delete row button clicked");
+              table.deleteRow(newRow.rowIndex);
+            });
+        });
+
+      document.getElementById("submit").addEventListener("click", function () {
+        // Get the form element
+        const form = document.getElementById("myForm");
+
+        // Get all rows in the table
+        const rows = form.querySelectorAll("#formTable tr");
+
+        // Initialize an array to hold the data
+        const data = [];
+
+        // Iterate over each row (excluding the header row)
+        rows.forEach((row, index) => {
+          if (index > 0) {
+            // Skip the header row
+            const itemNameInput = row.querySelector(
+              'input[name="item_name[]"]'
+            );
+            const quantityInput = row.querySelector('input[name="quantity[]"]');
+            const noteInput = row.querySelector('input[name="note[]"]');
+            const dineInInput = row.querySelector('input[name="dineIn[]"]');
+
+            // Ensure each input exists before accessing its value
+            const itemName = itemNameInput ? itemNameInput.value.trim() : null;
+            const quantity = quantityInput ? quantityInput.value.trim() : null;
+            const note = noteInput ? noteInput.value.trim() : null;
+            const dineIn = dineInInput ? dineInInput.value.trim() : null;
+
+            // Create an object with the form data
+            const rowData = {
+              itemName: itemName || null,
+              quantity: quantity || null,
+              note: note || null,
+              dineIn: dineIn || null,
+            };
+
+            // Only add rows with valid data
+            if (itemName || quantity || note || dineIn) {
+              data.push(rowData);
+            }
+          }
+        });
+
+        // Convert the array of data to JSON
+        const jsonString = JSON.stringify(data, null, 2);
+
+        // Display the JSON data in the console
+        console.log("Form Data in JSON format:");
+        console.log(jsonString);
+      });
+    </script>
+  </body>
+</html>
