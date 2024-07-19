@@ -18,6 +18,9 @@
       <section>
         <h2>Select a Dining Table</h2>
         <div class="table-buttons">
+          <button type="button" id="openPageBtn">
+            Open Receive Order Page
+          </button>
           <button class="table-btn" onclick="showModal(1)">1</button>
           <button class="table-btn" onclick="showModal(2)">2</button>
           <button class="table-btn" onclick="showModal(3)">3</button>
@@ -185,6 +188,12 @@
       function closeModal() {
         document.getElementById("orderModal").style.display = "none";
       }
+
+      document
+        .getElementById("openPageBtn")
+        .addEventListener("click", function () {
+          window.location.href = "receive_order.html";
+        });
     </script>
   </body>
 </html>
