@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OrderFlow - Home</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <header>
+        <a href="index.html"><img src="orderflowlogo.png" alt="OrderFlow Logo" class="logo"></a>
+        <h1>Welcome to OrderFlow</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Admin Logins</h2>
+            <div class="login-info">
+                <h3>1. Cashier Login</h3>
+                <p>Please use this login ID and password:</p>
+                <p>ID: <span id="cashAdmin">cashAdmin</span> <button onclick="copyToClipboard('cashAdmin')">Copy ID</button></p>
+                <p>Password: <span id="cashPw">cash100</span> <button onclick="copyToClipboard('cashPw')">Copy Password</button></p>
+            </div>
+            <div class="login-info">
+                <h3>2. Waiter Login</h3>
+                <p>Please use this login ID and password:</p>
+                <p>ID: <span id="waiterAdmin">waiterAdmin</span> <button onclick="copyToClipboard('waiterAdmin')">Copy ID</button></p>
+                <p>Password: <span id="waiterPw">waiter99</span> <button onclick="copyToClipboard('waiterPw')">Copy Password</button></p>
+            </div>
+            <div class="login-info">
+                <h3>3. Chef Login</h3>
+                <p>Please use this login ID and password:</p>
+                <p>ID: <span id="chiefAdmin">chiefAdmin</span> <button onclick="copyToClipboard('chiefAdmin')">Copy ID</button></p>
+                <p>Password: <span id="chiefPw">chief98</span> <button onclick="copyToClipboard('chiefPw')">Copy Password</button></p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 OrderFlow</p>
+    </footer>
+    <script>
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Copied to clipboard: ' + textToCopy);
+            }).catch(err => {
+                alert('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
