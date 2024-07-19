@@ -25,7 +25,7 @@ OrderFlow is a customer order management application designed to streamline the 
 ## Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/suman-shah/order_Management.git
+    https://github.com/projectdr-birgunj/order_Management.git
     ```
 
 2. Navigate to the project directory:
