@@ -11,31 +11,51 @@
         alt="OrderFlow Logo"
         class="logo"
       />
-      <h1>Cashier - Dining Tables_test</h1>
+      <h1>Cashier - Dining Tables</h1>
       <button onclick="logout()" class="logout-btn">Logout</button>
     </header>
     <main>
       <section>
-        <h2>Select a Dining Table</h2>
-        <div class="table-buttons">
-          <button class="table-btn">1</button>
-          <button class="table-btn">2</button>
-          <button class="table-btn">3</button>
-          <button class="table-btn">4</button>
-          <button class="table-btn">5</button>
-          <button class="table-btn">6</button>
-          <button class="table-btn">7</button>
-          <button class="table-btn">8</button>
-          <button class="table-btn">9</button>
-          <button class="table-btn">10</button>
-          <button class="table-btn">11</button>
-          <button class="table-btn">12</button>
-        </div>
+          <div class="columns">
+              <!-- Column 1: Active pending orders from waiter -->
+              <div class="column" id="activeOrders">
+                  <h2>Active Pending Orders from Waiter</h2>
+                  <div id="activeOrderList">
+                      <!-- Active orders will be dynamically added here -->
+                      <button onclick="showActiveOrderDetails(1)">Table 1</button>
+                      <button onclick="showActiveOrderDetails(2)">Table 2</button>
+                      <!-- Add more orders as needed -->
+                  </div>
+              </div>
+
+              <!-- Column 2: Payment pending -->
+              <div class="column" id="paymentPending">
+                  <h2>Payment Pending</h2>
+                  <div id="paymentPendingList">
+                      <!-- Payment pending orders will be dynamically added here -->
+                      <button onclick="openPaymentModal(1)">Table 1</button>
+                      <button onclick="openPaymentModal(2)">Table 2</button>
+                      <!-- Add more orders as needed -->
+                  </div>
+              </div>
+
+              <!-- Column 3: History of order completed -->
+              <div class="column" id="orderHistory">
+                  <h2>History of Order Completed</h2>
+                  <div id="orderHistoryList">
+                      <!-- Completed orders will be dynamically added here -->
+                      <div>Table 1 - Completed</div>
+                      <div>Table 2 - Completed</div>
+                      <!-- Add more orders as needed -->
+                  </div>
+              </div>
+          </div>
       </section>
-    </main>
+  </main>
     <footer>
       <p>&copy; 2024 OrderFlow</p>
     </footer>
+    
     <script>
       function logout() {
         window.location.href = "index.html";
