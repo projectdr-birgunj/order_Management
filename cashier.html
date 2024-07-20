@@ -14,27 +14,146 @@
         <section>
             <h2>Select a Dining Table</h2>
             <div class="table-buttons">
-                <button class="table-btn">1</button>
-                <button class="table-btn">2</button>
-                <button class="table-btn">3</button>
-                <button class="table-btn">4</button>
-                <button class="table-btn">5</button>
-                <button class="table-btn">6</button>
-                <button class="table-btn">7</button>
-                <button class="table-btn">8</button>
-                <button class="table-btn">9</button>
-                <button class="table-btn">10</button>
-                <button class="table-btn">11</button>
-                <button class="table-btn">12</button>
+                <button class="table-btn" onclick="openModal(1)">1</button>
+                <button class="table-btn" onclick="openModal(2)">2</button>
+                <button class="table-btn" onclick="openModal(3)">3</button>
+                <button class="table-btn" onclick="openModal(4)">4</button>
+                <button class="table-btn" onclick="openModal(5)">5</button>
+                <button class="table-btn" onclick="openModal(6)">6</button>
+                <button class="table-btn" onclick="openModal(7)">7</button>
+                <button class="table-btn" onclick="openModal(8)">8</button>
+                <button class="table-btn" onclick="openModal(9)">9</button>
+                <button class="table-btn" onclick="openModal(10)">10</button>
+                <button class="table-btn" onclick="openModal(11)">11</button>
+                <button class="table-btn" onclick="openModal(12)">12</button>
             </div>
         </section>
     </main>
     <footer>
         <p>&copy; 2024 OrderFlow</p>
     </footer>
+
+    <!-- Modal HTML -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="orderflowlogo.png" alt="OrderFlow Logo" class="modal-logo">
+            <h2>Table <span id="tableNumber"></span></h2>
+            <div class="food-list">
+                <!-- Example food item -->
+                <div class="food-item">
+                    <span>CHICKEN MOMO WITH TOMATO PICKEL</span>
+                    <span>Rate: RS. 690</span>
+                    <span>Quantity: <span class="quantity">2</span></span>
+                    <span>Total: RS. 1380</span>
+                </div>
+                <!-- More food items will be dynamically added here -->
+            </div>
+            <div class="total-amount">
+                <span>Subtotal: <span id="subtotal">RS. 1380</span></span>
+                <span>Tax: <span id="tax">RS. 138</span></span>
+                <span>Total: <span id="total">RS. 1518</span></span>
+                <span>Change: <input type="number" id="change" placeholder="Enter amount received"></span>
+                <span>Change Due: <span id="changeDue">RS. 0</span></span>
+            </div>
+            <div class="payment-section">
+                <h3>Payment QR Code</h3>
+                <div id="qrcode"></div>
+                <button onclick="generateQRCode()">Generate QR Code</button>
+                <button onclick="printSlip()">Print Slip</button>
+            </div>
+            <button class="confirm-btn">Confirm</button>
+            <p style="margin-top: 10px; font-style: italic; color: #888;">Order confirmed by chef.</p>
+            
+            <!-- Message Section -->
+            <div class="message-section">
+                <label for="orderMessage">Write a message:</label>
+                <textarea id="orderMessage" name="orderMessage" rows="4" placeholder="Type your message here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         function logout() {
             window.location.href = 'index.html';
+        }
+
+        function openModal(tableNumber) {
+            document.getElementById('tableNumber').textContent = tableNumber;
+
+            const foodList = document.querySelector('.food-list');
+            foodList.innerHTML = ''; // Clear previous items
+
+            // Example order items data (replace this with dynamic data)
+            const exampleOrderItems = [
+                { name: 'CHICKEN MOMO WITH TOMATO PICKEL', rate: 690, quantity: 2 },
+                { name: 'VEGETABLE MOMO', rate: 914, quantity: 1 },
+                // Add more items as needed
+            ];
+
+            let subtotal = 0;
+            exampleOrderItems.forEach(item => {
+                const foodItemDiv = document.createElement('div');
+                foodItemDiv.className = 'food-item';
+
+                const itemTotal = item.rate * item.quantity;
+                subtotal += itemTotal;
+
+                foodItemDiv.innerHTML = `
+                    <span>${item.name}</span>
+                    <span>Rate: RS. ${item.rate}</span>
+                    <span>Quantity: <span class="quantity">${item.quantity}</span></span>
+                    <span>Total: RS. ${itemTotal}</span>
+                `;
+
+                foodList.appendChild(foodItemDiv);
+            });
+
+            const tax = subtotal * 0.1; // Example tax rate of 10%
+            const total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = `RS. ${subtotal}`;
+            document.getElementById('tax').textContent = `RS. ${tax}`;
+            document.getElementById('total').textContent = `RS. ${total}`;
+
+            document.getElementById('orderModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        document.getElementById('change').addEventListener('input', function() {
+            const total = parseFloat(document.getElementById('total').textContent.replace('RS. ', ''));
+            const change = parseFloat(this.value);
+            const changeDue = change - total;
+
+            document.getElementById('changeDue').textContent = `RS. ${changeDue}`;
+        });
+
+        function generateQRCode() {
+            const totalAmount = document.getElementById('total').textContent.replace('RS. ', '');
+            const qrCodeContainer = document.getElementById('qrcode');
+            qrCodeContainer.innerHTML = ''; // Clear previous QR code
+
+            new QRCode(qrCodeContainer, {
+                text: `Amount to be paid: RS. ${totalAmount}`,
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function printSlip() {
+            const printContent = document.querySelector('.modal-content').innerHTML;
+            const originalContent = document.body.innerHTML;
+
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
         }
     </script>
 </body>
