@@ -60,22 +60,36 @@ OrderFlow is a customer order management application designed to streamline the 
    - Use the logout button to return to the home page.
 
 ## Contributing
+
 We welcome contributions to OrderFlow! To contribute:
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature-name
-    ```
-3. Make your changes and commit them:
-    ```bash
-    git commit -m "Description of feature"
-    ```
-4. Push to the branch:
-    ```bash
-    git push origin feature-name
-    ```
-5. Open a pull request.
+
+1. Fork the repository only once.
+
+2. Download the original repository to your local machine every time before pushing any changes:
+   ```bash
+   git remote add upstream https://github.com/projectdr-birgunj/order_Management.git
+   git fetch upstream
+   git checkout main
+   git merge upstream/main
+   git push origin main
+   ```
+
+3. After downloading, you can make changes:
+   - Edit any code or create new pages or functions.
+
+4. Once your work for the day is complete and you want to send it for merging:
+   ```bash
+   git add README.md
+   git commit -m "Updated README.md file "
+   git pull
+   git push origin main
+   ```
+
+5. Open a pull request:
+   - Open your forked GitHub repository and create a pull request from the 'Contribute' section.
+   - If you do not see any branch conflict message, then you have done everything correctly.
+
+Good luck!
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-d
