@@ -1,6 +1,6 @@
 # OrderFlow
 
-OrderFlow is a customer order management application designed to streamline the ordering process in restaurants. This application allows cashiers, waiters, and chefs to manage orders efficiently with user-friendly interfaces and functionalities.
+OrderFlow is a customer order management application designed to streamline the ordering process in a restaurant. This application allows cashiers, waiters, and chefs to manage orders efficiently with user-friendly interfaces and functionalities.
 
 ## Table of Contents
 - [Features](#features)
