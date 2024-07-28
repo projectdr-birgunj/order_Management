@@ -15,7 +15,7 @@
         class="logo"
       />
       <h1>Waiter - Dining Tables</h1>
-      <button onclick="logout()" class="logout-btn">Logout</button>
+      <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
     <form id="myForm">
       <h2>Select Table</h2>
@@ -70,18 +70,18 @@
           const data1 = [];
 
           row1.forEach((row) => {
-            const itemNameInput =
-              row.cells[0].querySelector('input[type="text"]');
-            const quantityInput = row.cells[1].querySelector(
-              'input[type="number"]'
-            );
-            const noteInput = row.cells[2].querySelector('input[type="text"]');
-            const dineInInput =
-              row.cells[3].querySelector('input[type="text"]');
-            const itemName = itemNameInput ? itemNameInput.value.trim() : null;
-            const quantity = quantityInput ? quantityInput.value.trim() : null;
-            const note = noteInput ? noteInput.value.trim() : null;
-            const dineIn = dineInInput ? dineInInput.value.trim() : null;
+            const itemName = row.cells[0].querySelector('input[type="text"]')
+              ? row.cells[0].querySelector('input[type="text"]').value.trim()
+              : null;
+            const quantity = row.cells[1].querySelector('input[type="number"]')
+              ? row.cells[1].querySelector('input[type="number"]').value.trim()
+              : null;
+            const note = row.cells[2].querySelector('input[type="text"]')
+              ? row.cells[2].querySelector('input[type="text"]').value.trim()
+              : null;
+            const dineIn = row.cells[3].querySelector('input[type="text"]')
+              ? row.cells[3].querySelector('input[type="text"]').value.trim()
+              : null;
             const rowData = {
               itemName: itemName || null,
               quantity: quantity || null,
@@ -121,6 +121,7 @@
                 const snapshot = await get(child(dbRef, "orders/" + orderId));
                 let orders = snapshot.val();
                 if (orders) {
+                  console.log("The data is: ", orders);
                   if (typeof orders === "string") {
                     orders = JSON.parse(orders);
                     console.log("The data is: ", orders);
@@ -181,15 +182,22 @@
             data.forEach((item, index) => {
               const row = document.createElement("tr");
 
-              for (const [key, value] of Object.entries(item)) {
+              Object.entries(item).forEach(([key, value], index) => {
                 const td = document.createElement("td");
                 const input = document.createElement("input");
-                input.type = "text";
+
+                if (index === 1) {
+                  // Assuming the second column corresponds to the "quantity" field
+                  input.type = "number";
+                } else {
+                  input.type = "text";
+                }
+
                 input.value = value;
                 input.name = `${key}[]`;
                 td.appendChild(input);
                 row.appendChild(td);
-              }
+              });
 
               const actionCell = document.createElement("td");
               const deleteBtn = document.createElement("button");
@@ -292,9 +300,9 @@
         }
       });
 
-      function logout() {
+      document.getElementById("logout")?.addEventListener("click", function () {
         window.location.href = "index.html";
-      }
+      });
     </script>
   </body>
 </html>
