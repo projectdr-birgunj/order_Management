@@ -33,20 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayOrders(data) {
-    const orderList = document.getElementById("order-list");
-    orderList.innerHTML = "";
-
-    if (data) {
-      Object.entries(data).forEach(([orderId, orderDetails]) => {
-        const orderButton = document.createElement("button");
-        orderButton.textContent = `Order ID: ${orderId}`;
-        orderButton.classList.add("order-button");
-        orderButton.onclick = () => displayBillDetails(orderId, orderDetails);
-        orderList.appendChild(orderButton);
-      });
-    } else {
-      orderList.textContent = "No orders found.";
+  function displayOrders() {
+  // Function to create buttons
+    const buttonsContainer = document.getElementById("order-list");
+    for (let i = 1; i <= 10; i++) {
+      const button = document.createElement("button");
+      button.textContent = "Table " + i;
+      button.setAttribute("data-table-no", "Table-" + i);
+      button.onclick = function () {
+        fetchOrders(button);
+      };
+      buttonsContainer.appendChild(button);
     }
   }
 
