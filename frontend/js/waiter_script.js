@@ -48,12 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const data1 = [];
 
     row1.forEach((row) => {
-      const itemNameInput = row.cells[0].querySelector('input[type="text"]');
+      const itemName = row.cells[0].querySelector(
+        'select[name="itemName[]"]'
+      ).value;
       const quantityInput = row.cells[1].querySelector('input[type="number"]');
       const noteInput = row.cells[2].querySelector('input[type="text"]');
       const dineInInput = row.cells[3].querySelector('input[type="text"]');
-
-      const itemName = itemNameInput ? itemNameInput.value.trim() : null;
+      //   console.log(itemNameInput);
+      //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
+      //   console.log("itemName" + itemName);
       const quantity = quantityInput ? quantityInput.value.trim() : null;
       const note = noteInput ? noteInput.value.trim() : null;
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
@@ -206,12 +209,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const hasData =
       data &&
       data.some((item) =>
-        Object.values(item).some((value) => value.trim() !== "")
+        Object.values(item).some(
+          (value) => typeof value === "string" && value.trim() !== ""
+        )
       );
 
     if (hasData) {
       console.log("Inside Has Data" + data);
       data.forEach((item) => {
+        console.log("Printing items: ", item);
         const row = document.createElement("tr");
 
         const itemNameCell = document.createElement("td");
@@ -225,10 +231,17 @@ document.addEventListener("DOMContentLoaded", () => {
           "Idli",
           "Gulab Jamun",
         ];
-        items.forEach((item) => {
+        items.forEach((optionName) => {
           const option = document.createElement("option");
-          option.value = item; // Set the value of the option
-          option.textContent = item; // Set the text content of the option
+          option.value = optionName; // Set the value of the option
+          option.textContent = optionName; // Set the text content of the option
+
+          // Set the selected attribute if this option matches the itemName
+          if (optionName === item.itemName) {
+            // Use item.itemName to check against the current item
+            option.selected = true; // Mark the option as selected if it matches the item's itemName
+          }
+
           itemNameSelect.appendChild(option);
         });
         itemNameCell.appendChild(itemNameSelect);
