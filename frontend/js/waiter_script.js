@@ -99,6 +99,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function toBillingData(button) {
+    const form = document.querySelector(".formTable tbody");
+    const row1 = Array.from(form.rows);
+    const to_billing_var = true;
+    const orderId = button.getAttribute("data-table-no");
+    const data = { to_billing: JSON.stringify(to_billing_var, null, 2) };
+    console.log("Data:" + data);
+
+    try {
+      //   const orderId = document.getElementById("tableSelect").value;
+      if (orderId) {
+        const reference = ref(database, "orders/" + orderId);
+        await update(reference, data);
+        alert("Bill Generated. Plz visit cashier");
+        location.reload(); // Reload the page
+      } else {
+        alert("Cannot fetch Order ID, Contact Developer");
+      }
+    } catch (error) {
+      console.error("Error writing data to Firebase:", error);
+      alert("Error submitting orders. Please try again.");
+    }
+  }
+
   async function fetchOrdersBtn(button) {
     try {
       const orderId = button.getAttribute("data-table-no");
@@ -111,6 +135,13 @@ document.addEventListener("DOMContentLoaded", () => {
         let orders = snapshot.val();
         if (orders) {
           console.log("Inside orders if:", orders);
+          const to_billing_var = orders["to_billing"];
+          console.log("to_billing", to_billing_var);
+          if (to_billing_var == "true") {
+            alert("Please clear the table from Cashier's end");
+            location.reload(); // Reload the page
+            return;
+          }
           const orderDetails = orders["order_detail"];
           var tableOneData = orderDetails[tableID]; // Accessing only the "Table-1" element
           console.log("tableOneData:\n:", tableOneData);
@@ -184,11 +215,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const row = document.createElement("tr");
 
         const itemNameCell = document.createElement("td");
-        const itemNameInput = document.createElement("input");
-        itemNameInput.type = "text";
-        itemNameInput.value = item.itemName;
-        itemNameInput.name = "itemName[]";
-        itemNameCell.appendChild(itemNameInput);
+        const itemNameSelect = document.createElement("select");
+        itemNameSelect.name = "itemName[]";
+        const items = [
+          "Biryani",
+          "Chicken Momo",
+          "Shawarma",
+          "Dosa",
+          "Idli",
+          "Gulab Jamun",
+        ];
+        items.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item; // Set the value of the option
+          option.textContent = item; // Set the text content of the option
+          itemNameSelect.appendChild(option);
+        });
+        itemNameCell.appendChild(itemNameSelect);
         row.appendChild(itemNameCell);
 
         const quantityCell = document.createElement("td");
@@ -279,9 +322,18 @@ document.addEventListener("DOMContentLoaded", () => {
       submitData(button);
     });
 
+    const toBillingBtn = document.createElement("button");
+    toBillingBtn.textContent = "To Billing";
+    toBillingBtn.classList.add("toBillingBtn");
+    toBillingBtn.type = "button";
+    toBillingBtn.addEventListener("click", function () {
+      toBillingData(button);
+    });
+
     form.appendChild(table);
     form.appendChild(addRowBtn);
     form.appendChild(submitBtn);
+    form.appendChild(toBillingBtn);
     container.appendChild(form);
   }
 
