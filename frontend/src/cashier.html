@@ -1,65 +1,43 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OrderFlow - Cashier</title>
-    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
-  </head>
-  <body>
+    <link rel="stylesheet" type="text/css" href="../css/cashier.css">
+    <script src="../js/cashier_script.js" type="module" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
     <header>
-      <img
-        src="../photos/orderflowlogo.png"
-        alt="OrderFlow Logo"
-        class="logo"
-      />
-      <h1>Cashier - Dining Tables</h1>
-      <button onclick="logout()" class="logout-btn">Logout</button>
+        <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo">
+        <h1>Cashier - Dining Tables</h1>
+        <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
     <main>
-      <section>
-          <div class="columns">
-              <!-- Column 1: Active pending orders from waiter -->
-              <div class="column" id="activeOrders">
-                  <h2>Active Pending Orders from Waiter</h2>
-                  <div id="activeOrderList">
-                      <!-- Active orders will be dynamically added here -->
-                      <button onclick="showActiveOrderDetails(1)">Table 1</button>
-                      <button onclick="showActiveOrderDetails(2)">Table 2</button>
-                      <!-- Add more orders as needed -->
-                  </div>
-              </div>
-
-              <!-- Column 2: Payment pending -->
-              <div class="column" id="paymentPending">
-                  <h2>Payment Pending</h2>
-                  <div id="paymentPendingList">
-                      <!-- Payment pending orders will be dynamically added here -->
-                      <button onclick="openPaymentModal(1)">Table 1</button>
-                      <button onclick="openPaymentModal(2)">Table 2</button>
-                      <!-- Add more orders as needed -->
-                  </div>
-              </div>
-
-              <!-- Column 3: History of order completed -->
-              <div class="column" id="orderHistory">
-                  <h2>History of Order Completed</h2>
-                  <div id="orderHistoryList">
-                      <!-- Completed orders will be dynamically added here -->
-                      <div>Table 1 - Completed</div>
-                      <div>Table 2 - Completed</div>
-                      <!-- Add more orders as needed -->
-                  </div>
-              </div>
-          </div>
-      </section>
-  </main>
+        <div class="left-section">
+            <h2>Orders</h2>
+            <div id="order-list"></div>
+        </div>
+        <div class="right-section">
+            <h2>Bill Details</h2>
+            <div class="bill-details">
+                <p class="bill-date" id="bill-date"></p>
+                <div id="bill-items"></div>
+                <div class="bill-summary">
+                    <p>Grand Total: <span id="grand-total"></span></p>
+                    <p>Tax (10%): <span id="tax"></span></p>
+                    <p>Discount (5%): <span id="discount"></span></p>
+                    <p>Final Total: <span id="final-total"></span></p>
+                </div>
+                <p>Thank you for dining with us. Please come again!</p>
+            </div>
+            <button id="generate-bill" class="generate-bill-btn">Generate Bill</button>
+        </div>
+    </main>
     <footer>
-      <p>&copy; 2024 OrderFlow</p>
+        <p>&copy; 2024 OrderFlow</p>
     </footer>
-    
-    <script>
-      function logout() {
-        window.location.href = "index.html";
-      }
-    </script>
-  </body>
+    <script src="../js/cashier_script.js" type="module"></script>
+</body>
 </html>
