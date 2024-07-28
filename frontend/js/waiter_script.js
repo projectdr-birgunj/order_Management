@@ -42,6 +42,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // Create buttons when the page loads
   window.onload = createButtons;
 
+  // Function to add leading zeroes
+  function pad(number) {
+    return number < 10 ? "0" + number : number;
+  }
+
+  // Function to get the formatted timestamp
+  function getFormattedTimestamp() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1); // Months are zero-based
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+
+    return `${year}-${month}-${day}_${hours}:${minutes}:${seconds}`;
+  }
+
   async function submitData(button) {
     const form = document.querySelector(".formTable tbody");
     const row1 = Array.from(form.rows);
@@ -110,11 +129,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = { to_billing: JSON.stringify(to_billing_var, null, 2) };
     console.log("Data:" + data);
 
+    // Store the timestamp in a variable
+    const timestamp_var = getFormattedTimestamp();
+    const timestamp_field = {
+      timeStamp: timestamp_var, // Directly assign the formatted timestamp
+    };
+    console.log(timestamp_field); // Outputs: 2024-07-28_11:10:11 (or the current timestamp)
+
     try {
       //   const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
         const reference = ref(database, "orders/" + orderId);
         await update(reference, data);
+        await update(reference, timestamp_field);
         alert("Bill Generated. Plz visit cashier");
         location.reload(); // Reload the page
       } else {
