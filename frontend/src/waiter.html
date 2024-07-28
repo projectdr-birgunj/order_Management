@@ -17,7 +17,7 @@
       <h1>Waiter - Dining Tables</h1>
       <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
-    <form id="myForm">
+    <!-- <form id="myForm">
       <h2>Select Table</h2>
       <select id="tableSelect">
         <option value="">Select Table</option>
@@ -32,9 +32,10 @@
         <option value="Table-9">Table-9</option>
         <option value="Table-10">Table-10</option>
       </select>
-      <!-- <button onclick="fetchTableData()">Fetch</button> -->
+      <button onclick="fetchTableData()">Fetch</button>
       <button type="button" id="fetchOrdersBtn">Fetch Orders</button>
-    </form>
+    </form> -->
+    <div id="buttonsContainer"></div>
     <div id="json-container"></div>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
@@ -64,6 +65,29 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
+    //     function handleButtonClick(button) {
+    //     const tableNo = button.getAttribute('data-table-no');
+    //     console.log("Table no : ", tableNo)
+    //     alert('Button clicked! Table Number: ' + tableNo);
+    // }
+
+    // Function to create buttons
+    function createButtons() {
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        
+        for (let i = 1; i <= 10; i++) {
+            const button = document.createElement('button');
+            button.textContent = 'Table ' + i;
+            button.setAttribute('data-table-no', 'Table-' + i);
+            button.onclick = function() {
+              fetchOrdersBtn(button);
+            };
+            buttonsContainer.appendChild(button);
+        }
+    }
+
+    // Create buttons when the page loads
+    window.onload = createButtons;
         async function submitData() {
           const form = document.querySelector(".formTable tbody");
           const row1 = Array.from(form.rows);
@@ -111,11 +135,10 @@
           }
         }
 
-        document
-          .getElementById("fetchOrdersBtn")
-          ?.addEventListener("click", async function () {
+         async function fetchOrdersBtn (button) {
             try {
-              const orderId = document.getElementById("tableSelect").value;
+              // const orderId = document.getElementById("tableSelect").value; // fetching table number from this line
+              const orderId = button.getAttribute('data-table-no');
               if (orderId) {
                 const dbRef = ref(database);
                 const snapshot = await get(child(dbRef, "orders/" + orderId));
@@ -137,7 +160,7 @@
             } catch (error) {
               console.error("Error fetching data from Firebase:", error);
             }
-          });
+          }
 
         function displayJsonData(data) {
           const container = document.getElementById("json-container");
