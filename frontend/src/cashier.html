@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OrderFlow - Cashier</title>
-    <link rel="stylesheet" type="text/css" href="../css/cashier.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/cashier.css" /> -->
     <link rel="stylesheet" type="text/css" href="../css/receive_order.css" />
     <script src="../js/cashier_script.js" type="module" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <header>
-        <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo">
-        <h1>Cashier - Dining Tables</h1>
-        <button type="button" id="logout" class="logout-btn">Logout</button>
+      <img
+        src="../photos/orderflowlogo.png"
+        alt="OrderFlow Logo"
+        class="logo"
+      />
+      <h1>Cashier - Dining Tables</h1>
+      <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
     <main>
-        <div class="left-section">
-            <h2>Orders</h2>
-            <div id="order-list"></div> 
-        </div>
-        <div class="right-section">
+      <h2>Orders</h2>
+      <div id="order-list"></div>
+      <!-- <div class="right-section">
             <h2>Bill Details</h2>
             <div class="bill-details">
                 <p class="bill-date" id="bill-date"></p>
@@ -34,11 +39,12 @@
                 <p>Thank you for dining with us. Please come again!</p>
             </div>
             <button id="generate-bill" class="generate-bill-btn">Generate Bill</button>
-        </div>
+        </div> -->
+      <div id="ordersContainer"></div>
     </main>
     <footer>
-        <p>&copy; 2024 OrderFlow</p>
+      <p>&copy; 2024 OrderFlow</p>
     </footer>
     <script src="../js/cashier_script.js" type="module"></script>
-</body>
+  </body>
 </html>

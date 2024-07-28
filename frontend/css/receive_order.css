@@ -7,7 +7,7 @@ body {
 }
 
 header {
-  background-color: #35424a;
+  background-color: #4caf50;
   color: white;
   padding: 20px 0;
   text-align: center;
@@ -111,6 +111,13 @@ form input[type="submit"]:hover {
 
 .tableQuantity {
   width: 30%;
+}
+footer {
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
 }
 
 @media only screen and (max-width: 600px) {
