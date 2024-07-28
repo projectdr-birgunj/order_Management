@@ -1,5 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  get,
+  child,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -18,15 +23,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
-  async function fetchOrders() {
+  async function fetchOrders(button) {
     try {
-      const dbRef = ref(database);
-      const snapshot = await get(child(dbRef, "orders/"));
-      let orders = snapshot.val();
-      if (orders) {
-        displayOrders(orders);
+      const orderId = button.getAttribute("data-table-no");
+      const tableID = orderId.toLowerCase();
+      // console.log("Inside orderID if:", tableID);
+      if (orderId) {
+        // console.log("Inside orderID if:", orderId);
+        const dbRef = ref(database);
+        const snapshot = await get(child(dbRef, "orders/" + orderId));
+        let orders = snapshot.val();
+        if (orders) {
+          // console.log("Inside orders if:", orders);
+          const to_billing_var = orders["to_billing"];
+          // console.log("to_billing", to_billing_var);
+          if (to_billing_var != "true") {
+            alert("Table not cleared yet! Please wait");
+            location.reload(); // Reload the page
+            return;
+          } else if (to_billing_var == "true") {
+            displayBillDetails(orders, tableID);
+          } else {
+            alert("This should not show. Please contact Developer!!");
+          }
+        } else {
+          orders = null;
+          displayBillDetails(orders, button);
+        }
       } else {
-        displayOrders(null);
+        alert("Cannot fetch Order ID, Contact Developer");
       }
     } catch (error) {
       console.error("Error fetching data from Firebase:", error);
@@ -34,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function displayOrders() {
-  // Function to create buttons
+    // Function to create buttons
     const buttonsContainer = document.getElementById("order-list");
     for (let i = 1; i <= 10; i++) {
       const button = document.createElement("button");
@@ -47,52 +72,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayBillDetails(orderId, orderDetails) {
-    const billItems = document.getElementById("bill-items");
-    const billDate = document.getElementById("bill-date");
+  window.onload = displayOrders;
 
-    billItems.innerHTML = "";
+  function displayBillDetails(orders, tableID) {
+    // Clear any existing content in the display area
+    const displayArea = document.getElementById("ordersContainer");
+    displayArea.innerHTML = ""; // Clear previous data
 
-    const date = new Date().toLocaleDateString();
-    billDate.textContent = `Date: ${date}`;
-
-    let grandTotal = 0;
-
-    if (orderDetails && orderDetails.order_detail) {
-      Object.values(orderDetails.order_detail).forEach(order => {
-        if (order && order.Table-1) {
-          const itemList = JSON.parse(order.Table-1);
-          if (itemList && Array.isArray(itemList)) {
-            itemList.forEach((item) => {
-              const itemRow = document.createElement("p");
-              const unitPrice = 100; // Assuming a unit price of 100 for simplicity
-              const totalPrice = item.quantity * unitPrice;
-              grandTotal += totalPrice;
-              itemRow.textContent = `${item.itemName} - Quantity: ${item.quantity} - Unit Price: $${unitPrice} - Total Price: $${totalPrice.toFixed(2)}`;
-              billItems.appendChild(itemRow);
-            });
-          }
-        }
-      });
+    if (!orders) {
+      displayArea.innerHTML = "<p>No orders found for this table.</p>";
+      return;
     }
 
-    const tax = (grandTotal * 0.1).toFixed(2);
-    const discount = (grandTotal * 0.05).toFixed(2); // Assuming a discount of 5%
-    const finalTotal = (grandTotal + parseFloat(tax) - parseFloat(discount)).toFixed(2);
+    // Display order details
+    const {
+      cust_Name,
+      order_detail,
+      table_closed,
+      timeStamp,
+      to_billing,
+      waiter_Name,
+    } = orders;
 
-    document.getElementById("grand-total").textContent = grandTotal.toFixed(2);
-    document.getElementById("tax").textContent = tax;
-    document.getElementById("discount").textContent = discount;
-    document.getElementById("final-total").textContent = finalTotal;
+    // Display customer and order details
+    displayArea.innerHTML += `<h2>Order Details for Table: ${tableID}</h2>`;
+    displayArea.innerHTML += `<p>Customer Name: ${cust_Name}</p>`;
+    displayArea.innerHTML += `<p>Table Closed: ${table_closed}</p>`;
+    displayArea.innerHTML += `<p>Time Stamp: ${timeStamp}</p>`;
+    displayArea.innerHTML += `<p>To Billing: ${to_billing}</p>`;
+    displayArea.innerHTML += `<p>Waiter Name: ${waiter_Name}</p>`;
+
+    // Extract items ordered from the order_detail
+    const itemsOrderedString = order_detail[tableID]; // This is a string
+    let itemsOrdered;
+
+    try {
+      // Parse the string into a JavaScript object (array)
+      itemsOrdered = JSON.parse(itemsOrderedString);
+    } catch (error) {
+      console.error("Error parsing items ordered:", error);
+      displayArea.innerHTML +=
+        "<p>Error parsing items ordered. Please check the data.</p>";
+      return;
+    }
+
+    // Display items ordered
+    if (Array.isArray(itemsOrdered)) {
+      displayArea.innerHTML += "<h3>Items Ordered:</h3>";
+      itemsOrdered.forEach((item) => {
+        displayArea.innerHTML += `<p>Item Name: ${item.itemName}, Quantity: ${item.quantity}, Note: ${item.note}, Dine In: ${item.dineIn}</p>`;
+      });
+    } else {
+      displayArea.innerHTML += "<p>No items ordered.</p>";
+    }
   }
 
-  fetchOrders();
+  // Example HTML Structure
+  // Make sure to add this in your HTML file
+  // <div id="ordersContainer"></div>
+
+  // Example of calling the function
+  // displayOrders(exampleOrders, 'table1');
+
+  // fetchOrders();
 
   document.getElementById("logout")?.addEventListener("click", function () {
     window.location.href = "index.html";
   });
 
-  document.getElementById("generate-bill")?.addEventListener("click", function () {
-    alert("Bill Generated!");
-  });
+  document
+    .getElementById("generate-bill")
+    ?.addEventListener("click", function () {
+      alert("Bill Generated!");
+    });
 });
