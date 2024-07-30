@@ -65,7 +65,7 @@ button:hover {
 /* Form Styling */
 form {
   max-width: 80%;
-  margin: 3rem 7rem;
+  margin: 0 3rem 0 3rem;
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -118,6 +118,14 @@ footer {
   text-align: center;
   padding: 1rem;
   font-size: 0.9rem;
+}
+
+#orderIDHeader {
+  margin: 2rem 0 1rem 3rem; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  text-align: left; /* Align text to the left */
+  font-size: 1.5em; /* Adjust font size as needed */
+  font-weight: bold; /* Make font bold */
 }
 
 @media only screen and (max-width: 600px) {
