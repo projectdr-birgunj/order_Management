@@ -174,8 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           const orderDetails = orders["order_detail"];
           var tableOneData = orderDetails[tableID]; // Accessing only the "Table-1" element
-          console.log("tableOneData:\n:", tableOneData);
-          console.log("orderDetails:\n", orderDetails);
 
           if (tableOneData) {
             // Check if the data is a string and parse it if necessary
@@ -187,15 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
               tableOneData = JSON.parse(tableOneData);
             }
             console.log("Table-1 data:", tableOneData); // Log the fetched data
-            //   if (typeof orders === "string") {
-            //     orders = JSON.parse(orders);
-            //     console.log("The data is: ", orders);
-            //   }
-            displayJsonData(tableOneData, button);
+            displayJsonData(tableOneData, button, orderId);
           }
         } else {
           orders = null;
-          displayJsonData(orders, button);
+          displayJsonData(orders, button, orderId);
         }
       } else {
         alert("Cannot fetch Order ID, Contact Developer");
@@ -205,10 +199,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayJsonData(data, button) {
-    console.log("Inside displayJson Data", data);
+  function displayJsonData(data, button, orderId) {
+    console.log("Inside displayJson Data" + "Button:\t\n" + button);
     const container = document.getElementById("json-container");
     container.innerHTML = "";
+
+    const h2Element = document.createElement("h2");
+    h2Element.id = "orderIDHeader";
+    h2Element.textContent = `Order Details for : ${orderId}`;
+    container.appendChild(h2Element);
 
     const form = document.createElement("form");
     form.id = "editForm";
