@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const quantityInput = row.cells[1].querySelector('input[type="number"]');
       const noteInput = row.cells[2].querySelector('input[type="text"]');
       const dineInInput = row.cells[3].querySelector('input[type="text"]');
-      //   console.log(itemNameInput);
+      console.log(itemName);
       //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
       //   console.log("itemName" + itemName);
       const quantity = quantityInput ? quantityInput.value.trim() : null;
@@ -382,7 +382,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const newRow = table.insertRow();
 
     const itemCell = newRow.insertCell(0);
-    itemCell.innerHTML = '<input type="text" name="item_name[]">';
+    const items = [
+      "Biryani",
+      "Chicken Momo",
+      "Shawarma",
+      "Dosa",
+      "Idli",
+      "Gulab Jamun",
+    ];
+
+    let select = '<select name="itemName[]">';
+    items.forEach((item) => {
+      if (item === "Dosa") {
+        select += `<option value="${item}" selected>${item}</option>`;
+      } else {
+        select += `<option value="${item}">${item}</option>`;
+      }
+    });
+    select += "</select>";
+    itemCell.innerHTML = select;
 
     const quantityCell = newRow.insertCell(1);
     quantityCell.innerHTML = '<input type="number" name="quantity[]">';
