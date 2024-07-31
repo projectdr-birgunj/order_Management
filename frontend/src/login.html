@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>OrderFlow - Login</title>
-    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
-  </head>
-  <body>
+    <!-- Linking the new CSS file -->
+    <link rel="stylesheet" type="text/css" href="../css/login.css" />
+    <!-- Importing Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- Added wrapper for new styles -->
     <header>
-      <a href="index.html"
-        ><img
-          src="../photos/orderflowlogo.png"
-          alt="OrderFlow Logo"
-          class="logo"
-      /></a>
-      <h1>Login</h1>
+        <a href="index.html">
+            <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo" />
+        </a>
+        <h1>OrderFlow</h1>
+        <!-- Exit button added -->
+        <button onclick="location.href='index.html'" class="exit-btn">Exit</button>
     </header>
-    <main>
-      <section>
-        <h2>Admin Login</h2>
+
+    <div class="wrapper">
         <form id="loginForm" onsubmit="return validateLogin()">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username" required />
-
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required />
-
-          <input type="submit" value="Login" />
+            <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo" />
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="text" id="username" name="username" placeholder="Username" required />
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" name="password" placeholder="Password" required />
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <div class="remember-forget">
+                <label><input type="checkbox" name="remember"> Remember me</label>
+                <a href="#">Forget Password?</a>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="register-link">
+                <p>Don't have an account?<a href="#"> Register</a></p>
+            </div>
         </form>
-      </section>
-    </main>
-    <footer>
-      <p>&copy; 2024 OrderFlow</p>
-    </footer>
-    <script>
-      function validateLogin() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+    </div>
 
-        if (username === "cashAdmin" && password === "cash100") {
-          window.location.href = "cashier.html";
-          return false;
-        } else if (username === "waiterAdmin" && password === "waiter99") {
-          window.location.href = "waiter.html";
-          return false;
-        } else if (username === "chiefAdmin" && password === "chief98") {
-          window.location.href = "chef.html";
-          return false;
-        } else {
-          alert("Invalid username or password");
-          return false;
+    <footer>
+        <p>&copy; 2024 OrderFlow</p>
+    </footer>
+
+    <script>
+        function validateLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "cashAdmin" && password === "cash100") {
+                window.location.href = "cashier.html";
+                return false;
+            } else if (username === "waiterAdmin" && password === "waiter99") {
+                window.location.href = "waiter.html";
+                return false;
+            } else if (username === "chiefAdmin" && password === "chief98") {
+                window.location.href = "chef.html";
+                return false;
+            } else {
+                alert("Invalid username or password");
+                return false;
+            }
         }
-      }
     </script>
-  </body>
+</body>
 </html>
