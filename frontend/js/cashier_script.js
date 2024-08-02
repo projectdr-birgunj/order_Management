@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let orders = snapshot.val();
         if (orders) {
           // console.log("Inside orders if:", orders);
-          const to_billing_var = orders["to_billing"];
+          const to_billing_var = orders["toBilling"];
           // console.log("to_billing", to_billing_var);
           if (to_billing_var != "true") {
             alert("Table not cleared yet! Please wait");
@@ -86,24 +86,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Display order details
     const {
-      cust_Name,
-      order_detail,
-      table_closed,
+      custName,
+      orderDetail,
+      tableClosed,
       timeStamp,
-      to_billing,
-      waiter_Name,
+      toBilling,
+      waiterName,
     } = orders;
 
     // Display customer and order details
     displayArea.innerHTML += `<h2>Order Details for Table: ${tableID}</h2>`;
-    displayArea.innerHTML += `<p>Customer Name: ${cust_Name}</p>`;
-    displayArea.innerHTML += `<p>Table Closed: ${table_closed}</p>`;
+    displayArea.innerHTML += `<p>Customer Name: ${custName}</p>`;
+    displayArea.innerHTML += `<p>Table Closed: ${tableClosed}</p>`;
     displayArea.innerHTML += `<p>Time Stamp: ${timeStamp}</p>`;
-    displayArea.innerHTML += `<p>To Billing: ${to_billing}</p>`;
-    displayArea.innerHTML += `<p>Waiter Name: ${waiter_Name}</p>`;
+    displayArea.innerHTML += `<p>To Billing: ${toBilling}</p>`;
+    displayArea.innerHTML += `<p>Waiter Name: ${waiterName}</p>`;
 
     // Extract items ordered from the order_detail
-    const itemsOrderedString = order_detail[tableID]; // This is a string
+    const itemsOrderedString = orderDetail[tableID]; // This is a string
     let itemsOrdered;
 
     try {
