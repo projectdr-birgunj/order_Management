@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const dineInInput = row.cells[3].querySelector('input[type="text"]');
       console.log(itemName);
       //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
-      //   console.log("itemName" + itemName);
+      console.log("itemName" + itemName);
       const quantity = quantityInput ? quantityInput.value.trim() : null;
       const note = noteInput ? noteInput.value.trim() : null;
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       //   const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
-        const reference = ref(database, "orders/" + orderId + "/order_detail/");
+        const reference = ref(database, "orders/" + orderId + "/orderDetail/");
         await update(reference, data);
         alert("Orders submitted successfully!");
         location.reload(); // Reload the page
@@ -122,11 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function toBillingData(button) {
-    const form = document.querySelector(".formTable tbody");
-    const row1 = Array.from(form.rows);
     const to_billing_var = true;
     const orderId = button.getAttribute("data-table-no");
-    const data = { to_billing: JSON.stringify(to_billing_var, null, 2) };
+    const data = { toBilling: JSON.stringify(to_billing_var, null, 2) };
     console.log("Data:" + data);
 
     // Store the timestamp in a variable
@@ -165,15 +163,16 @@ document.addEventListener("DOMContentLoaded", () => {
         let orders = snapshot.val();
         if (orders) {
           console.log("Inside orders if:", orders);
-          const to_billing_var = orders["to_billing"];
+          const to_billing_var = orders["toBilling"];
           console.log("to_billing", to_billing_var);
           if (to_billing_var == "true") {
             alert("Please clear the table from Cashier's end");
             location.reload(); // Reload the page
             return;
           }
-          const orderDetails = orders["order_detail"];
+          const orderDetails = orders["orderDetail"];
           var tableOneData = orderDetails[tableID]; // Accessing only the "Table-1" element
+          console.log("tableOneData details:\n", tableOneData);
 
           if (tableOneData) {
             // Check if the data is a string and parse it if necessary
