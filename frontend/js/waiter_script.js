@@ -62,9 +62,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function submitData(button) {
+    const orderId = button.getAttribute("data-table-no");
+    const tableID = orderId.toLowerCase();
+    let chefStatuses;
+    if (orderId) {
+      // console.log("Inside orderID if:", orderId);
+      const dbRef = ref(database);
+      const snapshot = await get(child(dbRef, "orders/" + orderId));
+      let orders = snapshot.val();
+      if (orders) {
+        // console.log("Inside orders if:", orders);
+        const orderDetails = orders["orderDetail"];
+        var tableOneData = orderDetails[tableID];
+        chefStatuses = tableOneData.map((order) => order.chefStatus);
+      }
+    }
+
     const form = document.querySelector(".formTable tbody");
     const row1 = Array.from(form.rows);
-    const data1 = [];
+    const data1 = {};
+    let i = 0;
 
     row1.forEach((row) => {
       const itemName = row.cells[0].querySelector(
@@ -75,35 +92,43 @@ document.addEventListener("DOMContentLoaded", () => {
       const dineInInput = row.cells[3].querySelector('input[type="text"]');
       console.log(itemName);
       //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
-      console.log("itemName" + itemName);
-      const quantity = quantityInput ? quantityInput.value.trim() : null;
+      // console.log("itemName" + itemName);
+      const quantity = quantityInput ? Number(quantityInput.value.trim()) : 0;
       const note = noteInput ? noteInput.value.trim() : null;
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
-      console.log(
-        "itemNameInput" +
-          itemName +
-          "\nquantityInput" +
-          quantity +
-          "\nnoteInput" +
-          note +
-          "\ndineInInput" +
-          dineIn
-      );
+      const chefStatus = chefStatuses[i];
+      // console.log("Final for i = :" + i + "\n" + chefStatus);
+      i++;
+      // console.log(
+      //   "itemNameInput" +
+      //     itemName +
+      //     "\nquantityInput" +
+      //     quantity +
+      //     "\nnoteInput" +
+      //     note +
+      //     "\ndineInInput" +
+      //     dineIn +
+      //     "\nchefStatus" +
+      //     chefStatus
+      // );
       const rowData = {
         itemName: itemName || null,
-        quantity: quantity || null,
+        quantity: quantity,
         note: note || null,
         dineIn: dineIn || null,
+        chefStatus: chefStatus !== undefined ? chefStatus : 100,
       };
-      if (itemName || quantity || note || dineIn) {
-        data1.push(rowData);
-      }
+      // console.log(`Row Data ${Object.keys(data1).length}:`, rowData); // Logs with current index
+
+      // Store rowData in data1 object with numeric keys
+      data1[Object.keys(data1).length] = rowData; // Assign using the current length of the object as key
     });
 
-    const orderId = button.getAttribute("data-table-no");
-    const tableID = orderId.toLowerCase();
-    const data = { [tableID]: JSON.stringify(data1, null, 2) };
-    console.log("Data:" + data + "\ntableID" + tableID);
+    // Final output of data1 to show the object structure
+    // console.log("Final data1:", data1);
+
+    const data = { [tableID]: data1 };
+    // console.log("Data:" + data + "\ntableID" + tableID);
 
     try {
       //   const orderId = document.getElementById("tableSelect").value;
@@ -173,6 +198,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const orderDetails = orders["orderDetail"];
           var tableOneData = orderDetails[tableID]; // Accessing only the "Table-1" element
           console.log("tableOneData details:\n", tableOneData);
+
+          const chefStatuses = tableOneData.map((order) => order.chefStatus);
+          console.log(chefStatuses[1]); // Output: [-1, -1]
 
           if (tableOneData) {
             // Check if the data is a string and parse it if necessary
