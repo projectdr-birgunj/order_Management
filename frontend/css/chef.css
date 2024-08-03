@@ -10,14 +10,16 @@ body {
 
 header {
   width: 100%;
+  margin: 0 1rem;
   background-color: #333;
   color: white;
   display: flex;
   align-items: center;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .logo {
+  margin: 0 1rem;
   height: 50px;
   margin-right: 20px;
 }
@@ -28,6 +30,7 @@ h1 {
 }
 
 .logout-btn {
+  margin: 0 1rem;
   background-color: #dc3545;
   color: white;
   border: none;
@@ -58,7 +61,7 @@ h2 {
   gap: 10px;
 }
 
-.table-buttons button {
+.button-row {
   background-color: #007bff;
   color: white;
   border: none;
@@ -69,7 +72,7 @@ h2 {
   width: 100px;
 }
 
-.table-buttons button:hover {
+.button-row {
   background-color: #0056b3;
 }
 
@@ -155,6 +158,7 @@ table {
 
 th,
 td {
+  margin: 1rem 0 1rem 0;
   border: 1px solid #ddd; /* Adds a light border to cells */
   padding: 12px 15px; /* Adds padding for better readability */
   text-align: left; /* Aligns text to the left */
@@ -248,10 +252,12 @@ caption {
 }
 
 .first-pair {
+  padding: 1rem 0;
   background-color: #90ee90; /* Light gray */
 }
 
 .second-pair {
+  padding: 1rem 0;
   background-color: #ffffff; /* Slightly darker gray */
 }
 
@@ -260,7 +266,7 @@ footer {
   background-color: #333;
   color: white;
   text-align: center;
-  padding: 10px;
+  /* padding: 10px; */
   position: fixed;
   bottom: 0;
 }

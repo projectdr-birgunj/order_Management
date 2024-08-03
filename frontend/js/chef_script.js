@@ -196,6 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("data-table-no", `Table-${i}`);
       button.classList.add("table-btn");
       button.onclick = function () {
+        const allButtons = document.querySelectorAll(".table-btn");
+        allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+        // Add active class to the clicked button
+        button.classList.add("active-btn");
         fetchOrderDetails(button);
       };
       buttonsContainer.appendChild(button);
