@@ -5,7 +5,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #eaeaea;
 }
 
 header {
@@ -98,7 +98,7 @@ h2 {
   margin: 10px 0;
 }
 
-.order-buttons {
+/* .order-buttons {
   display: flex;
   gap: 10px;
   margin-top: 10px;
@@ -144,7 +144,7 @@ h2 {
 
 .order-buttons .ready-btn:hover {
   background-color: #e0a800;
-}
+} */
 
 table {
   margin: 0 auto; /* Centers the table */
@@ -161,17 +161,20 @@ td {
 }
 
 th {
-  background-color: #f4f4f4; /* Sets a light background color for header cells */
+  background-color: #f0f8ff; /* Sets a light background color for header cells */
   font-weight: bold; /* Makes header text bold */
   text-transform: uppercase; /* Transforms text to uppercase */
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9; /* Sets a light gray background for even rows */
-}
-
 tr:hover {
   background-color: #f1f1f1; /* Changes the background color on hover */
+}
+
+tr.button-row td {
+  padding: 8px 4px;
+  /* background-color: #f9f9f9; */
+  border: none;
+  text-align: center;
 }
 
 caption {
@@ -181,19 +184,75 @@ caption {
   font-size: 0.9em; /* Sets font size slightly smaller than the table text */
 }
 
-.preparing {
-  background-color: #ffcc00;
-  color: white;
+/* Initial button styles */
+.status-btn {
+  padding: 10px 20px;
+  margin: 4px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 33%;
+  box-sizing: border-box;
+  transition: all 0.3s ease; /* Smooth transition for style changes */
 }
 
-.cooked {
-  background-color: #00cc66;
-  color: white;
+/* Styles for active status */
+.active {
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Shadow to lift the button */
 }
 
-.delivered {
-  background-color: #3399ff;
-  color: white;
+/* Animation for Preparing status */
+@keyframes preparing-animation {
+  0%,
+  100% {
+    background-color: #ffcc00;
+  }
+  50% {
+    background-color: #ffd633;
+  }
+}
+
+.preparing.active {
+  animation: preparing-animation 2s infinite; /* Looping animation */
+}
+
+/* Animation for Cooked status */
+@keyframes cooked-animation {
+  0%,
+  100% {
+    background-color: #00cc66;
+  }
+  50% {
+    background-color: #33d97a;
+  }
+}
+
+.cooked.active {
+  animation: cooked-animation 2s infinite; /* Looping animation */
+}
+
+/* Animation for Delivered status */
+@keyframes delivered-animation {
+  0%,
+  100% {
+    background-color: #3399ff;
+  }
+  50% {
+    background-color: #66aaff;
+  }
+}
+
+.delivered.active {
+  animation: delivered-animation 2s infinite; /* Looping animation */
+}
+
+.first-pair {
+  background-color: #90ee90; /* Light gray */
+}
+
+.second-pair {
+  background-color: #ffffff; /* Slightly darker gray */
 }
 
 footer {
@@ -204,4 +263,7 @@ footer {
   padding: 10px;
   position: fixed;
   bottom: 0;
+}
+main {
+  padding-bottom: 100px; /* Adjust this value based on the footer height */
 }

@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebas
 import {
   getDatabase,
   ref,
+  update,
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
@@ -66,6 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function displayOrderDetails(orders, button, orderId) {
+    const orderID = button.getAttribute("data-table-no");
+    const tableID = orderID.toLowerCase();
+    console.log("Inside orderID if:", tableID);
     // Get the container where the table will be inserted
     const container = document.getElementById("tableContainer");
     container.innerHTML = "";
@@ -82,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
 
-    const headers = ["Item Name", "Quantity", "Note", "Dine In", "Status"];
+    const headers = ["Item Name", "Quantity", "Note", "Dine In"];
     headers.forEach((headerText) => {
       const th = document.createElement("th");
       th.textContent = headerText;
@@ -95,8 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Create the table body
     const tbody = document.createElement("tbody");
 
-    orders.forEach((item) => {
+    let pairCounter = 0; // Add this line
+
+    orders.forEach((item, index) => {
+      // console.log("pairCounter vefore: " + pairCounter);
+      const rowClass = pairCounter % 2 === 1 ? "second-pair" : "first-pair"; // Modified line
+      // console.log("pairCounter after: " + pairCounter);
       const row = document.createElement("tr");
+      row.className = rowClass; // Add this line
 
       const itemNameCell = document.createElement("td");
       itemNameCell.textContent = item.itemName;
@@ -114,8 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
       dineInCell.textContent = item.dineIn;
       row.appendChild(dineInCell);
 
-      // Create the status cell with buttons
-      const statusCell = document.createElement("td");
+      tbody.appendChild(row);
+
+      const buttonRow = document.createElement("tr");
+      const buttonCell = document.createElement("td");
+      buttonRow.className = "button-row " + rowClass; // Adding class name here
+      buttonCell.colSpan = 4; // Span across all columns
       const statuses = [
         { label: "Preparing", value: -1 },
         { label: "Cooked", value: 0 },
@@ -126,20 +140,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const button = document.createElement("button");
         button.textContent = status.label;
         button.className = "status-btn " + status.label.toLowerCase();
-        button.addEventListener("click", () => {
-          handleStatusChange(status.value, item.itemName, button);
-        });
-        statusCell.appendChild(button);
-      });
-      row.appendChild(statusCell);
 
-      tbody.appendChild(row);
+        // Check the item's chefStatus and set the active button
+        if (item.chefStatus === status.value) {
+          button.classList.add("active");
+        }
+
+        button.addEventListener("click", function () {
+          handleStatusChange(status.value, item, orderID);
+          setActive(button, status.label.toLowerCase());
+        });
+        buttonCell.appendChild(button);
+      });
+
+      buttonRow.appendChild(buttonCell);
+      tbody.appendChild(buttonRow);
+      pairCounter++; // Add this line
     });
 
     table.appendChild(tbody);
 
     // Append the table to the container
     container.appendChild(table);
+  }
+
+  // Function to set a button as active and manage animations
+  function setActive(button, statusClass) {
+    // Reset all buttons in the status cell to remove active classes and animations
+    button.parentElement.querySelectorAll("button").forEach((btn) => {
+      btn.classList.remove("active", "preparing", "cooked", "delivered");
+      btn.classList.add(statusClass);
+    });
+    // Add active class to the clicked button
+    button.classList.add("active");
   }
 
   function displayOrders() {
@@ -156,26 +189,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function handleStatusChange(status_value, itemName, button) {
-    const to_billing_var = true;
-    const orderId = button.getAttribute("data-table-no");
-    const data = { toBilling: JSON.stringify(to_billing_var, null, 2) };
-    console.log("Data:" + data);
+  async function handleStatusChange(chefStatus_var, item, orderId) {
+    const tableID = orderId.toLowerCase();
 
     try {
-      //   const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
-        const reference = ref(database, "orders/" + orderId);
-        await update(reference, data);
-        await update(reference, timestamp_field);
-        alert("Bill Generated. Plz visit cashier");
-        location.reload(); // Reload the page
+        // Reference to the order details
+        const orderRef = ref(
+          database,
+          `orders/${orderId}/orderDetail/${tableID}`
+        );
+        const snapshot = await get(orderRef);
+
+        if (snapshot.exists()) {
+          const orderDetails = snapshot.val();
+
+          // Locate the index of the item you want to update
+          const itemIndex = orderDetails.findIndex(
+            (orderItem) =>
+              orderItem.itemName === item.itemName &&
+              orderItem.note === item.note &&
+              orderItem.quantity === item.quantity
+          );
+
+          if (itemIndex !== -1) {
+            // Update the chefStatus of the specific item
+            const updates = {};
+            updates[`${itemIndex}/chefStatus`] = chefStatus_var; // Update chefStatus for the specific index
+
+            await update(orderRef, updates);
+            alert("Order status updated successfully!");
+          } else {
+            console.log("Item not found for update.");
+          }
+        } else {
+          alert("No order details found.");
+        }
       } else {
         alert("Cannot fetch Order ID, Contact Developer");
       }
     } catch (error) {
       console.error("Error writing data to Firebase:", error);
-      alert("Error submitting orders. Please try again.");
+      alert("Error updating order status. Please try again.");
     }
   }
 
