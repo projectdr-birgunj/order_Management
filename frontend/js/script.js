@@ -25,52 +25,98 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
 
+  // async function submitData() {
+  //   const form = document.querySelector(".formTable tbody");
+  //   const row1 = Array.from(form.rows);
+  //   const data1 = [];
+
+  //   row1.forEach((row) => {
+  //     const itemNameInput = row.cells[0].querySelector('input[type="text"]');
+  //     const quantityInput = row.cells[1].querySelector('input[type="number"]');
+  //     const noteInput = row.cells[2].querySelector('input[type="text"]');
+  //     const dineInInput = row.cells[3].querySelector('input[type="text"]');
+
+  //     const itemName = itemNameInput ? itemNameInput.value.trim() : null;
+  //     const quantity = quantityInput ? quantityInput.value.trim() : null;
+  //     const note = noteInput ? noteInput.value.trim() : null;
+  //     const dineIn = dineInInput ? dineInInput.value.trim() : null;
+  //     console.log(
+  //       "itemNameInput" +
+  //         itemName +
+  //         "\nquantityInput" +
+  //         quantity +
+  //         "\nnoteInput" +
+  //         note +
+  //         "\ndineInInput" +
+  //         dineIn
+  //     );
+  //     const rowData = {
+  //       itemName: itemName || null,
+  //       quantity: quantity || null,
+  //       note: note || null,
+  //       dineIn: dineIn || null,
+  //     };
+  //     if (itemName || quantity || note || dineIn) {
+  //       data1.push(rowData);
+  //     }
+  //   });
+
+  // const orderId = document.getElementById("tableSelect").value;
+  // let tableID = orderId.toLowerCase();
+  // const data = { [tableID]: JSON.stringify(data1, null, 2) };
+  // console.log("Data:" + data + "\ntableID" + tableID);
+
+  //   try {
+  //     //   const orderId = document.getElementById("tableSelect").value;
+  //     if (orderId) {
+  //       const reference = ref(database, "orders/" + orderId + "/order_detail/");
+  //       await update(reference, data);
+  //       alert("Orders submitted successfully!");
+  //       location.reload(); // Reload the page
+  //     } else {
+  //       alert("Cannot fetch Order ID, Contact Developer");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error writing data to Firebase:", error);
+  //     alert("Error submitting orders. Please try again.");
+  //   }
+  // }
+
   async function submitData() {
-    const form = document.querySelector(".formTable tbody");
-    const row1 = Array.from(form.rows);
-    const data1 = [];
-
-    row1.forEach((row) => {
-      const itemNameInput = row.cells[0].querySelector('input[type="text"]');
-      const quantityInput = row.cells[1].querySelector('input[type="number"]');
-      const noteInput = row.cells[2].querySelector('input[type="text"]');
-      const dineInInput = row.cells[3].querySelector('input[type="text"]');
-
-      const itemName = itemNameInput ? itemNameInput.value.trim() : null;
-      const quantity = quantityInput ? quantityInput.value.trim() : null;
-      const note = noteInput ? noteInput.value.trim() : null;
-      const dineIn = dineInInput ? dineInInput.value.trim() : null;
-      console.log(
-        "itemNameInput" +
-          itemName +
-          "\nquantityInput" +
-          quantity +
-          "\nnoteInput" +
-          note +
-          "\ndineInInput" +
-          dineIn
-      );
-      const rowData = {
-        itemName: itemName || null,
-        quantity: quantity || null,
-        note: note || null,
-        dineIn: dineIn || null,
-      };
-      if (itemName || quantity || note || dineIn) {
-        data1.push(rowData);
-      }
-    });
-
     const orderId = document.getElementById("tableSelect").value;
-    let tableID = orderId.toLowerCase();
-    const data = { [tableID]: JSON.stringify(data1, null, 2) };
-    console.log("Data:" + data + "\ntableID" + tableID);
+    const tableID = orderId.toLowerCase();
+    const data = {
+      timeStamp: "2024-07-28_11:10:11",
+      custName: "Rajnish",
+      waiterName: "Sumna",
+      orderDetail: {
+        [tableID]: [
+          {
+            itemName: "Biryani",
+            quantity: "3",
+            note: "Oily",
+            dineIn: "Yes",
+            chefStatus: -1,
+          },
+          {
+            itemName: "Idli",
+            quantity: "1",
+            note: "Fishy",
+            dineIn: "No",
+            chefStatus: -1,
+          },
+        ],
+      },
+      tableClosed: "No",
+      toBilling: "No",
+    };
 
+    // Push data to Firebase Realtime Database
     try {
-      //   const orderId = document.getElementById("tableSelect").value;
+      const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
-        const reference = ref(database, "orders/" + orderId + "/order_detail/");
-        await update(reference, data);
+        const reference = ref(database, "orders/" + orderId);
+        await set(reference, data);
         alert("Orders submitted successfully!");
         location.reload(); // Reload the page
       } else {
@@ -81,53 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Error submitting orders. Please try again.");
     }
   }
-
-  //   async function submitData() {
-  //     const data = {
-  //       timeStamp: "2024-07-28_11:10:11",
-  //       cust_Name: "Rajnish",
-  //       waiter_Name: "Sumna",
-  //       order_detail: {
-  //         "table-10": [
-  //           {
-  //             itemName: "Chicken",
-  //             quantity: "3",
-  //             note: "Oily",
-  //             dineIn: "Yes",
-  //           },
-  //           {
-  //             itemName: "Momo",
-  //             quantity: "1",
-  //             note: "Fishy",
-  //             dineIn: "No",
-  //           },
-  //         ],
-  //         accept_order: "Yes",
-  //         reject_order: "No",
-  //         Preparing: "Yes",
-  //         cooked: "No",
-  //         delivered: "No",
-  //       },
-  //       table_closed: "No",
-  //       to_billing: "No",
-  //     };
-
-  //     // Push data to Firebase Realtime Database
-  //     try {
-  //       const orderId = document.getElementById("tableSelect").value;
-  //       if (orderId) {
-  //         const reference = ref(database, "orders/" + orderId);
-  //         await set(reference, data);
-  //         alert("Orders submitted successfully!");
-  //         location.reload(); // Reload the page
-  //       } else {
-  //         alert("Cannot fetch Order ID, Contact Developer");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error writing data to Firebase:", error);
-  //       alert("Error submitting orders. Please try again.");
-  //     }
-  //   }
 
   document
     .getElementById("fetchOrdersBtn")

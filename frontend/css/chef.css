@@ -1,5 +1,5 @@
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -41,19 +41,11 @@ h1 {
   background-color: #c82333;
 }
 
-main {
+/* main {
   display: flex;
   width: 100%;
   padding: 20px;
-}
-
-.left-section, .right-section {
-  flex: 1;
-  margin: 10px;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+} */
 
 h2 {
   margin-top: 0;
@@ -81,7 +73,17 @@ h2 {
   background-color: #0056b3;
 }
 
-.order-details {
+#orderIDHeader {
+  text-align: center;
+  margin: 4rem 0 1rem 0;
+  padding: 0;
+  /* text-align: left; */
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.orderDetails {
+  margin: 3rem 2rem;
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
@@ -91,7 +93,8 @@ h2 {
   overflow-y: auto; /* Enable vertical scrolling */
 }
 
-.order-details h2, .order-details p {
+.orderDetails h2,
+.orderDetails p {
   margin: 10px 0;
 }
 
@@ -141,6 +144,56 @@ h2 {
 
 .order-buttons .ready-btn:hover {
   background-color: #e0a800;
+}
+
+table {
+  margin: 0 auto; /* Centers the table */
+  border-collapse: collapse; /* Removes space between table cells */
+  width: 80%; /* Sets the table width to 80% of the parent container */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Adds a subtle shadow for depth */
+}
+
+th,
+td {
+  border: 1px solid #ddd; /* Adds a light border to cells */
+  padding: 12px 15px; /* Adds padding for better readability */
+  text-align: left; /* Aligns text to the left */
+}
+
+th {
+  background-color: #f4f4f4; /* Sets a light background color for header cells */
+  font-weight: bold; /* Makes header text bold */
+  text-transform: uppercase; /* Transforms text to uppercase */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Sets a light gray background for even rows */
+}
+
+tr:hover {
+  background-color: #f1f1f1; /* Changes the background color on hover */
+}
+
+caption {
+  caption-side: bottom; /* Positions caption at the bottom of the table */
+  padding: 8px; /* Adds padding to the caption */
+  font-style: italic; /* Italicizes the caption text */
+  font-size: 0.9em; /* Sets font size slightly smaller than the table text */
+}
+
+.preparing {
+  background-color: #ffcc00;
+  color: white;
+}
+
+.cooked {
+  background-color: #00cc66;
+  color: white;
+}
+
+.delivered {
+  background-color: #3399ff;
+  color: white;
 }
 
 footer {
