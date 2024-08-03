@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>OrderFlow - Chef</title>
-    <link rel="stylesheet" type="text/css" href="../css/chef.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="../css/chef.css" />
+  </head>
+  <body>
     <header>
-        <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo">
-        <h1>Chef - Dining Tables</h1>
-        <button onclick="logout()" class="logout-btn">Logout</button>
+      <img
+        src="../photos/orderflowlogo.png"
+        alt="OrderFlow Logo"
+        class="logo"
+      />
+      <h1>Chef - Dining Tables</h1>
+      <button onclick="logout()" class="logout-btn">Logout</button>
     </header>
     <main>
-        <section>
-            <h2>Select a Dining Table</h2>
-            <div id="order-list" class="table-buttons"></div>
-        </section>
-        <section id="order-details" class="order-details"></section>
+      <h2>Select a Dining Table</h2>
+      <div id="order-list" class="table-buttons"></div>
+      <!-- <div id="order-details" class="orderDetails"></div> -->
+      <div id="tableContainer"></div>
     </main>
     <footer>
-        <p>&copy; 2024 OrderFlow</p>
+      <p>&copy; 2024 OrderFlow</p>
     </footer>
     <script src="../js/chef_script.js" type="module"></script>
-</body>
+  </body>
 </html>
