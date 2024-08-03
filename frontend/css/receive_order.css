@@ -43,7 +43,7 @@ header .logout-btn:hover {
   background-color: #ff0000;
 }
 
-button {
+.form-btn {
   background-color: #35424a;
   color: white;
   border: none;
@@ -58,7 +58,7 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+.form-btn:hover {
   background-color: #575757;
 }
 

@@ -32,7 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const button = document.createElement("button");
       button.textContent = "Table " + i;
       button.setAttribute("data-table-no", "Table-" + i);
+      button.classList.add("table-btn");
       button.onclick = function () {
+        const allButtons = document.querySelectorAll(".table-btn");
+        allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+        // Add active class to the clicked button
+        button.classList.add("active-btn");
         fetchOrdersBtn(button);
       };
       buttonsContainer.appendChild(button);
@@ -328,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
         deleteBtn.classList.add("deleteRowBtn");
+        deleteBtn.classList.add("form-btn");
         deleteBtn.type = "button";
         deleteBtn.addEventListener("click", function () {
           row.remove();
@@ -362,6 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const deleteBtn = document.createElement("button");
       deleteBtn.textContent = "Delete";
       deleteBtn.classList.add("deleteRowBtn");
+      deleteBtn.classList.add("form-btn");
       deleteBtn.type = "button";
       deleteBtn.addEventListener("click", function () {
         blankRow.remove();
@@ -375,6 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const addRowBtn = document.createElement("button");
     addRowBtn.textContent = "Add Row";
     addRowBtn.classList.add("addRowBtn");
+    addRowBtn.classList.add("form-btn");
     addRowBtn.type = "button";
     addRowBtn.addEventListener("click", function () {
       addRow();
@@ -383,6 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = document.createElement("button");
     submitBtn.textContent = "Submit";
     submitBtn.classList.add("submitBtn");
+    submitBtn.classList.add("form-btn");
     submitBtn.type = "button";
     submitBtn.addEventListener("click", function () {
       submitData(button);
@@ -391,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toBillingBtn = document.createElement("button");
     toBillingBtn.textContent = "To Billing";
     toBillingBtn.classList.add("toBillingBtn");
+    toBillingBtn.classList.add("form-btn");
     toBillingBtn.type = "button";
     toBillingBtn.addEventListener("click", function () {
       toBillingData(button);

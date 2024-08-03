@@ -1,22 +1,32 @@
 @import url(https://fonts.googleapis.com/css?family=Bungee);
 
+#buttonsContainer {
+  margin: 1rem 2rem;
+  display: grid; /* Enables CSS Grid Layout */
+  grid-template-columns: 25% 25% 25% 25%; /* Creates four columns, each taking equal space */
+  gap: 5px; /* Adds space between buttons */
+  justify-content: center; /* Centers the grid within the container if extra space is available */
+  align-items: center; /* Vertically centers the buttons in their grid cell */
+}
+
 .table-btn {
+  width: auto;
   background-color: #cbf3f0;
   border-radius: 50px;
   color: #11534d;
   border: 3px solid #2ec4b6;
   line-height: 1;
   font-size: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px 25px;
+  margin: 4px;
+  padding: 20px 15px;
   font-family: "Bungee";
-  display: inline-block;
+  /* display: inline-block; */
   vertical-align: middle;
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
-  min-width: 200px;
   text-align: center;
+  box-sizing: border-box;
+  /* gap: 10px; */
 }
 .table-btn:hover,
 .table-btn:focus {
