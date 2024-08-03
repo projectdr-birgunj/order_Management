@@ -166,9 +166,9 @@ th {
   text-transform: uppercase; /* Transforms text to uppercase */
 }
 
-tr:hover {
-  background-color: #f1f1f1; /* Changes the background color on hover */
-}
+/* tr:hover {
+  background-color: #f1f1f1; 
+} */
 
 tr.button-row td {
   padding: 8px 4px;

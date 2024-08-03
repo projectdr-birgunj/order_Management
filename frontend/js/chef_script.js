@@ -146,7 +146,20 @@ document.addEventListener("DOMContentLoaded", () => {
           button.classList.add("active");
         }
 
+        // Disable buttons if chefStatus is 1 or if the current button is "Delivered"
+        if (
+          item.chefStatus === 1 ||
+          (status.value === 1 && item.chefStatus === 1)
+        ) {
+          button.disabled = true; // Add this line
+        }
+
         button.addEventListener("click", function () {
+          if (status.value === 1) {
+            buttonCell.querySelectorAll("button").forEach((btn) => {
+              btn.disabled = true; // Add this line
+            });
+          }
           handleStatusChange(status.value, item, orderID);
           setActive(button, status.label.toLowerCase());
         });
