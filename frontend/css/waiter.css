@@ -43,9 +43,7 @@ header .logout-btn:hover {
   background-color: #ff0000;
 }
 
-/* Form Styling */
 #editForm {
-  /* margin: 0 8rem; */
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -93,48 +91,59 @@ footer {
 
 @media (min-width: 641px) {
   form {
-    /* max-width: 95%; */
-    margin: 0 2rem;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 0 2rem;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   select,
   input[type="text"],
   input[type="number"],
   .deleteRowBtn {
-    padding: 0;
+      padding: 0;
   }
 }
 
-@media (min-width: 320px) {
-  form {
-    /* max-width: 95%; */
-    margin: 0 2rem;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+@media (max-width: 640px) {
+  body {
+      padding: 10px;
   }
-  select,
-  input[type="text"],
-  input[type="number"],
-  .deleteRowBtn {
-    padding: 0;
+  header {
+      padding: 10px 0;
+  }
+  header .logo {
+      height: 40px;
+      top: 5px;
+      left: 10px;
+  }
+  header h1 {
+      font-size: 1.2em;
+  }
+  header .logout-btn {
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+  }
+  #editForm {
+      padding: 10px;
+  }
+  form input[type="submit"] {
+      font-size: 14px;
+      padding: 8px 16px;
   }
 }
 
 .header-cell {
-  min-width: 100px; /* Minimum width */
-  max-width: 250px; /* Maximum width */
+  min-width: 100px;
+  max-width: 250px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   padding: 8px;
 }
 
-/* General styles for all select and input elements */
 select,
 input[type="text"],
 input[type="number"],
@@ -144,36 +153,29 @@ input[type="number"],
   border: solid 1px #eee;
   box-shadow: 0px 2px 5px 0px rgba(155, 155, 155, 0.5);
   box-sizing: border-box;
-  /* display: block; */
   font-size: 14px;
   height: 42px;
-  /* line-height: 40px; */
-  /* outline: none; */
   padding: 18px;
-  width: calc(100% - 10px); /* Ensures full width minus padding */
+  width: calc(100% - 10px);
   transition: all 0.2s ease-in-out;
-  /* width: auto; */
-  /* border: 3px solid red; */
 }
 
 .deleteRowBtn {
   display: flex;
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  font-size: 16px; /* Font size */
-  width: calc(100% - 10px); /* Ensures full width minus padding */
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  width: calc(100% - 10px);
   margin-left: 2rem;
 }
 
-/* Specific styles for focused inputs */
 input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
   border-color: #12cbc4;
-  box-shadow: 0 0 8px rgba(18, 203, 196, 0.5); /* Optional: adds a glow effect on focus */
+  box-shadow: 0 0 8px rgba(18, 203, 196, 0.5);
 }
 
-/* Style adjustments for buttons to match inputs and select boxes */
 .form-btn {
   background-color: #12cbc4;
   border: none;
@@ -181,7 +183,7 @@ select:focus {
   color: #fff;
   cursor: pointer;
   font-size: 14px;
-  padding: 10px 20px; /* Adjust padding to match the height of inputs */
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
@@ -193,7 +195,6 @@ select:focus {
 }
 
 .formTable {
-  /* margin: 0 2rem 0 1.5rem; */
   width: 100%;
   table-layout: fixed;
 }
