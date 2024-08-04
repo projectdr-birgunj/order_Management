@@ -1,5 +1,6 @@
-function create_custom_dropdowns() {
-  $("select").each(function (i, select) {
+// let valThis;
+window.create_custom_dropdowns = function () {
+  $("select.item-name").each(function (i, select) {
     if (!$(this).next().hasClass("dropdown-select")) {
       $(this).after(
         '<div class="dropdown-select wide ' +
@@ -34,7 +35,7 @@ function create_custom_dropdowns() {
   $(".dropdown-select ul").before(
     '<div class="dd-search"><input id="txtSearchValue" autocomplete="off" onkeyup="filter()" class="dd-searchbox" type="text"></div>'
   );
-}
+};
 
 // Event listeners
 
@@ -46,9 +47,21 @@ $(document).on("click", ".dropdown-select", function (event) {
   $(".dropdown-select").not($(this)).removeClass("open");
   $(this).toggleClass("open");
   if ($(this).hasClass("open")) {
+    //jft
+    var searchInput = $(this).find(".dd-searchbox");
+    searchInput.val(""); // Clear the search input value
+    $(this)
+      .find(".dropdown-select ul > li")
+      .each(function () {
+        $(this).show(); // Show all options
+      });
+    //jft_ends
+    console.log("checking tf this is when close is added");
+    // console.log("Inside clering" + valThis);
     $(this).find(".option").attr("tabindex", 0);
     $(this).find(".selected").focus();
   } else {
+    console.log("checking tf this is when close is removed");
     $(this).find(".option").removeAttr("tabindex");
     $(this).focus();
   }
@@ -63,15 +76,31 @@ $(document).on("click", function (event) {
   event.stopPropagation();
 });
 
-function filter() {
-  var valThis = $("#txtSearchValue").val();
-  $(".dropdown-select ul > li").each(function () {
+window.filter = function (searchInput) {
+  console.log("SearchInput\t" + searchInput);
+  if (!searchInput) return; // Check if searchInput is provided
+
+  var valThis = $(searchInput).val().toLowerCase();
+  console.log("Filtering with value:", valThis);
+
+  var dropdown = $(searchInput).closest(".dropdown-select");
+  if (dropdown.length === 0) {
+    console.error("Dropdown container not found");
+    return;
+  }
+
+  console.log(dropdown);
+  console.log("Outside filtering hide and show");
+
+  dropdown.find(" ul > li").each(function () {
+    console.log("Inside filtering hide and show");
     var text = $(this).text();
     text.toLowerCase().indexOf(valThis.toLowerCase()) > -1
       ? $(this).show()
       : $(this).hide();
   });
-}
+};
+
 // Search
 
 // Option click
@@ -129,6 +158,15 @@ $(document).on("keydown", ".dropdown-select", function (event) {
     }
     return false;
   }
+});
+
+// Event listener for search input
+// $(document).on("keyup", "#txtSearchValue", function () {
+//   filter();
+// });
+
+$(document).on("keyup", ".dd-searchbox", function () {
+  window.filter(this);
 });
 
 // $(document).ready(function () {

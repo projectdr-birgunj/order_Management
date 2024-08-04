@@ -254,9 +254,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
 
-    headers.forEach((headerText) => {
+    headers.forEach((headerText, index) => {
       const th = document.createElement("th");
       th.textContent = headerText;
+      th.className = `header-cell-${index + 1}`;
       headerRow.appendChild(th);
     });
 
@@ -283,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const itemNameCell = document.createElement("td");
         const itemNameSelect = document.createElement("select");
         itemNameSelect.name = "itemName[]";
+        itemNameSelect.className = "item-name";
 
         itemNames.forEach((optionName) => {
           const option = document.createElement("option");
@@ -380,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addRowBtn.classList.add("form-btn");
     addRowBtn.type = "button";
     addRowBtn.addEventListener("click", function () {
+      $(".dropdown-select .list .dd-search").remove();
       addRow();
     });
 
@@ -406,6 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.appendChild(submitBtn);
     form.appendChild(toBillingBtn);
     container.appendChild(form);
+    create_custom_dropdowns();
   }
 
   function addRow() {
@@ -413,39 +417,88 @@ document.addEventListener("DOMContentLoaded", () => {
     const newRow = table.insertRow();
 
     const itemCell = newRow.insertCell(0);
+    const itemNameSelect = document.createElement("select");
+    itemNameSelect.name = "itemName[]";
+    itemNameSelect.className = "item-name";
 
-    let select = '<select name="itemName[]">';
     itemNames.forEach((item) => {
-      if (item === "Dosa") {
-        select += `<option value="${item}" selected>${item}</option>`;
-      } else {
-        select += `<option value="${item}">${item}</option>`;
-      }
+      const option = document.createElement("option");
+      option.value = item;
+      option.textContent = item;
+      // Set default selection
+      if (item === "Dosa") option.selected = true;
+      itemNameSelect.appendChild(option);
     });
-    select += "</select>";
-    itemCell.innerHTML = select;
+    itemCell.appendChild(itemNameSelect);
 
     const quantityCell = newRow.insertCell(1);
-    quantityCell.innerHTML = '<input type="number" name="quantity[]">';
+    const quantityInput = document.createElement("input");
+    quantityInput.type = "number";
+    quantityInput.name = "quantity[]";
+    quantityCell.appendChild(quantityInput);
 
     const noteCell = newRow.insertCell(2);
-    noteCell.innerHTML = '<input type="text" name="note[]">';
+    const noteInput = document.createElement("input");
+    noteInput.type = "text";
+    noteInput.name = "note[]";
+    noteCell.appendChild(noteInput);
 
     const dineInCell = newRow.insertCell(3);
-    dineInCell.innerHTML =
-      '<input type="text" name="dineIn[]" value="Yes" placeholder="Yes">';
+    const dineInInput = document.createElement("input");
+    dineInInput.type = "text";
+    dineInInput.name = "dineIn[]";
+    dineInInput.placeholder = "Yes"; // Placeholder for user guidance
+    dineInCell.appendChild(dineInInput);
 
     const actionCell = newRow.insertCell(4);
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.classList.add("deleteRowBtn");
-    deleteBtn.classList.add("form-btn");
+    deleteBtn.classList.add("deleteRowBtn", "form-btn");
     deleteBtn.type = "button";
-    deleteBtn.addEventListener("click", function () {
-      newRow.remove();
-    });
+    deleteBtn.addEventListener("click", () => newRow.remove()); // Use arrow function for cleaner syntax
     actionCell.appendChild(deleteBtn);
+    create_custom_dropdowns();
   }
+
+  // function addRow() {
+  //   const table = document.querySelector(".formTable tbody");
+  //   const newRow = table.insertRow();
+
+  //   const itemCell = newRow.insertCell(0);
+
+  //   let select = '<select name="itemName[]">';
+  //   itemNames.forEach((item) => {
+  //     if (item === "Dosa") {
+  //       select += `<option value="${item}" selected>${item}</option>`;
+  //     } else {
+  //       select += `<option value="${item}">${item}</option>`;
+  //     }
+  //   });
+  //   select += "</select>";
+  //   itemCell.innerHTML = select;
+
+  //   const quantityCell = newRow.insertCell(1);
+  //   quantityCell.innerHTML = '<input type="number" name="quantity[]">';
+
+  //   const noteCell = newRow.insertCell(2);
+  //   noteCell.innerHTML = '<input type="text" name="note[]">';
+
+  //   const dineInCell = newRow.insertCell(3);
+  //   dineInCell.innerHTML =
+  //     '<input type="text" name="dineIn[]" value="Yes" placeholder="Yes">';
+
+  //   const actionCell = newRow.insertCell(4);
+  //   const deleteBtn = document.createElement("button");
+  //   deleteBtn.textContent = "Delete";
+  //   deleteBtn.classList.add("deleteRowBtn");
+  //   deleteBtn.classList.add("form-btn");
+  //   deleteBtn.type = "button";
+  //   deleteBtn.addEventListener("click", function () {
+  //     newRow.remove();
+  //   });
+  //   actionCell.appendChild(deleteBtn);
+  //   // create_custom_dropdowns();
+  // }
 
   document.getElementById("logout")?.addEventListener("click", function () {
     window.location.href = "index.html";

@@ -1,0 +1,205 @@
+/* styles.css */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #4caf50;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+}
+
+header .logo {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  height: 60px;
+}
+
+header .logout-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background-color: #ff4b4b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+}
+
+header .logout-btn:hover {
+  background-color: #ff0000;
+}
+
+/* Form Styling */
+#editForm {
+  /* margin: 0 8rem; */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form input[type="submit"] {
+  width: 100%;
+  background-color: #35424a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 0;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+}
+
+form input[type="submit"]:hover {
+  background-color: #575757;
+}
+
+footer {
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+#orderIDHeader {
+  margin: 2rem 0 1rem 3rem;
+  padding: 0;
+  text-align: left;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#json-container {
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 641px) {
+  form {
+    /* max-width: 95%; */
+    margin: 0 2rem;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  select,
+  input[type="text"],
+  input[type="number"],
+  .deleteRowBtn {
+    padding: 0;
+  }
+}
+
+@media (min-width: 320px) {
+  form {
+    /* max-width: 95%; */
+    margin: 0 2rem;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  select,
+  input[type="text"],
+  input[type="number"],
+  .deleteRowBtn {
+    padding: 0;
+  }
+}
+
+.header-cell {
+  min-width: 100px; /* Minimum width */
+  max-width: 250px; /* Maximum width */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 8px;
+}
+
+/* General styles for all select and input elements */
+select,
+input[type="text"],
+input[type="number"],
+.deleteRowBtn {
+  background-color: #fff;
+  border-radius: 6px;
+  border: solid 1px #eee;
+  box-shadow: 0px 2px 5px 0px rgba(155, 155, 155, 0.5);
+  box-sizing: border-box;
+  /* display: block; */
+  font-size: 14px;
+  height: 42px;
+  /* line-height: 40px; */
+  /* outline: none; */
+  padding: 18px;
+  width: calc(100% - 10px); /* Ensures full width minus padding */
+  transition: all 0.2s ease-in-out;
+  /* width: auto; */
+  /* border: 3px solid red; */
+}
+
+.deleteRowBtn {
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  font-size: 16px; /* Font size */
+  width: calc(100% - 10px); /* Ensures full width minus padding */
+  margin-left: 2rem;
+}
+
+/* Specific styles for focused inputs */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #12cbc4;
+  box-shadow: 0 0 8px rgba(18, 203, 196, 0.5); /* Optional: adds a glow effect on focus */
+}
+
+/* Style adjustments for buttons to match inputs and select boxes */
+.form-btn {
+  background-color: #12cbc4;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 20px; /* Adjust padding to match the height of inputs */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+  margin: 5px;
+}
+
+.form-btn:hover {
+  background-color: #0f9ba8;
+}
+
+.formTable {
+  /* margin: 0 2rem 0 1.5rem; */
+  width: 100%;
+  table-layout: fixed;
+}
+
+.header-cell-2,
+.header-cell-4,
+.header-cell-5 {
+  width: 120px;
+}
