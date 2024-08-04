@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
           default:
             statusBtn.textContent = "Unknown Status"; // Optional: handle unexpected values
         }
-        statusBtn.classList.add("form-btn");
+        statusBtn.classList.add("statusBtn");
         statusBtn.disabled = true;
         statusCell.appendChild(statusBtn);
         statusBtn.style.color = "#fff";
@@ -367,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
         deleteBtn.classList.add("deleteRowBtn");
-        deleteBtn.classList.add("form-btn");
         deleteBtn.type = "button";
         deleteBtn.addEventListener("click", function () {
           row.remove();
@@ -402,7 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const deleteBtn = document.createElement("button");
       deleteBtn.textContent = "Delete";
       deleteBtn.classList.add("deleteRowBtn");
-      deleteBtn.classList.add("form-btn");
       deleteBtn.type = "button";
       deleteBtn.addEventListener("click", function () {
         blankRow.remove();
@@ -415,8 +413,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const addRowBtn = document.createElement("button");
     addRowBtn.textContent = "Add Row";
-    addRowBtn.classList.add("addRowBtn");
     addRowBtn.classList.add("form-btn");
+    addRowBtn.classList.add("addRowBtn");
     addRowBtn.type = "button";
     addRowBtn.addEventListener("click", function () {
       $(".dropdown-select .list .dd-search").remove();
@@ -425,8 +423,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const submitBtn = document.createElement("button");
     submitBtn.textContent = "Submit";
-    submitBtn.classList.add("submitBtn");
     submitBtn.classList.add("form-btn");
+    submitBtn.classList.add("submitBtn");
     submitBtn.type = "button";
     submitBtn.addEventListener("click", function () {
       submitData(button);
@@ -434,8 +432,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const toBillingBtn = document.createElement("button");
     toBillingBtn.textContent = "To Billing";
-    toBillingBtn.classList.add("toBillingBtn");
     toBillingBtn.classList.add("form-btn");
+    toBillingBtn.classList.add("toBillingBtn");
     toBillingBtn.type = "button";
     toBillingBtn.addEventListener("click", function () {
       toBillingData(button);
@@ -500,7 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const actionCell = newRow.insertCell(5);
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.classList.add("deleteRowBtn", "form-btn");
+    deleteBtn.classList.add("deleteRowBtn");
     deleteBtn.type = "button";
     deleteBtn.addEventListener("click", () => newRow.remove()); // Use arrow function for cleaner syntax
     actionCell.appendChild(deleteBtn);
