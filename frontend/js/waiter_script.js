@@ -7,6 +7,7 @@ import {
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+import { itemNames } from "./item_price.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -282,15 +283,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const itemNameCell = document.createElement("td");
         const itemNameSelect = document.createElement("select");
         itemNameSelect.name = "itemName[]";
-        const items = [
-          "Biryani",
-          "Chicken Momo",
-          "Shawarma",
-          "Dosa",
-          "Idli",
-          "Gulab Jamun",
-        ];
-        items.forEach((optionName) => {
+
+        itemNames.forEach((optionName) => {
           const option = document.createElement("option");
           option.value = optionName; // Set the value of the option
           option.textContent = optionName; // Set the text content of the option
