@@ -202,8 +202,8 @@ select {
 
 @media (max-width: 600px) {
   .dropdown-select {
-    white-space: nowrap; /* Prevents text from wrapping */
-    overflow: hidden; /* Hides the overflowed text */
+    white-space: nowrap;
+    /* overflow: hidden; */
     text-overflow: ellipsis; /* Adds ellipsis (...) for overflowed text */
   }
 }

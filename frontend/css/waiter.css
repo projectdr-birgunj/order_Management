@@ -115,7 +115,7 @@ input[type="number"],
   box-sizing: border-box;
   font-size: 14px;
   height: 42px;
-  padding: 18px;
+  padding: 8px;
   width: calc(100% - 10px);
   transition: all 0.2s ease-in-out;
 }
@@ -219,7 +219,7 @@ select:focus {
   .table-responsive td {
     /* border: 2px solid red; */
     position: relative;
-    padding-left: 25%;
+    padding-left: 30%;
     text-align: right;
     /* border-bottom: 1px solid #ddd; */
   }
