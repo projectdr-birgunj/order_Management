@@ -250,7 +250,14 @@ document.addEventListener("DOMContentLoaded", () => {
     table.classList.add("formTable");
     table.style.width = "100%";
 
-    const headers = ["Item Name", "Quantity", "Note", "Dine-In", "Action"];
+    const headers = [
+      "Item Name",
+      "Quantity",
+      "Note",
+      "Dine-In",
+      "Status",
+      "Action",
+    ];
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
 
@@ -325,6 +332,36 @@ document.addEventListener("DOMContentLoaded", () => {
         dineInInput.name = "dineIn[]";
         dineInCell.appendChild(dineInInput);
         row.appendChild(dineInCell);
+
+        const statusCell = document.createElement("td");
+        const statusBtn = document.createElement("button");
+
+        // Determine the button text based on the value of statusValue;
+        switch (item.chefStatus) {
+          case -1:
+            statusBtn.textContent = "Preparing";
+            statusBtn.style.backgroundColor = "#ffcc00";
+            break;
+          case 100:
+            statusBtn.textContent = "Not Started";
+            statusBtn.style.backgroundColor = "#7f8c8d";
+            break;
+          case 0:
+            statusBtn.textContent = "Cooked";
+            statusBtn.style.backgroundColor = "#00cc66";
+            break;
+          case 1:
+            statusBtn.textContent = "Delivered";
+            statusBtn.style.backgroundColor = "#3399ff";
+            break;
+          default:
+            statusBtn.textContent = "Unknown Status"; // Optional: handle unexpected values
+        }
+        statusBtn.classList.add("form-btn");
+        statusBtn.disabled = true;
+        statusCell.appendChild(statusBtn);
+        statusBtn.style.color = "#fff";
+        row.appendChild(statusCell);
 
         const actionCell = document.createElement("td");
         const deleteBtn = document.createElement("button");
@@ -447,10 +484,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const dineInInput = document.createElement("input");
     dineInInput.type = "text";
     dineInInput.name = "dineIn[]";
+    dineInInput.value = "Yes";
     dineInInput.placeholder = "Yes"; // Placeholder for user guidance
     dineInCell.appendChild(dineInInput);
 
-    const actionCell = newRow.insertCell(4);
+    const statusCell = newRow.insertCell(4);
+    const statusBtn = document.createElement("button");
+    statusBtn.textContent = "Not Started";
+    statusBtn.classList.add("form-btn");
+    statusBtn.value = 100;
+    statusBtn.type = "button";
+    statusBtn.style.backgroundColor = "#7f8c8d";
+    statusCell.appendChild(statusBtn);
+
+    const actionCell = newRow.insertCell(5);
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.classList.add("deleteRowBtn", "form-btn");
