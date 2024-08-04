@@ -5,6 +5,7 @@ import {
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+import { itemPrices } from "./item_price.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -81,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onload = displayOrders;
 
   function displayBillDetails(order, orderId) {
+    let billAmount = 0;
     const tableID = orderId.toLowerCase();
     const orderDetails = order["orderDetail"];
     var tableOneData = orderDetails[tableID]; // Accessing only the "Table-1" element
@@ -126,7 +128,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
 
-    const headers = ["Item Name", "Quantity", "Note", "Dine In", "Price"];
+    const headers = [
+      "Item Name",
+      "Quantity",
+      "Note",
+      "Dine In",
+      "Rate",
+      "Price",
+    ];
     headers.forEach((headerText) => {
       const th = document.createElement("th");
       th.textContent = headerText;
@@ -163,9 +172,17 @@ document.addEventListener("DOMContentLoaded", () => {
       dineInCell.textContent = item.dineIn;
       row.appendChild(dineInCell);
 
+      const rateCell = document.createElement("td");
+      rateCell.textContent = itemPrices[item.itemName] || 0;
+      row.appendChild(rateCell);
+
       // Calculate the price and create a cell for it
-      const price = 100; // Assuming the price for each item is 100
+      // Get the price from itemPrices based on item name
+      const price = itemPrices[item.itemName] || 0; // Default to 0 if item not found
       const totalPrice = price * parseInt(item.quantity, 10); // Calculate total price
+
+      billAmount += totalPrice;
+
       const priceCell = document.createElement("td");
       priceCell.textContent = `NRs. ${totalPrice.toFixed(2)}`; // Display price in fixed-point notation
       row.appendChild(priceCell);
@@ -177,26 +194,9 @@ document.addEventListener("DOMContentLoaded", () => {
       displayArea.appendChild(table);
     });
 
-    // // Display items ordered
-    // if (Array.isArray(itemsOrdered)) {
-    //   displayArea.innerHTML += "<h3>Items Ordered:</h3>";
-    //   itemsOrdered.forEach((item) => {
-    //     displayArea.innerHTML += `<p>Item Name: ${item.itemName}, Quantity: ${item.quantity}, Note: ${item.note}, Dine In: ${item.dineIn}</p>`;
-    //   });
-    // } else {
-    //   displayArea.innerHTML += "<p>No items ordered.</p>";
-    // }
+    displayArea.innerHTML += `<p>Total Amount: NRs: ${billAmount}</p>`;
   }
 
-  // Example HTML Structure
-  // Make sure to add this in your HTML file
-  // <div id="ordersContainer"></div>
-
-  // Example of calling the function
-  // displayOrders(exampleOrders, 'table1');
-
-  // fetchOrders();
-   
   // Adding logout functionality
   document.getElementById("logout")?.addEventListener("click", function () {
     localStorage.removeItem("isLoggedIn");

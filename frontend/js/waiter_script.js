@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
       // console.log("itemName" + itemName);
       const quantity = quantityInput ? Number(quantityInput.value.trim()) : 0;
-      const note = noteInput ? noteInput.value.trim() : null;
+      const note = noteInput ? noteInput.value.trim() : "_";
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
       // console.log("Final for i = :" + i + "\n" + chefStatus);
@@ -413,17 +413,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const newRow = table.insertRow();
 
     const itemCell = newRow.insertCell(0);
-    const items = [
-      "Biryani",
-      "Chicken Momo",
-      "Shawarma",
-      "Dosa",
-      "Idli",
-      "Gulab Jamun",
-    ];
 
     let select = '<select name="itemName[]">';
-    items.forEach((item) => {
+    itemNames.forEach((item) => {
       if (item === "Dosa") {
         select += `<option value="${item}" selected>${item}</option>`;
       } else {
@@ -447,6 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.classList.add("deleteRowBtn");
+    deleteBtn.classList.add("form-btn");
     deleteBtn.type = "button";
     deleteBtn.addEventListener("click", function () {
       newRow.remove();

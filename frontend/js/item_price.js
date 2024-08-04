@@ -26,9 +26,9 @@ const itemPrices = {
   "Ghee Laddu": 1200,
   "Mota Bundi Laddu": 1300,
   "Masala Laddu": 1300,
-  "Basan Laddu": 1300,
-  "Kaju Katti": 1800,
-  "Khuwa Burfi": 1800,
+  "Besan Laddu": 1300,
+  "Kaju Katli": 1800,
+  "Khowa Burfi": 1800,
   "Chocolate Burfi": 1400,
   Chamcham: 1250,
   "Kala Jamun": 1300,
@@ -40,12 +40,12 @@ const itemPrices = {
   "Mathura Peda": 1450,
   Rasbari: 40,
   "Lal Mohan": 45,
-  "Raj Bhoji": 85,
+  "Raj Bhoj": 85,
   Rasmalai: 150,
   // Breakfast Items
   Puri: 185,
   "Chole Bhature": 220,
-  "Alu Paratha": 270,
+  "Aloo Paratha": 270,
   "Roti Chole": 235,
   "Samosa Tarkari": 130,
   "Pakora Tarkari": 170,
@@ -72,7 +72,7 @@ const itemPrices = {
   // Thali Sets
   "South Indian Platter": 390,
   "Indian Thali Set": 400,
-  "SAURYA's SPECIAL THALI SET": 550,
+  "SAURYA'S SPECIAL THALI SET": 550,
   // Momo Items
   "Veg Steam Momo": 160,
   "Paneer Chilly Momo": 350,
@@ -82,12 +82,12 @@ const itemPrices = {
   // South Indian Items
   "Plain Dosa": 300,
   "Masala Dosa": 350,
-  "Panir Dosa": 350,
-  "Butter Masala Panir Dosa": 450,
+  "Paneer Dosa": 350,
+  "Butter Masala Paneer Dosa": 450,
   "Rawa Dosa": 350,
   "Rawa Masala Dosa": 350,
   "Paper Plain Dosa": 350,
-  "Idili Sambar": 250,
+  "Idli Sambar": 250,
   "Onion Uttapam": 260,
   "Masala Uttapam": 350,
   "Pav Bhaji": 350,
@@ -151,11 +151,11 @@ const itemNames = [
   "Pani Puri",
   // Sweets
   "Ghee Laddu",
-  "Motu Bundi Laddu",
+  "Mota Bundi Laddu",
   "Masala Laddu",
-  "Basan Laddu",
-  "Kaju Katti",
-  "Khuwa Burfi",
+  "Besan Laddu",
+  "Kaju Katli",
+  "Khowa Burfi",
   "Chocolate Burfi",
   "Chamcham",
   "Kala Jamun",
@@ -168,12 +168,12 @@ const itemNames = [
   "Rasbari",
   "Lal Mohan",
   "Raj Bhoj",
-  "Rasmai",
+  "Rasmalai",
   // Breakfast
   "Puri",
   "Chole Bhature",
-  "Alu Paratha",
-  "Roti Omelet",
+  "Aloo Paratha",
+  "Roti Chole",
   "Samosa Tarkari",
   "Pakorra Tarkari",
   "Idli Sambar",
@@ -209,8 +209,8 @@ const itemNames = [
   // South Indian Items
   "Plain Dosa",
   "Masala Dosa",
-  "Panir Dosa",
-  "Butter Masala Panir Dosa",
+  "Paneer Dosa",
+  "Butter Masala Paneer Dosa",
   "Rawa Dosa",
   "Rawa Masala Dosa",
   "Paper Plain Dosa",
@@ -253,3 +253,5 @@ const itemNames = [
 ];
 
 export { itemNames };
+
+export { itemPrices };
