@@ -135,8 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // displayOrders(exampleOrders, 'table1');
 
   // fetchOrders();
-
+   
+  // Adding logout functionality
   document.getElementById("logout")?.addEventListener("click", function () {
+    localStorage.removeItem("isLoggedIn");
+    alert("You have been logged out.");
     window.location.href = "index.html";
   });
 
