@@ -48,6 +48,8 @@ header .logout-btn:hover {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* border: 2px solid red; */
+  margin: 2rem;
 }
 
 form input[type="submit"] {
@@ -88,51 +90,9 @@ footer {
   margin: 0;
   padding: 0;
 }
-
-@media (min-width: 641px) {
-  form {
-      margin: 0 2rem;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  select,
-  input[type="text"],
-  input[type="number"],
-  .deleteRowBtn {
-      padding: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  body {
-      padding: 10px;
-  }
-  header {
-      padding: 10px 0;
-  }
-  header .logo {
-      height: 40px;
-      top: 5px;
-      left: 10px;
-  }
-  header h1 {
-      font-size: 1.2em;
-  }
-  header .logout-btn {
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      font-size: 14px;
-  }
-  #editForm {
-      padding: 10px;
-  }
-  form input[type="submit"] {
-      font-size: 14px;
-      padding: 8px 16px;
-  }
+.table-responsive {
+  width: 100%;
+  /* overflow-x: auto; */
 }
 
 .header-cell {
@@ -188,6 +148,7 @@ select:focus {
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
   margin: 5px;
+  margin-left: 0;
   /* width: 150px; */
 }
 
@@ -206,3 +167,124 @@ select:focus {
 .header-cell-6 {
   width: 120px;
 }
+
+@media (max-width: 600px) {
+  /* Force table elements to behave like blocks */
+  .table-responsive table,
+  .table-responsive thead,
+  .table-responsive tbody,
+  .table-responsive th,
+  .table-responsive td,
+  .table-responsive tr {
+    display: block;
+    border-radius: 10px;
+  }
+
+  /* Hide table headers on mobile */
+  .table-responsive thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  /* Style each cell with padding and full width */
+  .table-responsive td {
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+    /* border-bottom: 1px solid #ddd; */
+  }
+
+  /* Label the data */
+  .table-responsive td:before {
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  /* Assign label values based on their order */
+  .table-responsive td:nth-of-type(1):before {
+    content: "Item Name";
+  }
+  .table-responsive td:nth-of-type(2):before {
+    content: "Quantity";
+  }
+  .table-responsive td:nth-of-type(3):before {
+    content: "Note";
+  }
+  .table-responsive td:nth-of-type(4):before {
+    content: "Dine-In";
+  }
+  .table-responsive td:nth-of-type(5):before {
+    content: "Status";
+  }
+  .table-responsive td:nth-of-type(6):before {
+    content: "Action";
+  }
+
+  /* Style to place the second half of the row below the first half */
+  .table-responsive tr {
+    /* margin-bottom: 20px;  */
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .table-responsive td:nth-of-type(1),
+  .table-responsive td:nth-of-type(2),
+  .table-responsive td:nth-of-type(3),
+  .table-responsive td:nth-of-type(4),
+  .table-responsive td:nth-of-type(5),
+  .table-responsive td:nth-of-type(6) {
+    /* border: 2px solid red; */
+    clear: both; /* Starts a new line for Dine-In, Status, and Action */
+    display: flex;
+    align-items: center;
+    margin: 15px;
+  }
+
+  .table-responsive table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Light grey color for odd rows */
+  }
+
+  .table-responsive table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White color for even rows */
+  }
+
+  .addRowBtn .submitBtn .toBillingBtn {
+    margin-top: 20px;
+  }
+}
+
+/* @media (max-width: 640px) {
+  body {
+    padding: 10px;
+  }
+  header {
+    padding: 10px 0;
+  }
+  header .logo {
+    height: 40px;
+    top: 5px;
+    left: 10px;
+  }
+  header h1 {
+    font-size: 1.2em;
+  }
+  header .logout-btn {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  #editForm {
+    padding: 10px;
+  }
+  form input[type="submit"] {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+} */
