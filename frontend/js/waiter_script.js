@@ -314,6 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
         quantityInput.type = "number";
         quantityInput.value = item.quantity;
         quantityInput.name = "quantity[]";
+        quantityInput.required = true;
         quantityCell.appendChild(quantityInput);
         row.appendChild(quantityCell);
 
@@ -330,6 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dineInInput.type = "text";
         dineInInput.value = item.dineIn;
         dineInInput.name = "dineIn[]";
+        quantityInput.required = true;
         dineInCell.appendChild(dineInInput);
         row.appendChild(dineInCell);
 
@@ -385,7 +387,8 @@ document.addEventListener("DOMContentLoaded", () => {
       blankRow.appendChild(itemCell);
 
       const quantityCell = document.createElement("td");
-      quantityCell.innerHTML = '<input type="number" name="quantity[]">';
+      quantityCell.innerHTML =
+        '<input type="number" name="quantity[]" required>';
       blankRow.appendChild(quantityCell);
 
       const noteCell = document.createElement("td");
@@ -469,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const quantityCell = newRow.insertCell(1);
     const quantityInput = document.createElement("input");
     quantityInput.type = "number";
+    quantityInput.required = true;
     quantityInput.name = "quantity[]";
     quantityCell.appendChild(quantityInput);
 
