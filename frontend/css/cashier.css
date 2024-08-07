@@ -1,84 +1,78 @@
-@import url(https://fonts.googleapis.com/css2?family=Calistoga);
+/* cashier.css */
+
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
+  background: #f0f0f0;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: #eaeaea;
+  min-height: 100vh;
 }
 
 header {
-  background-color: #333;
-  color: white;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 10px;
-  text-align: center;
-  position: relative;
-  height: auto;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header .logo {
-  position: absolute;
-  left: 20px;
-  top: 10px;
   height: 50px;
 }
 
+header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
 header .logout-btn {
-  position: absolute;
-  right: 20px;
-  top: 10px;
-  background-color: #ff4b4b;
-  color: white;
+  background: #ff6347;
+  color: #fff;
   border: none;
   padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
   cursor: pointer;
-  border-radius: 12px;
-  transition: background-color 0.3s;
+  border-radius: 5px;
 }
 
-header .logout-btn:hover {
-  background-color: #ff0000;
+main {
+  flex: 1;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  border-radius: 10px;
 }
 
-h1 {
-  flex-grow: 1;
-  margin: 0;
+main h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+#buttonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#ordersContainer {
+  margin-top: 20px;
+}
+
+footer {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
   text-align: center;
+  padding: 10px 0;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  text-align: center;
-  margin: 1rem 2rem;
-  color: #343a40;
-}
-
-p {
-  font-family: "Calistoga";
-  text-align: left;
-  margin: 1rem 2rem 0 5.5rem;
-  color: #343a40;
-}
-
-.table-btn {
-  padding: 8px 16px; /* Padding inside buttons */
-  margin: 0 4px; /* Space between buttons */
-  background-color: #f8f9fa; /* Light grey background, change as necessary */
-  border: 1px solid #ccc; /* Grey border */
-  border-radius: 4px; /* Rounded corners */
-  font-size: 14px; /* Text size within button */
-  cursor: pointer; /* Cursor indicates clickable */
-  transition: background-color 0.3s ease; /* Smooth transition for background color */
-}
-
+/* Table Styles */
 #orderIDHeader {
   text-align: center;
   margin: 4rem 0 1rem 0;
@@ -120,41 +114,82 @@ tr.button-row td {
   background-color: #90ee90; /* Light gray */
 }
 
-footer {
-  width: 100%;
-  background-color: #383232;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-}
-
-main {
-  padding-bottom: 100px; /* Adjust this value based on the footer height */
-}
-
-/* Media queries for responsive design */
-@media (max-width: 640px) {
+/* Responsive Design */
+@media (max-width: 768px) {
   header {
     flex-direction: column;
-    align-items: center;
-    padding: 10px 0;
+    align-items: flex-start;
   }
-  header .logo {
-    height: 40px;
-    top: 5px;
-    left: 10px;
+
+  header h1 {
+    font-size: 20px;
   }
-  h1 {
-    font-size: 1.2em;
+
+  header .logout-btn {
+    width: 100%;
     text-align: center;
+    margin-top: 10px;
+  }
+
+  main {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  main h2 {
+    font-size: 18px;
+  }
+
+  footer {
+    font-size: 14px;
+  }
+
+  table {
     width: 100%;
   }
+}
+
+@media (max-width: 480px) {
+  header {
+    align-items: center;
+  }
+
+  header .logo {
+    height: 40px;
+  }
+
+  header h1 {
+    font-size: 18px;
+  }
+
   header .logout-btn {
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
     font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  main {
+    margin: 5px;
+    padding: 10px;
+  }
+
+  main h2 {
+    font-size: 16px;
+  }
+
+  footer {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
+
+  th {
+    font-size: 14px;
+  }
+
+  table {
+    width: 100%;
   }
 }
