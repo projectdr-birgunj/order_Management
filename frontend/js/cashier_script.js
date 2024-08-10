@@ -59,18 +59,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayOrders() {
+  async function displayOrders() {
     // Function to create buttons
     const buttonsContainer = document.getElementById("buttonsContainer");
+
+    const dbRef = ref(database);
+    const snapshot = await get(child(dbRef, "orders/"));
+    let orders = snapshot.val();
+
+    console.log("Orders: \n" + JSON.stringify(orders, null, 2));
+
     for (let i = 1; i <= 10; i++) {
+      let tableKey = "Table-" + i;
       const button = document.createElement("button");
       button.textContent = "Table " + i;
       button.setAttribute("data-table-no", "Table-" + i);
       button.classList.add("table-btn");
+
+      console.log(
+        "orders[tableKey].tableClosed: " + orders[tableKey].toBilling
+      );
+
+      if (orders) {
+        if (!(orders[tableKey].toBilling === "true")) {
+          // Disable the button if the table is closed
+          button.classList.add("disabled-btn");
+          button.disabled = true;
+        }
+      } else {
+        alert("Cannot fetch Order ID, Contact Developer");
+      }
+
       button.onclick = function () {
         const allButtons = document.querySelectorAll(".table-btn");
         allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-
+        console.log("Inside button clicked");
         // Add active class to the clicked button
         button.classList.add("active-btn");
         fetchOrders(button);
@@ -114,12 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const h2Element = document.createElement("h2");
     h2Element.id = "orderIDHeader";
     h2Element.textContent = `Order Details for : ${orderId}`;
+    const orderDetailsContainer = document.createElement("div");
+    orderDetailsContainer.classList.add("orderDetailsContainer");
     displayArea.appendChild(h2Element);
-    displayArea.innerHTML += `<p>Customer Name: ${custName}</p>`;
-    displayArea.innerHTML += `<p>Table Closed: ${tableClosed}</p>`;
-    displayArea.innerHTML += `<p>Time Stamp: ${timeStamp}</p>`;
+    orderDetailsContainer.innerHTML += `<p>Customer Name: ${custName}</p>`;
+    orderDetailsContainer.innerHTML += `<p>Table Closed: ${tableClosed}</p>`;
+    orderDetailsContainer.innerHTML += `<p>Time Stamp: ${timeStamp}</p>`;
     // displayArea.innerHTML += `<p>To Billing: ${toBilling}</p>`;
-    displayArea.innerHTML += `<p>Waiter Name: ${waiterName}</p>`;
+    orderDetailsContainer.innerHTML += `<p>Waiter Name: ${waiterName}</p>`;
+    displayArea.appendChild(orderDetailsContainer);
 
     // Create a table element
     const table = document.createElement("table");
@@ -194,7 +220,46 @@ document.addEventListener("DOMContentLoaded", () => {
       displayArea.appendChild(table);
     });
 
-    displayArea.innerHTML += `<p>Total Amount: NRs: ${billAmount}</p>`;
+    // Display the gross amount
+    displayArea.innerHTML += `<p>Gross Amount: NRs: ${billAmount}</p>`;
+
+    // Create the discount input field
+    const discountField = document.createElement("div");
+    discountField.classList.add("discount-container");
+    discountField.innerHTML =
+      '<label for="discount" class="label_discountInput">Discount:</label> <input type="number" id="discount" class="discountInput" name="discount" placeholder="Enter Discount amount if any" required>';
+    displayArea.appendChild(discountField);
+
+    // Initialize a variable to store the discount value
+    let discount_var = 0;
+
+    // Get a reference to the input field
+    const discountInput = document.getElementById("discount");
+
+    // Create the "Payment" button
+    const toPaymentBtn = document.createElement("button");
+    toPaymentBtn.textContent = "Payment";
+    toPaymentBtn.classList.add("payment-btn");
+    toPaymentBtn.type = "button";
+
+    // Add an event listener to the button to calculate the total amount
+    toPaymentBtn.addEventListener("click", function () {
+      // Get the discount value from the input field
+      discount_var = parseFloat(discountInput.value) || 0; // Parse the input value to a number, default to 0 if invalid
+
+      // Calculate the total amount after applying the discount
+      const totalAmount = billAmount - discount_var;
+
+      // Display the total amount
+      displayArea.innerHTML += `<p>Total Amount: NRs: ${totalAmount}</p>`;
+
+      // Additional logic for payment processing can be added here
+      console.log("Proceeding to payment with total amount:", totalAmount);
+      toPaymentDetails(button);
+    });
+
+    // Append the payment button to the display area
+    displayArea.appendChild(toPaymentBtn);
   }
 
   // Adding logout functionality

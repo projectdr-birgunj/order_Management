@@ -41,7 +41,7 @@ select {
   height: 42px;
   line-height: 40px;
   outline: none;
-  padding-left: 18px;
+  padding-left: 10px;
   padding-right: 30px;
   position: relative;
   text-align: left !important;
@@ -141,6 +141,7 @@ select {
   background-color: transparent !important;
 }
 .dropdown-select .dd-search {
+  position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -149,6 +150,8 @@ select {
 }
 
 .dropdown-select .dd-searchbox {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
   width: 90%;
   padding: 0.5rem;
   border: 1px solid #999;
@@ -201,7 +204,7 @@ select {
 }
 
 @media (max-width: 600px) {
-  .dropdown-select {
+  .dropdown-select:not(.open) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Adds ellipsis (...) for overflowed text */

@@ -1,7 +1,5 @@
-/* cashier.css */
-
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
   background: #f0f0f0;
@@ -61,6 +59,8 @@ main h2 {
 }
 
 #ordersContainer {
+  overflow-x: auto;
+  width: 100%;
   margin-top: 20px;
 }
 
@@ -82,114 +82,91 @@ footer {
 }
 
 table {
-  margin: 0 auto; /* Centers the table */
+  /* margin: 1rem 2rem 0 5.5rem; */
   margin-top: 1rem;
   border-collapse: collapse; /* Removes space between table cells */
-  width: 80%; /* Sets the table width to 80% of the parent container */
+  width: auto;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Adds a subtle shadow for depth */
+  border: 2px solid red;
 }
 
 th,
 td {
   margin: 1rem 0 1rem 0;
-  border: 1px solid #ddd; /* Adds a light border to cells */
-  padding: 12px 15px; /* Adds padding for better readability */
-  text-align: left; /* Aligns text to the left */
+  border: 1px solid #ddd;
 }
 
 th {
-  background-color: #f0f8ff; /* Sets a light background color for header cells */
-  font-weight: bold; /* Makes header text bold */
-  text-transform: uppercase; /* Transforms text to uppercase */
+  background-color: #f0f8ff;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 tr.button-row td {
-  padding: 8px 4px;
+  /* padding: 8px 4px; */
   border: none;
   text-align: center;
 }
 
 .first-pair {
-  padding: 1rem 0;
-  background-color: #90ee90; /* Light gray */
+  background-color: #90ee90;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  header h1 {
-    font-size: 20px;
-  }
-
-  header .logout-btn {
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  main {
-    margin: 10px;
-    padding: 15px;
-  }
-
-  main h2 {
-    font-size: 18px;
-  }
-
-  footer {
-    font-size: 14px;
-  }
-
-  table {
-    width: 100%;
-  }
+footer {
+  font-size: 12px;
 }
 
-@media (max-width: 480px) {
-  header {
-    align-items: center;
-  }
+th,
+td {
+  padding: 8px;
+}
 
-  header .logo {
-    height: 40px;
-  }
+th {
+  font-size: 14px;
+}
 
-  header h1 {
-    font-size: 18px;
-  }
+.payment-btn {
+  background-color: #12cbc4;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+  margin: 1rem 2rem 0 5.5rem;
+  /* width: 150px; */
+}
 
-  header .logout-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
+.payment-btn {
+  background-color: #12cbc4;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+  margin: 1rem 2rem 0 5.5rem;
+  /* width: 150px; */
+}
 
-  main {
-    margin: 5px;
-    padding: 10px;
-  }
-
-  main h2 {
-    font-size: 16px;
-  }
-
-  footer {
-    font-size: 12px;
-  }
-
-  th,
-  td {
-    padding: 8px;
-  }
-
-  th {
-    font-size: 14px;
-  }
-
-  table {
-    width: 100%;
-  }
+.discountInput {
+  background-color: #fff;
+  border-radius: 6px;
+  border: solid 1px #eee;
+  box-shadow: 0px 2px 5px 0px rgba(155, 155, 155, 0.5);
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 42px;
+  padding: 8px;
+  width: 65%;
+  transition: all 0.2s ease-in-out;
+}
+.label_discountInput {
+  font-family: "Ubuntu", sans-serif;
 }
