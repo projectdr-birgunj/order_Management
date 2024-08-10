@@ -72,7 +72,7 @@ const itemPrices = {
   // Thali Sets
   "South Indian Platter": 390,
   "Indian Thali Set": 400,
-  "SAURYA'S SPECIAL THALI SET": 550,
+  "Shauray's Special Thali Set": 550,
   // Momo Items
   "Veg Steam Momo": 160,
   "Paneer Chilly Momo": 350,
@@ -199,7 +199,7 @@ const itemNames = [
   // Thali Set
   "South Indian Platter",
   "Indian Thali Set",
-  "SAURYA'S SPECIAL THALI SET",
+  "Shauray's Special Thali Set",
   // Momo Items
   "Veg Steam Momo",
   "Paneer Chilly Momo",

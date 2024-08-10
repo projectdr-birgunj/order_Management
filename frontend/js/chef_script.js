@@ -188,13 +188,29 @@ document.addEventListener("DOMContentLoaded", () => {
     button.classList.add("active");
   }
 
-  function displayOrders() {
+  async function displayOrders() {
     const buttonsContainer = document.getElementById("order-list");
+
+    const dbRef = ref(database);
+    const snapshot = await get(child(dbRef, "orders/"));
+    let orders = snapshot.val();
+
     for (let i = 1; i <= 12; i++) {
+      let tableKey = "Table-" + i;
       const button = document.createElement("button");
       button.textContent = `Table ${i}`;
       button.setAttribute("data-table-no", `Table-${i}`);
       button.classList.add("table-btn");
+      if (orders) {
+        if (!(orders[tableKey].toBilling === "No")) {
+          // Disable the button if the table is closed
+          button.classList.add("disabled-btn");
+          button.disabled = true;
+        }
+      } else {
+        alert("Cannot fetch Order ID, Contact Developer");
+      }
+
       button.onclick = function () {
         const allButtons = document.querySelectorAll(".table-btn");
         allButtons.forEach((btn) => btn.classList.remove("active-btn"));

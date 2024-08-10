@@ -115,9 +115,10 @@ input[type="number"],
   box-sizing: border-box;
   font-size: 14px;
   height: 42px;
-  padding: 8px;
+  padding-left: 10px;
   width: calc(100% - 10px);
   transition: all 0.2s ease-in-out;
+  /* border: 2px solid red; */
 }
 
 .deleteRowBtn {
@@ -147,6 +148,7 @@ input[type="number"]:focus,
 select:focus {
   border-color: #12cbc4;
   box-shadow: 0 0 8px rgba(18, 203, 196, 0.5);
+  border-radius: 2px solid red;
 }
 
 .form-btn {
@@ -194,6 +196,14 @@ select:focus {
 .header-cell-5,
 .header-cell-6 {
   width: 120px;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.header-cell-1,
+.header-cell-3 {
+  text-align: left;
+  padding-left: 10px;
 }
 
 @media (max-width: 600px) {
@@ -272,7 +282,7 @@ select:focus {
     clear: both; /* Starts a new line for Dine-In, Status, and Action */
     display: flex;
     align-items: center;
-    margin: 15px;
+    margin: 15px 5px;
   }
 
   .table-responsive table tbody tr:nth-child(odd) {
@@ -290,47 +300,41 @@ select:focus {
 
 @media (min-width: 641px) {
   form {
-      margin: 0 2rem;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  select,
-  input[type="text"],
-  input[type="number"],
-  .deleteRowBtn {
-      padding: 0;
+    margin: 0 2rem;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 }
 
 @media (max-width: 640px) {
   body {
-      padding: 10px;
+    padding: 10px;
   }
   header {
-      padding: 10px 0;
+    padding: 10px 0;
   }
   header .logo {
-      height: 40px;
-      top: 5px;
-      left: 10px;
+    height: 40px;
+    top: 5px;
+    left: 10px;
   }
   header h1 {
-      font-size: 1.2em;
+    font-size: 1.2em;
   }
   header .logout-btn {
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      font-size: 14px;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
   }
   #editForm {
-      padding: 10px;
+    padding: 10px;
+    margin: 1rem;
   }
   form input[type="submit"] {
-      font-size: 14px;
-      padding: 8px 16px;
+    font-size: 14px;
+    padding: 8px 16px;
   }
 }
-
