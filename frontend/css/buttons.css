@@ -28,7 +28,7 @@
   box-sizing: border-box;
   /* gap: 10px; */
 }
-.table-btn:hover,
+/* .table-btn:hover,
 .table-btn:focus {
   -webkit-animation-name: wobble;
   animation-name: wobble;
@@ -38,13 +38,13 @@
   animation-timing-function: ease-in-out;
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
-}
+} */
 
 .active-btn {
-  background-color: #2ec4b6; /* Active state color */
-  color: #fff; /* White text color for contrast */
+  background-color: #2ec4b6;
+  color: #fff;
 }
-
+/* 
 @-webkit-keyframes wobble {
   16.65% {
     -webkit-transform: translateX(8px);
@@ -96,7 +96,7 @@
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-}
+} */
 
 button[disabled] {
   opacity: 0.5;
