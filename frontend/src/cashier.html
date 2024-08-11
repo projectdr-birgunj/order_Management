@@ -7,7 +7,8 @@
     <link rel="stylesheet" type="text/css" href="../css/cashier.css" />
     <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
     <script src="../js/cashier_script.js" type="module" defer></script>
-    <script src="../js/auth.js"></script><!-- Include the auth.js script -->
+    <script src="../js/auth.js"></script>
+    <!-- Include the auth.js script -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
@@ -27,6 +28,55 @@
       <h2>Tables</h2>
       <div id="buttonsContainer"></div>
       <div id="ordersContainer"></div>
+
+      <div class="popup-overlay hidden" id="popupOverlay">Testing Div</div>
+      <div class="popup hidden" id="paymentPopup">
+        <h2>Payment Details</h2>
+        <table class="popup-table">
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="itemDetails"></tbody>
+        </table>
+        <img src="../photos/payment_qr.jpg" alt="QR Code" id="qrCodeImage" />
+        <!-- <div>
+          <label for="messageInput">Message:</label>
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Enter your message here"
+          />
+        </div> -->
+        <!-- Message Section -->
+        <div class="message-section">
+          <label for="orderMessage">Write a message:</label>
+          <textarea
+            id="messageInput"
+            name="orderMessage"
+            rows="4"
+            placeholder="Type your message here..."
+          ></textarea>
+        </div>
+        <button id="paymentReceivedBtn" class="form-btn">
+          Payment Received
+        </button>
+        <button id="printButton" class="form-btn">Print</button>
+        <button id="closePopupButton" class="form-btn">Close</button>
+      </div>
+
+      <!-- New Confirmation Popup -->
+      <div id="confirmationPopup" class="popup hidden">
+        <div class="popup-content">
+          <p>Do you want to print the bill?</p>
+          <button id="yesButton" class="form-btn">Yes</button>
+          <button id="noButton" class="form-btn">No</button>
+        </div>
+      </div>
     </main>
     <footer>
       <p>&copy; 2024 OrderFlow</p>
