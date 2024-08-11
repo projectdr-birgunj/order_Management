@@ -48,7 +48,7 @@ const itemPrices = {
   "Aloo Paratha": 270,
   "Roti Chole": 235,
   "Samosa Tarkari": 130,
-  "Pakora Tarkari": 170,
+  "Pakorra Tarkari": 170,
   "Idli Sambar": 255,
   // Chaat Items
   "Mix Chaat": 250,
