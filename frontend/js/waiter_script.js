@@ -8,6 +8,7 @@ import {
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import { itemNames } from "./item_price.js";
+import { itemPrices } from "./item_price.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -120,6 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const note = noteInput ? noteInput.value.trim() : "_";
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
+      const rate = itemPrices[itemName] || 0;
+
       // console.log("Final for i = :" + i + "\n" + chefStatus);
       i++;
       // console.log(
@@ -140,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         note: note || null,
         dineIn: dineIn || null,
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
+        rate: rate !== 0 ? rate : 0,
       };
       // console.log(`Row Data ${Object.keys(data1).length}:`, rowData); // Logs with current index
 
@@ -300,6 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (hasData) {
       console.log("Inside Has Data" + data);
+      let accept_billing = false;
       data.forEach((item) => {
         console.log("Printing items: ", item);
         const row = document.createElement("tr");
@@ -359,18 +364,22 @@ document.addEventListener("DOMContentLoaded", () => {
           case -1:
             statusBtn.textContent = "Preparing";
             statusBtn.style.backgroundColor = "#ffcc00";
+            accept_billing = false;
             break;
           case 100:
             statusBtn.textContent = "Not Started";
             statusBtn.style.backgroundColor = "#7f8c8d";
+            accept_billing = false;
             break;
           case 0:
             statusBtn.textContent = "Cooked";
             statusBtn.style.backgroundColor = "#00cc66";
+            accept_billing = false;
             break;
           case 1:
             statusBtn.textContent = "Delivered";
             statusBtn.style.backgroundColor = "#3399ff";
+            accept_billing = true;
             break;
           default:
             statusBtn.textContent = "Unknown Status"; // Optional: handle unexpected values
