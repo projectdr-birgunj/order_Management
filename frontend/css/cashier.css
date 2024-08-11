@@ -170,3 +170,87 @@ th {
 .label_discountInput {
   font-family: "Ubuntu", sans-serif;
 }
+
+.popup {
+  /* display: none; */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 70%;
+  max-width: 90%; /* Allow the popup to be responsive */
+}
+.popup-overlay {
+  /* display: none; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.hidden {
+  display: none;
+}
+
+.popup-table {
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+#qrCodeImage {
+  width: 200px;
+  height: 200px;
+}
+
+.message-section {
+  margin-top: 20px;
+}
+
+.message-section label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.message-section textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.popup.hidden {
+  display: none; /* Hide the popup by default */
+}
+
+.popup-content {
+  text-align: center;
+}
+
+#confirmationPopup {
+  width: 300px; /* Adjust width as needed */
+}
+
+.form-btn {
+  background-color: #12cbc4;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+  margin: 5px;
+  /* width: 150px; */
+}

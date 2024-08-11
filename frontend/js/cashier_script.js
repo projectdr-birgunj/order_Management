@@ -2,10 +2,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebas
 import {
   getDatabase,
   ref,
+  update,
   get,
+  set,
   child,
+  remove,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import { itemPrices } from "./item_price.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -27,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchOrders(button) {
     try {
       const orderId = button.getAttribute("data-table-no");
-      const tableID = orderId.toLowerCase();
       // console.log("Inside orderID if:", tableID);
       if (orderId) {
         // console.log("Inside orderID if:", orderId);
@@ -59,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function displayOrders() {
+  async function createButtons() {
     // Function to create buttons
     const buttonsContainer = document.getElementById("buttonsContainer");
 
@@ -102,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.onload = displayOrders;
+  window.onload = createButtons;
 
   function displayBillDetails(order, orderId) {
     let billAmount = 0;
@@ -175,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tbody = document.createElement("tbody");
     let pairCounter = 0; // Add this line
 
-    tableOneData.forEach((item, index) => {
+    tableOneData.forEach((item) => {
       // console.log("pairCounter vefore: " + pairCounter);
       const rowClass = pairCounter % 2 === 1 ? "second-pair" : "first-pair"; // Modified line
       // console.log("pairCounter after: " + pairCounter);
@@ -199,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.appendChild(dineInCell);
 
       const rateCell = document.createElement("td");
-      rateCell.textContent = itemPrices[item.itemName] || 0;
+      rateCell.textContent = item.rate; //itemPrices[item.itemName] || 0;
       row.appendChild(rateCell);
 
       // Calculate the price and create a cell for it
@@ -238,28 +246,302 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create the "Payment" button
     const toPaymentBtn = document.createElement("button");
+    toPaymentBtn.id = "showPopupButton";
     toPaymentBtn.textContent = "Payment";
     toPaymentBtn.classList.add("payment-btn");
     toPaymentBtn.type = "button";
 
-    // Add an event listener to the button to calculate the total amount
     toPaymentBtn.addEventListener("click", function () {
-      // Get the discount value from the input field
-      discount_var = parseFloat(discountInput.value) || 0; // Parse the input value to a number, default to 0 if invalid
-
-      // Calculate the total amount after applying the discount
-      const totalAmount = billAmount - discount_var;
-
-      // Display the total amount
-      displayArea.innerHTML += `<p>Total Amount: NRs: ${totalAmount}</p>`;
-
-      // Additional logic for payment processing can be added here
-      console.log("Proceeding to payment with total amount:", totalAmount);
-      toPaymentDetails(button);
+      discount_var = parseFloat(discountInput.value) || 0;
+      updateTotal(orderId, discount_var, billAmount);
+      toPaymentDetails(tableOneData, orderId);
     });
 
     // Append the payment button to the display area
     displayArea.appendChild(toPaymentBtn);
+  }
+
+  async function updateTotal(orderId, discountAmount, billAmount) {
+    const discount = { discount: discountAmount };
+    const grossAmount = { grossAmount: billAmount };
+    const totalAmount = { totalAmount: billAmount - discountAmount };
+
+    try {
+      if (orderId) {
+        const reference = ref(database, "orders/" + orderId);
+        await update(reference, discount);
+        await update(reference, grossAmount);
+        await update(reference, totalAmount);
+      } else {
+        alert("Cannot fetch Order ID, Contact Developer");
+      }
+    } catch (error) {
+      console.error("Error writing data to Firebase:", error);
+    }
+  }
+
+  // const showPopupButton = document.getElementById("showPopupButton");
+  const paymentPopup = document.getElementById("paymentPopup");
+  const popupOverlay = document.getElementById("popupOverlay");
+  const itemDetails = document.getElementById("itemDetails");
+  const printButton = document.getElementById("printButton");
+  // const paymentButton = document.getElementById("printButton");
+  const closePopupButton = document.getElementById("closePopupButton");
+  const paymentReceivedBtn = document.getElementById("paymentReceivedBtn");
+  const confirmationPopup = document.getElementById("confirmationPopup");
+
+  // Function to show the confirmation popup
+  function showConfirmationPopup() {
+    confirmationPopup.classList.remove("hidden");
+  }
+
+  // Function to populate the table
+  function populateTable(itemList) {
+    console.log("Inside PopulateData");
+
+    itemDetails.innerHTML = ""; // Clear previous entries
+    itemList.forEach((item) => {
+      let total = item.rate * parseInt(item.quantity, 10);
+      console.log("Inside loop");
+      const row = document.createElement("tr");
+      row.innerHTML = `
+              <td>${item.itemName}</td>
+              <td>${item.quantity}</td>
+              <td>${item.rate}</td>
+              <td>${total}</td>
+          `;
+      itemDetails.appendChild(row);
+    });
+  }
+
+  // Function to open the popup
+  async function toPaymentDetails(tableOneData, orderID) {
+    console.log("Inside PaymentDetails" + orderID);
+    populateTable(tableOneData);
+    paymentPopup.classList.remove("hidden");
+    popupOverlay.classList.remove("hidden");
+    document.getElementById("messageInput").value = ""; // Clear the message input
+    console.log("Out of toPaymentDetails function ");
+  }
+
+  // Event listeners
+  // showPopupButton.addEventListener("click", toPaymentDetails);
+  closePopupButton.addEventListener("click", () => {
+    paymentPopup.classList.add("hidden");
+    popupOverlay.classList.add("hidden");
+    document.getElementById("messageInput").value = ""; // Clear the message input
+  });
+
+  paymentReceivedBtn.addEventListener("click", paymentReceivedFn);
+
+  async function paymentReceivedFn(tableOneData) {
+    // await moveToFirestore();
+    // await initializeTableWithDeafultValues();
+    console.log("Payment Received : " + tableOneData);
+    const moveToFirestoreResult = await moveToFirestore();
+
+    if (moveToFirestoreResult) {
+      await initializeTableWithDeafultValues();
+    }
+    showConfirmationPopup();
+  }
+
+  const yesButton = document.getElementById("yesButton");
+  const noButton = document.getElementById("noButton");
+
+  // Function to handle printing the bill
+  function printBill() {
+    // Implement your print logic here
+    window.print(); // This will open the print dialog
+    closePaymentPopup(); // Close the popups after printing
+  }
+
+  function closePaymentPopup() {
+    paymentPopup.classList.add("hidden");
+    popupOverlay.classList.add("hidden");
+    document.getElementById("messageInput").value = ""; // Clear the message input
+  }
+
+  // Event listener for Yes button
+  yesButton.addEventListener("click", function () {
+    printBill();
+    location.reload();
+  });
+
+  // Event listener for No button
+  noButton.addEventListener("click", () => {
+    confirmationPopup.classList.add("hidden");
+    location.reload();
+  });
+
+  printButton.addEventListener("click", printButtonFn);
+  function printButtonFn() {
+    const printContent = paymentPopup.innerHTML; // Get the content of the popup
+    const printWindow = window.open("", "", "height=600,width=800"); // Open a new window
+
+    // Write the HTML and include styles
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Print</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                    }
+                    h2 {
+                        color: #333;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    th, td {
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                ${printContent} <!-- Add the popup content -->
+            </body>
+        </html>
+    `);
+    printWindow.document.close(); // Close the document
+    printWindow.print(); // Trigger the print dialog
+    printWindow.close(); // Close the print window after printing
+  }
+
+  // Optional: Close the popup when clicking on the overlay
+  popupOverlay.addEventListener("click", () => {
+    paymentPopup.classList.add("hidden");
+    popupOverlay.classList.add("hidden");
+    document.getElementById("messageInput").value = ""; // Clear the message input
+  });
+
+  async function moveToFirestore() {
+    const tableButton = document.querySelector(".table-btn.active-btn");
+    const orderId = tableButton.dataset.tableNo;
+    console.log("moveToFirestore Enter with orderID: " + orderId);
+    // const tableKey = orderId.toLowerCase();
+    // const newTableKey = `${tableKey}_somedata`;
+    const dbFirestore = getFirestore(app);
+
+    try {
+      // Fetch order data from Realtime Database
+      const dbRef = ref(database);
+      const snapshot = await get(child(dbRef, "orders/" + orderId));
+      let orderData = snapshot.val();
+      if (orderData) {
+        console.log("moveToFirestore Snapshot exists");
+        console.log("Order Data: ", orderData);
+
+        const now = new Date();
+
+        // Format the date to YYYYMMDD
+        const formattedDate = now.toISOString().split("T")[0].replace(/-/g, ""); // e.g., '20240811'
+        const timeStampStr = now.toTimeString().split(" ")[0].replace(/:/g, ""); // e.g., '11:18:23'
+        const dataDocName = `${orderId}_${formattedDate}_${timeStampStr}`;
+
+        // const dateDocRef = doc(
+        //   dbFirestore,
+        //   `orders/data_${formattedDate}/${orderId}`
+        // );
+
+        // await setDoc(doc(dateDocRef, dataDocName), data);
+        // console.log(
+        //   `Order data stored at: orders/data_${formattedDate}/${dataDocName}`
+        // );
+
+        try {
+          await setDoc(
+            doc(
+              dbFirestore,
+              `orders/data_${formattedDate}/${orderId}`,
+              dataDocName
+            ),
+            orderData
+          );
+          console.log(
+            `Order data stored at: orders/data_${formattedDate}/${dataDocName}`
+          );
+        } catch (error) {
+          console.error("Error writing document: ", error);
+          return false; // Execution failed
+        }
+
+        // Write the data to Firestore
+        // await setDoc(
+        //   doc(collection(dbFirestore, "orders"), newTableKey),
+        //   orderData
+        // );
+
+        // Optionally, remove the original order from Realtime Database
+        const entryRef = ref(database, "orders/" + orderId);
+        await remove(entryRef)
+          .then(() => {
+            console.log("Entry removed successfully");
+          })
+          .catch((error) => {
+            console.error("Error removing entry: ", error);
+          });
+
+        alert("Payment received and order moved to Firestore!");
+        return true;
+      } else {
+        console.error("No data available for this table.");
+        alert("No order found for this table.");
+      }
+    } catch (error) {
+      console.error("Error fetching or moving data: ", error);
+      alert("An error occurred. Please try again.");
+    }
+  }
+
+  async function initializeTableWithDeafultValues() {
+    const tableButton = document.querySelector(".table-btn.active-btn");
+    const orderId = tableButton.dataset.tableNo;
+    console.log(
+      "initializeTableWithDeafultValues Enter with orderID: " + orderId
+    );
+    const tableID = orderId.toLowerCase();
+    const data = {
+      tableClosed: "No",
+      toBilling: "No",
+      custName: "Rajnish",
+      orderDetail: {
+        [tableID]: [
+          {
+            chefStatus: 100,
+            dineIn: "Yes",
+            itemName: "Paneer Curry",
+            note: "",
+            quantity: 0,
+          },
+        ],
+      },
+      tableClosed: "Yes",
+      timeStamp: "2024-07-28_11:10:11",
+      toBilling: "No",
+      waiterName: "Sumna",
+    };
+
+    try {
+      if (orderId) {
+        const reference = ref(database, "orders/" + orderId);
+        await set(reference, data);
+        console.log("Orders submitted successfully!");
+      } else {
+        alert("Cannot fetch Order ID, Contact Developer");
+      }
+    } catch (error) {
+      console.error("Error writing data to Firebase:", error);
+      alert("Error submitting orders. Please try again.");
+    }
   }
 
   // Adding logout functionality
