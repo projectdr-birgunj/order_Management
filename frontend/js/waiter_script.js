@@ -254,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function displayJsonData(data, button, orderId) {
+    let accept_billing = false;
     console.log("Inside displayJson Data" + "Button:\t\n" + button);
     const container = document.getElementById("json-container");
     container.innerHTML = "";
@@ -304,7 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (hasData) {
       console.log("Inside Has Data" + data);
-      let accept_billing = false;
       data.forEach((item) => {
         console.log("Printing items: ", item);
         const row = document.createElement("tr");
@@ -464,7 +464,14 @@ document.addEventListener("DOMContentLoaded", () => {
     toBillingBtn.classList.add("toBillingBtn");
     toBillingBtn.type = "button";
     toBillingBtn.addEventListener("click", function () {
-      toBillingData(button);
+      if (accept_billing) {
+        toBillingData(button);
+      } else {
+        // Show the popup
+        showPopup(function () {
+          toBillingData(button); // Call toBillingData if user clicks Yes
+        });
+      }
     });
 
     form.appendChild(table);
@@ -534,45 +541,28 @@ document.addEventListener("DOMContentLoaded", () => {
     create_custom_dropdowns();
   }
 
-  // function addRow() {
-  //   const table = document.querySelector(".formTable tbody");
-  //   const newRow = table.insertRow();
+  function showPopup(callback) {
+    // Show overlay and popup
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").style.display = "block";
 
-  //   const itemCell = newRow.insertCell(0);
+    // Yes button action
+    document.getElementById("yesBtn").onclick = function () {
+      callback(); // Call the passed function
+      hidePopup(); // Hide the popup after clicking Yes
+    };
 
-  //   let select = '<select name="itemName[]">';
-  //   itemNames.forEach((item) => {
-  //     if (item === "Dosa") {
-  //       select += `<option value="${item}" selected>${item}</option>`;
-  //     } else {
-  //       select += `<option value="${item}">${item}</option>`;
-  //     }
-  //   });
-  //   select += "</select>";
-  //   itemCell.innerHTML = select;
+    // No button action
+    document.getElementById("noBtn").onclick = function () {
+      hidePopup(); // Just hide the popup on No
+    };
+  }
 
-  //   const quantityCell = newRow.insertCell(1);
-  //   quantityCell.innerHTML = '<input type="number" name="quantity[]">';
-
-  //   const noteCell = newRow.insertCell(2);
-  //   noteCell.innerHTML = '<input type="text" name="note[]">';
-
-  //   const dineInCell = newRow.insertCell(3);
-  //   dineInCell.innerHTML =
-  //     '<input type="text" name="dineIn[]" value="Yes" placeholder="Yes">';
-
-  //   const actionCell = newRow.insertCell(4);
-  //   const deleteBtn = document.createElement("button");
-  //   deleteBtn.textContent = "Delete";
-  //   deleteBtn.classList.add("deleteRowBtn");
-  //   deleteBtn.classList.add("form-btn");
-  //   deleteBtn.type = "button";
-  //   deleteBtn.addEventListener("click", function () {
-  //     newRow.remove();
-  //   });
-  //   actionCell.appendChild(deleteBtn);
-  //   // create_custom_dropdowns();
-  // }
+  function hidePopup() {
+    // Hide overlay and popup
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("popup").style.display = "none";
+  }
 
   document.getElementById("logout")?.addEventListener("click", function () {
     localStorage.removeItem("isLoggedIn");

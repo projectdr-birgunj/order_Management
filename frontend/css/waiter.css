@@ -342,11 +342,13 @@ select:focus {
 #popup {
   display: none; /* Initially hidden */
   position: fixed;
+  width: 80%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
   border: 1px solid #ccc;
+  border-radius: 10px;
   padding: 20px;
   z-index: 1000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
