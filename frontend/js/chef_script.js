@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.classList.add("active");
   }
 
-  async function displayOrders() {
+  async function createButtons() {
     const buttonsContainer = document.getElementById("order-list");
 
     const dbRef = ref(database);
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.onload = displayOrders;
+  window.onload = createButtons;
 
   document.getElementById("logout")?.addEventListener("click", function () {
     localStorage.removeItem("isLoggedIn");
