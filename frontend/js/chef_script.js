@@ -9,12 +9,14 @@ import {
   update,
   get,
   child,
+  onValue,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import {
   getFirestore,
   doc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
+// import Swal from "sweetalert2";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -227,6 +229,43 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add active class to the clicked button
     button.classList.add("active");
   }
+  console.log("Script is running, Firebase initialized.");
+  const notificationsRef = ref(database, "notifications");
+
+  let previousTableNo = null;
+
+  onValue(
+    notificationsRef,
+    (snapshot) => {
+      console.log("Inside code");
+      const notoficationObj = snapshot.val();
+
+      if (notoficationObj.tableNo !== previousTableNo) {
+        // Check if table number has changed
+        Swal.fire({
+          title: "New Table Number!",
+          text:
+            "Table number " + notoficationObj.tableNo + " has been updated.",
+          icon: "info",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
+
+        playNotificationSound();
+
+        previousTableNo = tableNo; // Update previousTableNo for subsequent checks
+      }
+    },
+    (error) => {
+      console.error("Error listening for changes:", error);
+    }
+  );
+
+  function playNotificationSound() {
+    const audio = new Audio("../sound/sound.mp3"); // Replace with your sound file path
+    audio.play();
+  }
 
   async function createButtons() {
     const buttonsContainer = document.getElementById("order-list");
@@ -243,6 +282,12 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("table-btn");
       if (orders) {
         if (!(orders[tableKey].toBilling === false)) {
+          console.log(
+            "Tbale number with toBilling value" +
+              tableKey +
+              "\t" +
+              orders[tableKey].toBilling
+          );
           // Disable the button if the table is closed
           button.classList.add("disabled-btn");
           button.disabled = true;
@@ -307,34 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Error updating order status. Please try again.");
     }
   }
-
-  // window.onload = createButtons;
-
-  // document.getElementById("logout")?.addEventListener("click", function () {
-  //   localStorage.removeItem("isLoggedIn");
-  //   alert("You have been logged out.");
-  //   window.location.href = "index.html";
-  // });
-
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (!user) {
-  //     // No user is signed in, redirect to login page
-  //     window.location.href = "login.html";
-  //   } else {
-  //     try {
-  //       const userDocRef = doc(db, "users", user.uid);
-  //       const userDoc = await getDoc(userDocRef);
-
-  //       if (!userDoc.exists() || userDoc.data().role !== "chef") {
-  //         // User document does not exist or role is not 'chef'
-  //         window.location.href = "login.html";
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //       window.location.href = "login.html";
-  //     }
-  //   }
-  // });
 
   const logoutButton = document.getElementById("logout");
 
