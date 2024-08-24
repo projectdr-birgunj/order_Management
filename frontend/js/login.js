@@ -1,19 +1,18 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+// Import Firebase modules (ESM)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import {
   getAuth,
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 import {
-  getDatabase,
-  ref,
-  set,
-  update,
-  get,
-  child,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
-import { itemNames } from "./item_price.js";
-import { itemPrices } from "./item_price.js";
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
   authDomain: "resturant-order-1d2b3.firebaseapp.com",
@@ -25,71 +24,103 @@ const firebaseConfig = {
   measurementId: "G-4TS2JLW1BY",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const database = firebase.database();
+const db = getFirestore(app);
 
-function storeUserData(user, role) {
-  const userId = user.uid;
-  database.ref("users/" + userId).set({
-    email: user.email,
-    role: role,
-    lastLogin: new Date().toISOString(),
-  });
-}
+// Registration
+document
+  .getElementById("registerForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-function redirectToRolePage(role) {
-  switch (role) {
-    case "Waiter":
-      window.location.href = "waiter.html";
-      break;
-    case "Chef":
-      window.location.href = "chef.html";
-      break;
-    case "Cashier":
-      window.location.href = "cashier.html";
-      break;
-    case "Admin":
-      window.location.href = "admin.html";
-      break;
-    default:
-      alert("Role not recognized");
-  }
-}
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+    const role = document.getElementById("registerRole").value;
+    const name = document.getElementById("registerName").value;
 
-// Login function
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  auth
-    .signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-      database
-        .ref("users/" + user.uid)
-        .once("value")
-        .then((snapshot) => {
-          const userData = snapshot.val();
-          if (userData) {
-            storeUserData(user, userData.role);
-            redirectToRolePage(userData.role);
-          } else {
-            alert("No role assigned. Please contact admin.");
-          }
-        });
-    })
-    .catch((error) => {
-      alert("Login failed: " + error.message);
-    });
-}
+
+      // Save user role in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: role,
+        name: name,
+      });
+
+      alert("User registered successfully!");
+      document.getElementById("registerForm").reset();
+    } catch (error) {
+      document.getElementById("registerErrorMessage").textContent =
+        error.message;
+    }
+  });
+
+// Login
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    // Fetch user role from Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    const role = userDoc.data().role;
+
+    switch (role) {
+      case "waiter":
+        window.location.href = "waiter.html";
+        break;
+      case "chef":
+        window.location.href = "chef.html";
+        break;
+      case "cashier":
+        window.location.href = "cashier.html";
+        break;
+      case "admin":
+        window.location.href = "admin.html";
+        break;
+      default:
+        document.getElementById("loginErrorMessage").textContent =
+          "Invalid role or user not assigned a role.";
+    }
+  } catch (error) {
+    document.getElementById("loginErrorMessage").textContent = error.message;
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-  const loginButton = document.getElementById("loginButton");
+  const registerSection = document.getElementById("registerSection");
+  const loginSection = document.getElementById("loginSection");
+  const showRegisterLink = document.getElementById("showRegister");
+  const showLoginLink = document.getElementById("showLogin");
 
-  if (loginButton) {
-    loginButton.addEventListener("click", login);
-  } else {
-    console.error("Login button not found");
-  }
+  // Show login form and hide registration form
+  showLoginLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    registerSection.style.display = "none";
+    loginSection.style.display = "block";
+  });
+
+  // Show registration form and hide login form
+  showRegisterLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    registerSection.style.display = "block";
+    loginSection.style.display = "none";
+  });
 });
