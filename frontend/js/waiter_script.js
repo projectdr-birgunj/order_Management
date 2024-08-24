@@ -183,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
-      const waiterName = waiterNamePlaceHolder;
       i++;
       // console.log(
       //   "itemNameInput" +
@@ -204,10 +203,9 @@ document.addEventListener("DOMContentLoaded", () => {
         dineIn: dineIn || null,
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
         rate: rate !== 0 ? rate : 0,
-        waiterName: waiterName || null,
       };
 
-      console.log("Waiter Name +" + waiterName);
+      // console.log("Waiter Name +" + waiterName);
       // console.log(`Row Data ${Object.keys(data1).length}:`, rowData); // Logs with current index
 
       // Store rowData in data1 object with numeric keys
@@ -218,13 +216,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log("Final data1:", data1);
 
     const data = { [tableID]: data1 };
+    const waiterNameVar = {
+      waiterName: JSON.stringify(waiterNamePlaceHolder, null, 2),
+    };
     // console.log("Data:" + data + "\ntableID" + tableID);
 
     try {
       //   const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
         const reference = ref(database, "orders/" + orderId + "/orderDetail/");
+        const waiterNameRef = ref(database, "orders/" + orderId);
         await update(reference, data);
+        await update(waiterNameRef, waiterNameVar);
         alert("Orders submitted successfully!");
         location.reload(); // Reload the page
       } else {
