@@ -1,11 +1,20 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+import {
   getDatabase,
   ref,
   update,
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -21,6 +30,37 @@ const firebaseConfig = {
 document.addEventListener("DOMContentLoaded", () => {
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      try {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log("User Role = " + userData.role);
+          if (userData.role === "chef") {
+            // Ensure the role matches what you have in Firestore
+            document.body.style.display = "block"; // Show the content
+            createButtons(); // Call createButtons now that the user is authenticated
+          } else {
+            // console.log("User Role = " + userData.role + "but not waiter");
+            window.location.href = "login.html"; // Redirect if the role is not Waiter
+          }
+        } else {
+          console.error("No such user document!");
+          window.location.href = "login.html"; // Redirect if no user document is found
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        window.location.href = "login.html"; // Redirect on error
+      }
+    } else {
+      window.location.href = "login.html"; // Redirect if not signed in
+    }
+  });
 
   async function fetchOrderDetails(button) {
     try {
@@ -202,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("data-table-no", `Table-${i}`);
       button.classList.add("table-btn");
       if (orders) {
-        if (!(orders[tableKey].toBilling === "No")) {
+        if (!(orders[tableKey].toBilling === false)) {
           // Disable the button if the table is closed
           button.classList.add("disabled-btn");
           button.disabled = true;
@@ -268,11 +308,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.onload = createButtons;
+  // window.onload = createButtons;
 
-  document.getElementById("logout")?.addEventListener("click", function () {
-    localStorage.removeItem("isLoggedIn");
-    alert("You have been logged out.");
-    window.location.href = "index.html";
-  });
+  // document.getElementById("logout")?.addEventListener("click", function () {
+  //   localStorage.removeItem("isLoggedIn");
+  //   alert("You have been logged out.");
+  //   window.location.href = "index.html";
+  // });
+
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (!user) {
+  //     // No user is signed in, redirect to login page
+  //     window.location.href = "login.html";
+  //   } else {
+  //     try {
+  //       const userDocRef = doc(db, "users", user.uid);
+  //       const userDoc = await getDoc(userDocRef);
+
+  //       if (!userDoc.exists() || userDoc.data().role !== "chef") {
+  //         // User document does not exist or role is not 'chef'
+  //         window.location.href = "login.html";
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       window.location.href = "login.html";
+  //     }
+  //   }
+  // });
+
+  const logoutButton = document.getElementById("logout");
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          // Sign-out successful.
+          console.log("User signed out");
+          // Redirect to login page or another page
+          window.location.href = "login.html";
+        })
+        .catch((error) => {
+          // An error happened.
+          console.error("Sign-out error:", error);
+        });
+    });
+  }
 });

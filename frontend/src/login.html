@@ -1,51 +1,138 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>OrderFlow - Login</title>
     <!-- Linking the new CSS file -->
     <link rel="stylesheet" type="text/css" href="../css/login.css" />
     <!-- Importing Boxicons for icons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
-<body>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <!-- Added wrapper for new styles -->
     <header>
-        <a href="index.html">
-            <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo" />
-        </a>
-        <h1>OrderFlow</h1>
-        <!-- Exit button added -->
-        <button onclick="location.href='index.html'" class="exit-btn">Exit</button>
+      <a href="index.html">
+        <img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="logo"
+        />
+      </a>
+      <h1>Homepage</h1>
     </header>
 
     <div class="wrapper">
-        <form id="loginForm" onsubmit="return validateLogin()">
-            <img src="../photos/orderflowlogo.png" alt="OrderFlow Logo" class="logo" />
-            <h1>Login</h1>
-            <div class="input-box">
-                <input type="text" id="username" name="username" placeholder="Username" required />
-                <i class='bx bxs-user'></i>
+      <!-- Registration Form -->
+      <div id="registerSection" style="display: none">
+        <h1>Registration</h1>
+        <form id="registerForm" method="post">
+          <!-- <label for="registerEmail">Email:</label>
+          <input type="email" id="registerEmail" required />
+          <br /> -->
+          <div class="input-box">
+            <input
+              type="text"
+              id="registerName"
+              name="name"
+              placeholder="Name"
+              required
+            />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="email"
+              id="registerEmail"
+              name="email"
+              placeholder="Email"
+              required
+            />
+            <i class="bx bxs-envelope"></i>
+          </div>
+          <!-- <label for="registerPassword">Password:</label>
+          <input type="password" id="registerPassword" required />
+          <br /> -->
+          <div class="input-box">
+            <input
+              type="password"
+              id="registerPassword"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <div class="form-group">
+            <label for="registerRole" class="role-label">Role:</label>
+            <div class="select-container">
+              <select id="registerRole" class="select-box">
+                <option value="waiter">Waiter</option>
+                <option value="chef">Chef</option>
+                <option value="cashier">Cashier</option>
+                <option value="admin">Admin</option>
+              </select>
+              <i class="bx bxs-chevron-down select-icon"></i>
             </div>
-            <div class="input-box">
-                <input type="password" id="password" name="password" placeholder="Password" required />
-                <i class='bx bxs-lock-alt'></i>
-            </div>
-            <div class="remember-forget">
-                <label><input type="checkbox" name="remember"> Remember me</label>
-                <a href="#">Forget Password?</a>
-            </div>
-            <button type="submit" class="btn">Login</button>
-            <div class="register-link">
-                <p>Don't have an account?<a href="#"> Register</a></p>
-            </div>
+          </div>
+          <button type="submit" class="btn">Register</button>
         </form>
+        <p id="registerErrorMessage"></p>
+        <div class="register-link">
+          <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginSection">
+        <img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="logo"
+        />
+        <h1>Login</h1>
+        <form id="loginForm" method="post">
+          <div class="input-box">
+            <input
+              type="email"
+              id="loginEmail"
+              name="email"
+              placeholder="Email"
+              required
+            />
+            <i class="bx bxs-envelope"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <div class="remember-forget">
+            <label><input type="checkbox" name="remember" /> Remember me</label>
+            <a href="#">Forget Password?</a>
+          </div>
+          <button type="submit" class="btn">Login</button>
+          <p id="loginErrorMessage"></p>
+          <div class="register-link">
+            <p>
+              Don't have an account? <a href="#" id="showRegister">Register</a>
+            </p>
+          </div>
+        </form>
+      </div>
     </div>
 
     <footer>
-        <p>&copy; 2024 OrderFlow</p>
+      <p>&copy; 2024 OrderFlow</p>
     </footer>
 
     <!-- Linking the external JavaScript file -->
-    <script src="../js/login.js"></script>
-</body>
+    <script src="../js/test_script.js" type="module" defer></script>
+  </body>
 </html>

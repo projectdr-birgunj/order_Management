@@ -1,14 +1,26 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+import {
   getDatabase,
   ref,
-  set,
   update,
   get,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
+
 import { itemNames } from "./item_price.js";
 import { itemPrices } from "./item_price.js";
+
+let waiterNamePlaceHolder;
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -26,6 +38,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      try {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log("User Role = " + userData.role);
+          waiterNamePlaceHolder = userData.name;
+          if (waiterNamePlaceHolder == null) {
+            waiterNamePlaceHolder = "Not available";
+          }
+          if (userData.role === "waiter") {
+            // Ensure the role matches what you have in Firestore
+            document.body.style.display = "block"; // Show the content
+            createButtons(); // Call createButtons now that the user is authenticated
+          } else {
+            //console.log("User Role = " + userData.role + "but not waiter");
+            window.location.href = "login.html"; // Redirect if the role is not Waiter
+          }
+        } else {
+          console.error("No such user document!");
+          window.location.href = "login.html"; // Redirect if no user document is found
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        window.location.href = "login.html"; // Redirect on error
+      }
+    } else {
+      window.location.href = "login.html"; // Redirect if not signed in
+    }
+  });
+
+  function logout() {
+    console.log("Logout called");
+    signOut(auth)
+      .then(() => {
+        console.log("Logout called");
+        // window.location.href = "login.html"; // Redirect to login page after successful logout
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
+  }
+  const logoutButton = document.getElementById("logout");
+  logoutButton.addEventListener("click", logout);
 
   // Function to create buttons
   async function createButtons() {
@@ -43,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("table-btn");
 
       if (orders) {
-        if (!(orders[tableKey].toBilling === "No")) {
+        if (!(orders[tableKey].toBilling === false)) {
           // Disable the button if the table is closed
           button.classList.add("disabled-btn");
           button.disabled = true;
@@ -64,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Create buttons when the page loads
-  window.onload = createButtons;
+  // window.onload = createButtons;
 
   // Function to add leading zeroes
   function pad(number) {
@@ -122,8 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
-
-      // console.log("Final for i = :" + i + "\n" + chefStatus);
+      const waiterName = waiterNamePlaceHolder;
       i++;
       // console.log(
       //   "itemNameInput" +
@@ -144,7 +204,10 @@ document.addEventListener("DOMContentLoaded", () => {
         dineIn: dineIn || null,
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
         rate: rate !== 0 ? rate : 0,
+        waiterName: waiterName || null,
       };
+
+      console.log("Waiter Name +" + waiterName);
       // console.log(`Row Data ${Object.keys(data1).length}:`, rowData); // Logs with current index
 
       // Store rowData in data1 object with numeric keys
@@ -563,10 +626,4 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("overlay").style.display = "none";
     document.getElementById("popup").style.display = "none";
   }
-
-  document.getElementById("logout")?.addEventListener("click", function () {
-    localStorage.removeItem("isLoggedIn");
-    alert("You have been logged out.");
-    window.location.href = "index.html";
-  });
 });
