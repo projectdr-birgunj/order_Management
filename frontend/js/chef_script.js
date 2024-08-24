@@ -243,12 +243,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (notoficationObj.tableNo !== previousTableNo) {
         // Check if table number has changed
         Swal.fire({
-          title: "New Table Number!",
+          title: "New Order Received",
           text:
             "Table number " + notoficationObj.tableNo + " has been updated.",
           icon: "info",
-          showConfirmButton: false,
-          timer: 3000,
+          showConfirmButton: true,
+          // timer: 30000,
         });
         console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
 
