@@ -1,5 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+import {
   getDatabase,
   ref,
   update,
@@ -13,7 +17,7 @@ import {
   getFirestore,
   collection,
   doc,
-  setDoc,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -32,6 +36,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      try {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log("User Role = " + userData.role);
+          if (userData.role === "cashier") {
+            // Ensure the role matches what you have in Firestore
+            document.body.style.display = "block"; // Show the content
+            createButtons(); // Call createButtons now that the user is authenticated
+          } else {
+            console.log("User Role = " + userData.role + "but not waiter");
+            //window.location.href = "login.html"; // Redirect if the role is not Waiter
+          }
+        } else {
+          console.error("No such user document!");
+          window.location.href = "login.html"; // Redirect if no user document is found
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        //window.location.href = "login.html"; // Redirect on error
+      }
+    } else {
+      window.location.href = "login.html"; // Redirect if not signed in
+    }
+  });
+
+  function logout() {
+    console.log("Logout called");
+    signOut(auth)
+      .then(() => {
+        console.log("Logout called");
+        // window.location.href = "login.html"; // Redirect to login page after successful logout
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
+  }
+  const logoutButton = document.getElementById("logout");
+  logoutButton.addEventListener("click", logout);
 
   async function fetchOrders(button) {
     try {
@@ -110,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  window.onload = createButtons;
+  // window.onload = createButtons;
 
   function displayBillDetails(order, orderId) {
     let billAmount = 0;
@@ -444,6 +493,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Format the date to YYYYMMDD
         const formattedDate = now.toISOString().split("T")[0].replace(/-/g, ""); // e.g., '20240811'
+        // const yearMonth = formattedDate.slice(0, 6); // Extract 'YYYYMM' from 'YYYYMMDD'
+        // const year = yearMonth.slice(0, 4); // Extract 'YYYYMM' from 'YYYYMMDD'
         const timeStampStr = now.toTimeString().split(" ")[0].replace(/:/g, ""); // e.g., '11:18:23'
         const dataDocName = `${orderId}_${formattedDate}_${timeStampStr}`;
 
@@ -456,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // console.log(
         //   `Order data stored at: orders/data_${formattedDate}/${dataDocName}`
         // );
-
+        // `orders/data_${year}/data_${yearMonth}/data_${formattedDate}/${orderId}`,
         try {
           await setDoc(
             doc(
@@ -510,8 +561,8 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const tableID = orderId.toLowerCase();
     const data = {
-      tableClosed: "No",
-      toBilling: "No",
+      tableClosed: false,
+      toBilling: false,
       custName: "Rajnish",
       orderDetail: {
         [tableID]: [
@@ -524,9 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ],
       },
-      tableClosed: "Yes",
       timeStamp: "2024-07-28_11:10:11",
-      toBilling: "No",
       waiterName: "Sumna",
     };
 
@@ -543,13 +592,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Error submitting orders. Please try again.");
     }
   }
-
-  // Adding logout functionality
-  document.getElementById("logout")?.addEventListener("click", function () {
-    localStorage.removeItem("isLoggedIn");
-    alert("You have been logged out.");
-    window.location.href = "index.html";
-  });
 
   document
     .getElementById("generate-bill")

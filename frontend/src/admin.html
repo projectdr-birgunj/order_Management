@@ -13,13 +13,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/admin.css" />
     <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
     <link rel="stylesheet" type="text/css" href="../css/dropdown_search.css" />
-    <link rel="stylesheet" type="text/css" href="../css/waiter.css" />
     <script src="../js/dropdown_search.js" type="module" defer></script>
-    <script src="../js/waiter_script.js" type="module" defer></script>
-    <!-- <script src="../js/auth.js"></script> -->
-    <title>Waiter</title>
+    <script src="../js/admin_script.js" type="module" defer></script>
+    <script src="../js/auth.js"></script>
+    <title>Add Row Example</title>
   </head>
   <body>
     <header>
@@ -28,16 +28,27 @@
         alt="OrderFlow Logo"
         class="logo"
       />
-      <h1>Waiter - Dining Tables</h1>
+      <h1>Admin</h1>
       <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
+    <div class="extra-div">
+      <button id="chefStatusButton" class="form-btn extra-btn">
+        Chef Status
+      </button>
+      <button id="orderHistoryButton" class="form-btn extra-btn">
+        Order History
+      </button>
+    </div>
     <div id="buttonsContainer"></div>
-    <div id="json-container" class="table-responsive"></div>
-
+    <div id="ordersContainer" class="table-responsive"></div>
+    <div id="ordersHistoryContainer" class="table-responsive"></div>
+    <select id="collectionSelect">
+      <option value="">Select a path</option>
+    </select>
+    <div id="dataDisplay"></div>
     <div id="overlay"></div>
-    <!-- Popup content -->
     <div id="popup">
-      <p>All items not delivered!! Do you still want to go for billing?</p>
+      <p>Are you sure?</p>
       <button id="yesBtn" class="button form-btn">Yes</button>
       <button id="noBtn" class="button form-btn">No</button>
     </div>

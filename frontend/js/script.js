@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       tableClosed: "No",
       timeStamp: "2024-07-28_11:10:11",
-      toBilling: "No",
+      toBilling: "true",
       waiterName: "Sumna",
     };
 
