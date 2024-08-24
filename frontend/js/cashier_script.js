@@ -19,6 +19,7 @@ import {
   collection,
   doc,
   getDoc,
+  setDoc,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -96,11 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
           // console.log("Inside orders if:", orders);
           const to_billing_var = order["toBilling"];
           // console.log("to_billing", to_billing_var);
-          if (to_billing_var != "true") {
+          if (to_billing_var != true) {
             alert("Table not cleared yet! Please wait");
             location.reload(); // Reload the page
             return;
-          } else if (to_billing_var == "true") {
+          } else if (to_billing_var == true) {
             displayBillDetails(order, orderId);
           } else {
             alert("This should not show. Please contact Developer!!");
@@ -139,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (orders) {
-        if (!(orders[tableKey].toBilling === "true")) {
+        if (!(orders[tableKey].toBilling === true)) {
           // Disable the button if the table is closed
           button.classList.add("disabled-btn");
           button.disabled = true;

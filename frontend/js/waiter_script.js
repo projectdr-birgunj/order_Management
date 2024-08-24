@@ -9,6 +9,7 @@ import {
   ref,
   update,
   get,
+  push,
   child,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import {
@@ -226,8 +227,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (orderId) {
         const reference = ref(database, "orders/" + orderId + "/orderDetail/");
         const waiterNameRef = ref(database, "orders/" + orderId);
+        const notificationRef = ref(database, "notifications");
         await update(reference, data);
         await update(waiterNameRef, waiterNameVar);
+        await update(notificationRef, {
+          tableNo: orderId,
+          message: `A new order has been placed for ${orderId}!`,
+          timestamp: Date.now(),
+        });
+        // .then(() => {
+        //   console.log("Notification sent!");
+        // })
+        // .catch((error) => {
+        //   console.error("Error sending notification: ", error);
+        // });
         alert("Orders submitted successfully!");
         location.reload(); // Reload the page
       } else {
@@ -242,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function toBillingData(button) {
     const to_billing_var = true;
     const orderId = button.getAttribute("data-table-no");
-    const data = { toBilling: JSON.stringify(to_billing_var, null, 2) };
+    const data = { toBilling: true };
     console.log("Data:" + data);
 
     // Store the timestamp in a variable
