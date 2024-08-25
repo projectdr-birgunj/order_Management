@@ -12,6 +12,7 @@ import {
   set,
   child,
   remove,
+  onValue,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import { itemPrices } from "./item_price.js";
 import {
@@ -593,6 +594,43 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error writing data to Firebase:", error);
       alert("Error submitting orders. Please try again.");
     }
+  }
+
+  const notificationsRef = ref(database, "notificationsToCashier");
+
+  let previousTableNo = null;
+
+  onValue(
+    notificationsRef,
+    (snapshot) => {
+      console.log("Inside code");
+      const notoficationObj = snapshot.val();
+
+      if (notoficationObj.tableNo !== previousTableNo) {
+        // Check if table number has changed
+        Swal.fire({
+          title: "Bill Generated",
+          text:
+            "Table number " + notoficationObj.tableNo + " has been generated.",
+          icon: "info",
+          showConfirmButton: true,
+          // timer: 30000,
+        });
+        console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
+
+        playNotificationSound();
+
+        previousTableNo = notoficationObj.tableNo; // Update previousTableNo for subsequent checks
+      }
+    },
+    (error) => {
+      console.error("Error listening for changes:", error);
+    }
+  );
+
+  function playNotificationSound() {
+    const audio = new Audio("../sound/ting_only.mp3"); // Replace with your sound file path
+    audio.play();
   }
 
   document

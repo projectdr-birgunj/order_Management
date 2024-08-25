@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         playNotificationSound();
 
-        previousTableNo = tableNo; // Update previousTableNo for subsequent checks
+        previousTableNo = notoficationObj.tableNo; // Update previousTableNo for subsequent checks
       }
     },
     (error) => {
