@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log("Data:" + data + "\ntableID" + tableID);
 
     try {
-      //   const orderId = document.getElementById("tableSelect").value;
       if (orderId) {
         const reference = ref(database, "orders/" + orderId + "/orderDetail/");
         const waiterNameRef = ref(database, "orders/" + orderId);
@@ -235,13 +234,6 @@ document.addEventListener("DOMContentLoaded", () => {
           message: `A new order has been placed for ${orderId}!`,
           timestamp: Date.now(),
         });
-        // .then(() => {
-        //   console.log("Notification sent!");
-        // })
-        // .catch((error) => {
-        //   console.error("Error sending notification: ", error);
-        // });
-        alert("Orders submitted successfully!");
         location.reload(); // Reload the page
       } else {
         alert("Cannot fetch Order ID, Contact Developer");
@@ -271,6 +263,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const reference = ref(database, "orders/" + orderId);
         await update(reference, data);
         await update(reference, timestamp_field);
+        const notificationRef = ref(database, "notificationsToCashier");
+        await update(notificationRef, {
+          tableNo: orderId,
+          message: `Bill Generated for ${orderId}!`,
+          timestamp: Date.now(),
+        });
         alert("Bill Generated. Plz visit cashier");
         location.reload(); // Reload the page
       } else {
