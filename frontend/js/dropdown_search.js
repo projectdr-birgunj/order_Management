@@ -1,6 +1,6 @@
 // let valThis;
-window.create_custom_dropdowns = function () {
-  $("select.item-name").each(function (i, select) {
+window.create_custom_dropdowns = function (classNameParam) {
+  $("select." + classNameParam).each(function (i, select) {
     if (!$(this).next().hasClass("dropdown-select")) {
       $(this).after(
         '<div class="dropdown-select wide ' +
@@ -18,7 +18,7 @@ window.create_custom_dropdowns = function () {
         dropdown
           .find("ul")
           .append(
-            '<li class="option ' +
+            '<li id="dropdownLI" class="option ' +
               ($(o).is(":selected") ? "selected" : "") +
               '" data-value="' +
               $(o).val() +

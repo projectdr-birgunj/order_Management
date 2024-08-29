@@ -1,54 +1,53 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
 import {
-  getDatabase,
+  database,
+  auth,
+  db,
+  itemPrices,
+  itemNames,
+  onAuthStateChanged,
+  signOut,
   ref,
-  set,
   update,
   get,
   child,
-} from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
-import { itemNames } from "./item_price.js";
-import { itemPrices } from "./item_price.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
   doc,
-} from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
-  authDomain: "resturant-order-1d2b3.firebaseapp.com",
-  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
-  projectId: "resturant-order-1d2b3",
-  storageBucket: "resturant-order-1d2b3.appspot.com",
-  messagingSenderId: "971852262554",
-  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
-  measurementId: "G-4TS2JLW1BY",
-};
+  getDoc,
+} from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const db = getFirestore(app);
-
   document
     .getElementById("chefStatusButton")
     .addEventListener("click", function () {
       // Call the createButtons function
-      createButtons();
-
       // Remove display: none to show the containers
-      document.getElementById("buttonsContainer").style.display = "";
-      document.getElementById("ordersContainer").style.display = "";
+      document.getElementById("buttonsContainer").classList.remove("hidden");
+      document.getElementById("ordersContainer").classList.remove("hidden");
+      document.getElementById("ordersHistoryContainer").classList.add("hidden");
+      document.getElementById("changeItemContainer").classList.add("hidden");
+      // Call the createButtons function
+      createButtons();
     });
 
   document
     .getElementById("orderHistoryButton")
     .addEventListener("click", function () {
-      document.getElementById("buttonsContainer").style.display = "none";
-      document.getElementById("ordersContainer").style.display = "none";
+      document.getElementById("buttonsContainer").classList.add("hidden");
+      document.getElementById("ordersContainer").classList.add("hidden");
+      document
+        .getElementById("ordersHistoryContainer")
+        .classList.remove("hidden");
+      document.getElementById("changeItemContainer").classList.add("hidden");
       displayOrderHistory();
+    });
+
+  document
+    .getElementById("changeItemButton")
+    .addEventListener("click", function () {
+      document.getElementById("buttonsContainer").classList.add("hidden");
+      document.getElementById("ordersContainer").classList.add("hidden");
+      document.getElementById("ordersHistoryContainer").classList.add("hidden");
+      document.getElementById("changeItemContainer").classList.remove("hidden");
+      displayChangeItem();
     });
 
   const collectionSelect = document.getElementById("collectionSelect");
@@ -457,5 +456,103 @@ document.addEventListener("DOMContentLoaded", () => {
     // Hide overlay and popup
     document.getElementById("overlay").style.display = "none";
     document.getElementById("popup").style.display = "none";
+  }
+
+  // import { itemNames, itemPrices } from './yourFirebaseModule'; // Import item data from Firebase
+
+  const changeItemContainer = document.getElementById("changeItemContainer");
+  // const changeItemButton = document.getElementById("changeItemButton");
+  const editButtonContainer = document.createElement("div");
+  function displayChangeItem() {
+    changeItemContainer.innerHTML = "";
+
+    // Create Edit button
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.classList.add("form-btn");
+    editButton.addEventListener("click", () => {
+      editButtonContainer.className = "editButtonContainer";
+      // Show dropdown menu and input fields for editing
+      showDropdownAndRate("Edit", itemNames, itemPrices);
+      // hideOtherButtons(editButton);
+      create_custom_dropdowns("admin-item-name");
+    });
+
+    // Create Delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("form-btn");
+    deleteButton.addEventListener("click", () => {
+      // Show dropdown menu and confirmation for deleting
+      showDropdownAndConfirmation("Delete", itemNames);
+      hideOtherButtons(deleteButton);
+    });
+
+    // Create Add button
+    const addButton = document.createElement("button");
+    addButton.textContent = "Add";
+    addButton.classList.add("form-btn");
+    addButton.addEventListener("click", () => {
+      // Show input fields for adding a new item
+      showInputFields("Add");
+      hideOtherButtons(addButton);
+    });
+
+    // Append buttons to container
+    changeItemContainer.appendChild(editButton);
+    changeItemContainer.appendChild(deleteButton);
+    changeItemContainer.appendChild(addButton);
+    changeItemContainer.appendChild(editButtonContainer);
+  }
+
+  function showDropdownAndRate() {
+    const itemNameSelect = document.createElement("select");
+    itemNameSelect.name = "itemName[]";
+    itemNameSelect.className = "admin-item-name";
+
+    itemNames.forEach((optionName) => {
+      const option = document.createElement("option");
+      option.value = optionName; // Set the value of the option
+      option.textContent = optionName; // Set the text content of the option
+
+      itemNameSelect.appendChild(option);
+    });
+
+    const p = document.createElement("p");
+    p.className = "p-admin-item-name"; // Set the class for styling
+    $(document).on("click", ".dropdown-select .option", function () {
+      console.log("Inside event listener for dropdown");
+
+      // Remove "selected" class from all <li> elements within .dropdown-select
+      $(this).siblings().removeClass("selected");
+
+      // Add "selected" class to the clicked <li>
+      $(this).addClass("selected");
+
+      // Retrieve and store the value of the newly selected <li>
+      let selectItem = getSelectedValue();
+      const price = itemPrices[selectItem];
+      p.textContent = `Price: ${price}`;
+    });
+
+    editButtonContainer.appendChild(itemNameSelect);
+    editButtonContainer.appendChild(p);
+  }
+
+  function getSelectedValue() {
+    // Find the <li> element with the class "selected"
+    const selectedLi = $(".dropdown-select").find("li.selected");
+
+    // Get the value from the data-value attribute of the selected <li>
+    const selectedValue = selectedLi.data("value");
+
+    // Store the value in a variable
+    var storedValue = selectedValue;
+
+    // Log the value to verify
+    console.log("Stored Value:", storedValue);
+
+    // Return the stored value if needed
+    return storedValue;
   }
 });

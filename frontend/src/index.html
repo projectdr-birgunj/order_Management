@@ -3,17 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Firebase Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
   </head>
   <body>
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button id="loginButton">Login</button>
+    <script type="module">
+      import {
+        fetchItemPrices,
+        fetchItemNames,
+        showAlert,
+      } from "../js/commonUtilityMgr.js";
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x/firebase-database.js"></script>
-    <script src="../js/login.js" type="module" defer></script>
+      async function displayData() {
+        try {
+          const itemPrices = await fetchItemPrices();
+          const itemNames = await fetchItemNames();
+
+          console.log("Item Prices:", itemPrices);
+          console.log("Item Names:", itemNames);
+
+          showAlert(
+            "Data Loaded",
+            "Item prices and names have been fetched successfully."
+          );
+        } catch (error) {
+          showAlert("Error", "There was an error loading the data.");
+        }
+      }
+
+      displayData();
+    </script>
   </body>
 </html>
