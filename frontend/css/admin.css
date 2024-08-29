@@ -356,3 +356,22 @@ select:focus {
 .button {
   margin: 5px;
 }
+
+.hidden {
+  display: none !important;
+}
+
+.admin-item-name {
+  width: 80%;
+  margin-left: 3rem;
+  float: none !important;
+}
+
+.p-admin-item-name {
+  margin: 3rem;
+  margin-top: 1rem;
+}
+
+.editButtonContainer {
+  display: block;
+}

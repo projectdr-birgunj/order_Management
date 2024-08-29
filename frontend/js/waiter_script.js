@@ -1,46 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
-  getAuth,
+  database,
+  auth,
+  db,
+  itemPrices,
+  itemNames,
   onAuthStateChanged,
   signOut,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
-import {
-  getDatabase,
   ref,
   update,
   get,
-  push,
   child,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
-import {
-  getFirestore,
   doc,
   getDoc,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
-
-import { itemNames } from "./item_price.js";
-import { itemPrices } from "./item_price.js";
+} from "../js/commonUtilityMgr.js";
 
 let waiterNamePlaceHolder;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
-  authDomain: "resturant-order-1d2b3.firebaseapp.com",
-  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
-  projectId: "resturant-order-1d2b3",
-  storageBucket: "resturant-order-1d2b3.appspot.com",
-  messagingSenderId: "971852262554",
-  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
-  measurementId: "G-4TS2JLW1BY",
-};
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
-
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -381,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     if (hasData) {
-      console.log("Inside Has Data" + data);
+      // console.log("Inside Has Data" + data);
       data.forEach((item) => {
         console.log("Printing items: ", item);
         const row = document.createElement("tr");
@@ -556,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.appendChild(submitBtn);
     form.appendChild(toBillingBtn);
     container.appendChild(form);
-    create_custom_dropdowns();
+    create_custom_dropdowns("item-name");
   }
 
   function addRow() {
@@ -615,7 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteBtn.type = "button";
     deleteBtn.addEventListener("click", () => newRow.remove()); // Use arrow function for cleaner syntax
     actionCell.appendChild(deleteBtn);
-    create_custom_dropdowns();
+    create_custom_dropdowns("item-name");
   }
 
   function showPopup(callback) {
