@@ -11,7 +11,11 @@ import {
   get,
   child,
   doc,
-  getDoc,
+  deleteDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -470,13 +474,101 @@ document.addEventListener("DOMContentLoaded", () => {
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
     editButton.classList.add("form-btn");
+
     editButton.addEventListener("click", () => {
       editButtonContainer.className = "editButtonContainer";
-      // Show dropdown menu and input fields for editing
+
       showDropdownAndRate("Edit", itemNames, itemPrices);
-      // hideOtherButtons(editButton);
+      // Create input fields for ItemName and ItemPrice
+      const itemNameInput = document.createElement("input");
+      itemNameInput.type = "text";
+      itemNameInput.placeholder = "Enter Item Name";
+      itemNameInput.classList.add("item-input");
+
+      const itemPriceInput = document.createElement("input");
+      itemPriceInput.type = "number";
+      itemPriceInput.placeholder = "Enter Item Price";
+      itemPriceInput.classList.add("item-input");
+
+      const editSubmitButton = document.createElement("button");
+      editSubmitButton.textContent = "Submit";
+      editSubmitButton.classList.add("form-btn");
+
+      // Append input fields to the container
+      editButtonContainer.appendChild(itemNameInput);
+      editButtonContainer.appendChild(itemPriceInput);
+      editButtonContainer.appendChild(editSubmitButton);
+
+      editSubmitButton.addEventListener("click", async () => {
+        let itemName = itemNameInput.value.trim();
+        let itemPrice = itemPriceInput.value;
+
+        // Retrieve selected item and price from dropdown
+        const selectItem = getSelectedValue();
+        const price = itemPrices[selectItem];
+
+        // Handle empty inputs
+        if (!itemName) {
+          itemName = selectItem;
+        }
+        if (!itemPrice) {
+          itemPrice = price;
+        }
+
+        if (!itemName || !itemPrice) {
+          // Show error if both inputs are empty
+          alert("Error: Empty value received for Item Name or Item Price.");
+        } else {
+          // Update Firestore with the new or existing values
+          try {
+            // Check if the item name needs to be changed
+            if (itemName !== selectItem) {
+              // Create a new document with the new item name and price
+              const newItemDocRef = doc(db, "itemPrices", itemName);
+              await setDoc(newItemDocRef, {
+                price: parseFloat(itemPrice),
+              });
+
+              console.log("New item document successfully created!");
+
+              // Delete the old document
+              const oldItemDocRef = doc(db, "itemPrices", selectItem);
+              await deleteDoc(oldItemDocRef);
+
+              console.log("Old item document successfully deleted!");
+
+              // Update the `itemNames` array if the itemName was changed
+              const itemNamesDocRef = doc(db, "itemNames", "names"); // Replace 'namesDocId' with the actual document ID
+
+              await updateDoc(itemNamesDocRef, {
+                names: arrayUnion(itemName),
+              });
+
+              await updateDoc(itemNamesDocRef, {
+                names: arrayRemove(selectItem), // Remove old name
+              });
+
+              console.log("Item name successfully added to names array!");
+              editButtonContainer.innerHTML = "";
+            } else {
+              // Update price if item name hasn't changed
+              const itemPriceDocRef = doc(db, "itemPrices", itemName);
+              await updateDoc(itemPriceDocRef, {
+                price: parseFloat(itemPrice),
+              });
+              editButtonContainer.innerHTML = "";
+            }
+          } catch (error) {
+            console.error("Error updating document: ", error);
+          }
+        }
+      });
+
+      // Initialize custom dropdowns
       create_custom_dropdowns("admin-item-name");
     });
+
+    editButtonContainer.appendChild(editButton);
 
     // Create Delete button
     const deleteButton = document.createElement("button");

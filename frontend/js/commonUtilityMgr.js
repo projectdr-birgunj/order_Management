@@ -18,7 +18,12 @@ import {
   doc,
   getDoc,
   getDocs,
+  setDoc,
   collection,
+  updateDoc,
+  arrayUnion,
+  deleteDoc,
+  arrayRemove,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 // import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
 
@@ -115,4 +120,9 @@ export {
   child,
   doc,
   getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  deleteDoc,
+  arrayRemove,
 };
