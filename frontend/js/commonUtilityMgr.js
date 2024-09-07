@@ -25,7 +25,7 @@ import {
   deleteDoc,
   arrayRemove,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
-// import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
+// import * as Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -80,12 +80,16 @@ async function fetchItemNames() {
 }
 
 // SweetAlert2 utility function
-function showAlert(title, text) {
+function showAlert(title, text, shouldReload = true) {
   Swal.fire({
     title: title,
     text: text,
     icon: "info",
     confirmButtonText: "OK",
+  }).then((result) => {
+    if (result.isConfirmed && shouldReload) {
+      location.reload();
+    }
   });
 }
 
@@ -120,7 +124,9 @@ export {
   child,
   doc,
   getDoc,
+  getDocs,
   setDoc,
+  collection,
   updateDoc,
   arrayUnion,
   deleteDoc,
