@@ -1,11 +1,11 @@
 import {
   database,
   auth,
+  onAuthStateChanged,
+  signOut,
   db,
   itemPrices,
   itemNames,
-  onAuthStateChanged,
-  signOut,
   ref,
   update,
   get,
@@ -13,12 +13,61 @@ import {
   doc,
   deleteDoc,
   setDoc,
+  getDoc,
+  getDocs,
   updateDoc,
   arrayUnion,
   arrayRemove,
+  showAlert,
+  collection,
 } from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      try {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          if (userData.role === "admin") {
+            // Ensure the role matches what you have in Firestore
+            document.body.style.display = "block"; // Show the content
+            // createButtons(); // Call createButtons now that the user is authenticated
+          } else {
+            //console.log("User Role = " + userData.role + "but not waiter");
+            window.location.href = "login.html"; // Redirect if the role is not Waiter
+          }
+        } else {
+          console.error("No such user document!");
+          window.location.href = "login.html"; // Redirect if no user document is found
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        window.location.href = "login.html"; // Redirect on error
+      }
+    } else {
+      window.location.href = "login.html"; // Redirect if not signed in
+    }
+  });
+
+  function logout() {
+    console.log("Logout called");
+    signOut(auth)
+      .then(() => {
+        console.log("Logout called");
+        // window.location.href = "login.html"; // Redirect to login page after successful logout
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
+  }
+  const logoutButton = document.getElementById("logout");
+  logoutButton.addEventListener("click", function () {
+    console.log("Logout clicked");
+    logout();
+  });
+
   document
     .getElementById("chefStatusButton")
     .addEventListener("click", function () {
@@ -467,6 +516,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const changeItemContainer = document.getElementById("changeItemContainer");
   // const changeItemButton = document.getElementById("changeItemButton");
   const editButtonContainer = document.createElement("div");
+  const deleteButtonContainer = document.createElement("div");
+  const addButtonContainer = document.createElement("div");
   function displayChangeItem() {
     changeItemContainer.innerHTML = "";
 
@@ -476,49 +527,44 @@ document.addEventListener("DOMContentLoaded", () => {
     editButton.classList.add("form-btn");
 
     editButton.addEventListener("click", () => {
+      clearAllContainers();
       editButtonContainer.className = "editButtonContainer";
 
-      showDropdownAndRate("Edit", itemNames, itemPrices);
+      showDropdownAndRate(editButtonContainer);
       // Create input fields for ItemName and ItemPrice
-      const itemNameInput = document.createElement("input");
-      itemNameInput.type = "text";
-      itemNameInput.placeholder = "Enter Item Name";
-      itemNameInput.classList.add("item-input");
-
-      const itemPriceInput = document.createElement("input");
-      itemPriceInput.type = "number";
-      itemPriceInput.placeholder = "Enter Item Price";
-      itemPriceInput.classList.add("item-input");
+      addItemPriceandItemNameTag(editButtonContainer);
 
       const editSubmitButton = document.createElement("button");
       editSubmitButton.textContent = "Submit";
       editSubmitButton.classList.add("form-btn");
 
-      // Append input fields to the container
-      editButtonContainer.appendChild(itemNameInput);
-      editButtonContainer.appendChild(itemPriceInput);
       editButtonContainer.appendChild(editSubmitButton);
 
       editSubmitButton.addEventListener("click", async () => {
-        let itemName = itemNameInput.value.trim();
-        let itemPrice = itemPriceInput.value;
+        let itemName = document.getElementById("itemNameInput").value.trim();
+        let itemPrice = document.getElementById("itemPriceInput").value;
+        itemPrice = parseFloat(itemPrice);
 
         // Retrieve selected item and price from dropdown
         const selectItem = getSelectedValue();
         const price = itemPrices[selectItem];
 
-        // Handle empty inputs
-        if (!itemName) {
-          itemName = selectItem;
-        }
-        if (!itemPrice) {
-          itemPrice = price;
-        }
-
-        if (!itemName || !itemPrice) {
+        if (!itemName && isNaN(itemPrice)) {
           // Show error if both inputs are empty
-          alert("Error: Empty value received for Item Name or Item Price.");
+          showAlert(
+            "Edit Item form Database",
+            "Error: Empty value received for Item Name or Item Price.",
+            false
+          );
+          console.log("JFT CHECK");
         } else {
+          // Handle empty inputs
+          if (!itemName) {
+            itemName = selectItem;
+          }
+          if (!itemPrice) {
+            itemPrice = price;
+          }
           // Update Firestore with the new or existing values
           try {
             // Check if the item name needs to be changed
@@ -547,17 +593,21 @@ document.addEventListener("DOMContentLoaded", () => {
               await updateDoc(itemNamesDocRef, {
                 names: arrayRemove(selectItem), // Remove old name
               });
-
-              console.log("Item name successfully added to names array!");
-              editButtonContainer.innerHTML = "";
             } else {
               // Update price if item name hasn't changed
               const itemPriceDocRef = doc(db, "itemPrices", itemName);
               await updateDoc(itemPriceDocRef, {
                 price: parseFloat(itemPrice),
               });
-              editButtonContainer.innerHTML = "";
             }
+            showAlert(
+              "Edit Item form Database",
+              "Item '" +
+                itemName +
+                "' with price'" +
+                itemPrice +
+                "' Added Successfully"
+            );
           } catch (error) {
             console.error("Error updating document: ", error);
           }
@@ -575,9 +625,35 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteButton.textContent = "Delete";
     deleteButton.classList.add("form-btn");
     deleteButton.addEventListener("click", () => {
+      clearAllContainers();
+      console.log("On click for delete is called");
       // Show dropdown menu and confirmation for deleting
-      showDropdownAndConfirmation("Delete", itemNames);
-      hideOtherButtons(deleteButton);
+      showDropdownAndRate(deleteButtonContainer);
+
+      const deleteSubmitButton = document.createElement("button");
+      deleteSubmitButton.textContent = "Submit";
+      deleteSubmitButton.classList.add("form-btn");
+
+      deleteButtonContainer.appendChild(deleteSubmitButton);
+
+      deleteSubmitButton.addEventListener("click", async () => {
+        const selectItemName = getSelectedValue();
+        // const selectItemPrice = itemPrices[selectItemName];
+        const oldItemDocRef = doc(db, "itemPrices", selectItemName);
+        await deleteDoc(oldItemDocRef);
+
+        const itemNamesDocRef = doc(db, "itemNames", "names");
+        await updateDoc(itemNamesDocRef, {
+          names: arrayRemove(selectItemName), // Remove old name
+        });
+
+        showAlert(
+          "Delete Item form Database",
+          "Item '" + selectItemName + "' Deleted Successfully"
+        );
+      });
+
+      create_custom_dropdowns("admin-item-name");
     });
 
     // Create Add button
@@ -585,9 +661,27 @@ document.addEventListener("DOMContentLoaded", () => {
     addButton.textContent = "Add";
     addButton.classList.add("form-btn");
     addButton.addEventListener("click", () => {
+      clearAllContainers();
+      console.log("On click for add is called");
       // Show input fields for adding a new item
-      showInputFields("Add");
-      hideOtherButtons(addButton);
+      addItemPriceandItemNameTag(addButtonContainer);
+      // Submit Button and Handling
+      const addSubmitButton = document.createElement("button");
+      addSubmitButton.textContent = "Submit";
+      addSubmitButton.classList.add("form-btn");
+
+      addButtonContainer.appendChild(addSubmitButton);
+
+      addSubmitButton.addEventListener("click", async () => {
+        let itemName = document.getElementById("itemNameInput").value.trim();
+        let itemPrice = document.getElementById("itemPriceInput").value;
+
+        if (!itemName || !itemPrice) {
+          alert("Error: Empty value received for Item Name or Item Price.");
+        } else {
+          await handleAddButtonClick(itemName, itemPrice, addButtonContainer);
+        }
+      });
     });
 
     // Append buttons to container
@@ -595,9 +689,30 @@ document.addEventListener("DOMContentLoaded", () => {
     changeItemContainer.appendChild(deleteButton);
     changeItemContainer.appendChild(addButton);
     changeItemContainer.appendChild(editButtonContainer);
+    changeItemContainer.appendChild(deleteButtonContainer);
+    changeItemContainer.appendChild(addButtonContainer);
   }
 
-  function showDropdownAndRate() {
+  function addItemPriceandItemNameTag(containerVarName) {
+    console.log("addItemPriceandItemNameTag is called" + containerVarName);
+    const itemNameInput = document.createElement("input");
+    itemNameInput.type = "text";
+    itemNameInput.placeholder = "Enter Item Name";
+    itemNameInput.classList.add("item-input");
+    itemNameInput.id = "itemNameInput";
+
+    const itemPriceInput = document.createElement("input");
+    itemPriceInput.type = "number";
+    itemPriceInput.placeholder = "Enter Item Price";
+    itemPriceInput.classList.add("item-input");
+    itemPriceInput.id = "itemPriceInput";
+
+    // Append input fields to the container
+    containerVarName.appendChild(itemNameInput);
+    containerVarName.appendChild(itemPriceInput);
+  }
+
+  function showDropdownAndRate(containerVarName) {
     const itemNameSelect = document.createElement("select");
     itemNameSelect.name = "itemName[]";
     itemNameSelect.className = "admin-item-name";
@@ -627,8 +742,8 @@ document.addEventListener("DOMContentLoaded", () => {
       p.textContent = `Price: ${price}`;
     });
 
-    editButtonContainer.appendChild(itemNameSelect);
-    editButtonContainer.appendChild(p);
+    containerVarName.appendChild(itemNameSelect);
+    containerVarName.appendChild(p);
   }
 
   function getSelectedValue() {
@@ -646,5 +761,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Return the stored value if needed
     return storedValue;
+  }
+
+  async function checkIfItemExists(itemName) {
+    const docRef = doc(db, "itemPrices", itemName);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists(); // Returns true if the document exists
+  }
+
+  async function handleAddButtonClick(itemName, itemPrice, container) {
+    try {
+      const itemExists = await checkIfItemExists(itemName);
+
+      if (itemExists) {
+        alert("Item already exists! No changes made.");
+      } else {
+        // If item does not exist, add new item
+        const newItemDocRef = doc(db, "itemPrices", itemName);
+        await setDoc(newItemDocRef, {
+          price: parseFloat(itemPrice),
+        });
+
+        const itemNamesDocRef = doc(db, "itemNames", "names"); // Replace 'namesDocId' with the actual document ID
+
+        await updateDoc(itemNamesDocRef, {
+          names: arrayUnion(itemName),
+        });
+
+        showAlert(
+          "Item Added to Database",
+          "Item '" +
+            itemName +
+            "' with price'" +
+            itemPrice +
+            "' Added Successfully"
+        );
+      }
+
+      container.innerHTML = ""; // Clear the container after operation
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  }
+
+  function clearAllContainers() {
+    editButtonContainer.innerHTML = "";
+    deleteButtonContainer.innerHTML = "";
+    addButtonContainer.innerHTML = "";
   }
 });
