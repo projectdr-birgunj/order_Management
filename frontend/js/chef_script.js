@@ -49,18 +49,18 @@ document.addEventListener("DOMContentLoaded", () => {
             createButtons(); // Call createButtons now that the user is authenticated
           } else {
             // console.log("User Role = " + userData.role + "but not waiter");
-            window.location.href = "login.html"; // Redirect if the role is not Waiter
+            window.location.href = "index.html"; // Redirect if the role is not Waiter
           }
         } else {
           console.error("No such user document!");
-          window.location.href = "login.html"; // Redirect if no user document is found
+          window.location.href = "index.html"; // Redirect if no user document is found
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        window.location.href = "login.html"; // Redirect on error
+        window.location.href = "index.html"; // Redirect on error
       }
     } else {
-      window.location.href = "login.html"; // Redirect if not signed in
+      window.location.href = "index.html"; // Redirect if not signed in
     }
   });
 
@@ -364,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Sign-out successful.
           console.log("User signed out");
           // Redirect to login page or another page
-          window.location.href = "login.html";
+          window.location.href = "index.html";
         })
         .catch((error) => {
           // An error happened.
