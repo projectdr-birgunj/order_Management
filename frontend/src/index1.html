@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      import {
+        fetchItemPrices,
+        fetchItemNames,
+        showAlert,
+      } from "../js/commonUtilityMgr.js";
+
+      async function displayData() {
+        try {
+          const itemPrices = await fetchItemPrices();
+          const itemNames = await fetchItemNames();
+
+          console.log("Item Prices:", itemPrices);
+          console.log("Item Names:", itemNames);
+
+          showAlert(
+            "Data Loaded",
+            "Item prices and names have been fetched successfully."
+          );
+        } catch (error) {
+          showAlert("Error", "There was an error loading the data.");
+        }
+      }
+
+      displayData();
+    </script>
+  </body>
+</html>
