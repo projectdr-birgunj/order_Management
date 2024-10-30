@@ -1,67 +1,59 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
-import {
-  getDatabase,
+  database,
+  auth,
+  db,
+  checkUserRole,
+  signOut,
+  logOut,
   ref,
   update,
   get,
   child,
-  onValue,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
-import {
-  getFirestore,
   doc,
   getDoc,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
-// import Swal from "sweetalert2";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
-  authDomain: "resturant-order-1d2b3.firebaseapp.com",
-  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
-  projectId: "resturant-order-1d2b3",
-  storageBucket: "resturant-order-1d2b3.appspot.com",
-  messagingSenderId: "971852262554",
-  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
-  measurementId: "G-4TS2JLW1BY",
-};
+  onValue,
+} from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  const logoutButton = document.getElementById("logout");
+  logoutButton.addEventListener("click", logOut);
+  // const app = initializeApp(firebaseConfig);
+  // const database = getDatabase(app);
+  // const auth = getAuth(app);
+  // const db = getFirestore(app);
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log("User Role = " + userData.role);
-          if (userData.role === "chef") {
-            // Ensure the role matches what you have in Firestore
-            document.body.style.display = "block"; // Show the content
-            createButtons(); // Call createButtons now that the user is authenticated
-          } else {
-            // console.log("User Role = " + userData.role + "but not waiter");
-            window.location.href = "index.html"; // Redirect if the role is not Waiter
-          }
-        } else {
-          console.error("No such user document!");
-          window.location.href = "index.html"; // Redirect if no user document is found
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        window.location.href = "index.html"; // Redirect on error
-      }
-    } else {
-      window.location.href = "index.html"; // Redirect if not signed in
-    }
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     const userDocRef = doc(db, "users", user.uid);
+  //     try {
+  //       const userDoc = await getDoc(userDocRef);
+  //       if (userDoc.exists()) {
+  //         const userData = userDoc.data();
+  //         console.log("User Role = " + userData.role);
+  //         if (userData.role === "chef") {
+  //           // Ensure the role matches what you have in Firestore
+  //           document.body.style.display = "block"; // Show the content
+  //           createButtons(); // Call createButtons now that the user is authenticated
+  //         } else {
+  //           // console.log("User Role = " + userData.role + "but not waiter");
+  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
+  //         }
+  //       } else {
+  //         console.error("No such user document!");
+  //         window.location.href = "index.html"; // Redirect if no user document is found
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       window.location.href = "index.html"; // Redirect on error
+  //     }
+  //   } else {
+  //     window.location.href = "index.html"; // Redirect if not signed in
+  //   }
+  // });
+
+  checkUserRole("chef", () => {
+    // Action specific to chef
+    createButtons(); // Run chef-specific code
   });
 
   async function fetchOrderDetails(button) {
@@ -351,25 +343,5 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error writing data to Firebase:", error);
       alert("Error updating order status. Please try again.");
     }
-  }
-
-  const logoutButton = document.getElementById("logout");
-
-  if (logoutButton) {
-    logoutButton.addEventListener("click", () => {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          // Sign-out successful.
-          console.log("User signed out");
-          // Redirect to login page or another page
-          window.location.href = "index.html";
-        })
-        .catch((error) => {
-          // An error happened.
-          console.error("Sign-out error:", error);
-        });
-    });
   }
 });

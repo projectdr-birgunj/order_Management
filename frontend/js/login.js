@@ -81,28 +81,41 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     // Fetch user role from Firestore
     const userDoc = await getDoc(doc(db, "users", user.uid));
     const role = userDoc.data().role;
+    let targetPage = "index.html";
 
     switch (role) {
       case "waiter":
-        window.location.href = "waiter.html";
+        targetPage = "waiter.html";
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", role);
         break;
       case "chef":
-        window.location.href = "chef.html";
+        targetPage = "chef.html";
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", role);
         break;
       case "cashier":
-        window.location.href = "cashier.html";
+        targetPage = "cashier.html";
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", role);
         break;
       case "admin":
-        window.location.href = "admin.html";
+        targetPage = "admin.html";
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", role);
         break;
       default:
         document.getElementById("loginErrorMessage").textContent =
           "Invalid role or user not assigned a role.";
     }
+    console.log("Is LoggedIn value: ", localStorage.getItem("isLoggedIn"));
+    (async () => {
+      console.log("Start");
+      await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10000 milliseconds (10 seconds)
+      console.log("This message is displayed after 10 seconds");
+      console.log("End");
+    })();
+    window.location.href = targetPage;
   } catch (error) {
     document.getElementById("loginErrorMessage").textContent = error.message;
   }
