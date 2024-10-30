@@ -85,15 +85,19 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     switch (role) {
       case "waiter":
         window.location.href = "waiter.html";
+        localStorage.setItem("isLoggedIn", "true");
         break;
       case "chef":
         window.location.href = "chef.html";
+        localStorage.setItem("isLoggedIn", "true");
         break;
       case "cashier":
         window.location.href = "cashier.html";
+        localStorage.setItem("isLoggedIn", "true");
         break;
       case "admin":
         window.location.href = "admin.html";
+        localStorage.setItem("isLoggedIn", "true");
         break;
       default:
         document.getElementById("loginErrorMessage").textContent =

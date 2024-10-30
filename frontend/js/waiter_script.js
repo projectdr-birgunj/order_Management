@@ -2,6 +2,8 @@ import {
   database,
   auth,
   db,
+  messaging,
+  onMessage,
   itemPrices,
   itemNames,
   onAuthStateChanged,
@@ -57,6 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     signOut(auth)
       .then(() => {
         console.log("Logout called");
+        localStorage.removeItem("isLoggedIn");
         // window.location.href = "index.html"; // Redirect to login page after successful logout
       })
       .catch((error) => {
@@ -102,8 +105,83 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Create buttons when the page loads
-  // window.onload = createButtons;
+  //Push Notification changes Starts
+  function requestPermission() {
+    console.log("Requesting permission...");
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("Notification permission granted.");
+        // TODO(developer): Retrieve a registration token for use with FCM.
+        // In many cases once an app has been granted notification permission,
+        // it should update its UI reflecting this.
+        resetUI();
+      } else {
+        console.log("Unable to get permission to notify.");
+      }
+    });
+  }
+  // Handle incoming messages
+  // onMessage(messaging, (payload) => {
+  //   console.log("Message received. ", payload);
+  //   const notificationTitle = payload.notification.title;
+  //   const notificationOptions = {
+  //     body: payload.notification.body,
+  //   };
+
+  //   // Display notification
+  //   if (Notification.permission === "granted") {
+  //     new Notification(notificationTitle, notificationOptions);
+  //   }
+  // });
+
+  // const functions = require("firebase-functions");
+  // const admin = require("firebase-admin");
+  // admin.initializeApp();
+
+  // exports.notifyChefStatusUpdate = functions.database
+  //   .ref("/orders/{tableId}/orderDetail/{orderDetailId}/{itemIndex}/chefStatus")
+  //   .onUpdate((change, context) => {
+  //     const beforeStatus = change.before.val(); // Previous chefStatus value
+  //     const afterStatus = change.after.val(); // Updated chefStatus value
+
+  //     // Only proceed if chefStatus was updated (change in value)
+  //     if (beforeStatus !== afterStatus) {
+  //       const tableId = context.params.tableId; // The table (e.g., "Table-1")
+  //       const itemIndex = context.params.itemIndex; // Index of the item (e.g., 0, 1, etc.)
+  //       const orderDetailId = context.params.orderDetailId; // Usually 'table-{id}' but depends on structure
+
+  //       // Get the updated order data to retrieve item details (itemName)
+  //       return admin
+  //         .database()
+  //         .ref(`/orders/${tableId}/orderDetail/${orderDetailId}/${itemIndex}`)
+  //         .once("value")
+  //         .then((snapshot) => {
+  //           const itemData = snapshot.val();
+  //           const itemName = itemData.itemName || "Unknown Item"; // Get itemName (e.g., "Milk Coffee")
+
+  //           // Create notification payload
+  //           const payload = {
+  //             notification: {
+  //               title: "Chef Status Updated",
+  //               body: `Chef status updated for ${itemName} at ${tableId}. New status: ${afterStatus}`,
+  //             },
+  //           };
+
+  //           // Send push notification (broadcasting to a topic)
+  //           return admin
+  //             .messaging()
+  //             .sendToTopic("allUsers", payload)
+  //             .then((response) => {
+  //               console.log("Notification sent successfully:", response);
+  //             })
+  //             .catch((error) => {
+  //               console.error("Error sending notification:", error);
+  //             });
+  //         });
+  //     }
+
+  //     return null; // If no update to chefStatus, do nothing
+  //   }); //Push notification changes ends
 
   // Function to add leading zeroes
   function pad(number) {
