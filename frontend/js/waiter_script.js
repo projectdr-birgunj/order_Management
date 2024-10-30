@@ -2,8 +2,8 @@ import {
   database,
   auth,
   db,
-  messaging,
-  onMessage,
+  // messaging,
+  // onMessage,
   itemPrices,
   itemNames,
   onAuthStateChanged,
@@ -105,21 +105,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  //Push Notification changes Starts
-  function requestPermission() {
-    console.log("Requesting permission...");
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        console.log("Notification permission granted.");
-        // TODO(developer): Retrieve a registration token for use with FCM.
-        // In many cases once an app has been granted notification permission,
-        // it should update its UI reflecting this.
-        resetUI();
-      } else {
-        console.log("Unable to get permission to notify.");
-      }
-    });
-  }
+  // //Push Notification changes Starts
+  // function requestPermission() {
+  //   console.log("Requesting permission...");
+  //   Notification.requestPermission().then((permission) => {
+  //     if (permission === "granted") {
+  //       console.log("Notification permission granted.");
+  //       // TODO(developer): Retrieve a registration token for use with FCM.
+  //       // In many cases once an app has been granted notification permission,
+  //       // it should update its UI reflecting this.
+  //       resetUI();
+  //     } else {
+  //       console.log("Unable to get permission to notify.");
+  //     }
+  //   });
+  // }
   // Handle incoming messages
   // onMessage(messaging, (payload) => {
   //   console.log("Message received. ", payload);
