@@ -6,6 +6,8 @@ import {
   // onMessage,
   itemPrices,
   itemNames,
+  checkUserRole,
+  logOut,
   onAuthStateChanged,
   signOut,
   ref,
@@ -16,59 +18,76 @@ import {
   getDoc,
 } from "../js/commonUtilityMgr.js";
 
-
 let waiterNamePlaceHolder;
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log("User Role = " + userData.role);
-          waiterNamePlaceHolder = userData.name;
-          if (waiterNamePlaceHolder == null) {
-            waiterNamePlaceHolder = "Not available";
-          }
-          if (userData.role === "waiter") {
-            // Ensure the role matches what you have in Firestore
-            document.body.style.display = "block"; // Show the content
-            createButtons(); // Call createButtons now that the user is authenticated
-          } else {
-            //console.log("User Role = " + userData.role + "but not waiter");
-            window.location.href = "index.html"; // Redirect if the role is not Waiter
-          }
-        } else {
-          console.error("No such user document!");
-          window.location.href = "index.html"; // Redirect if no user document is found
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        window.location.href = "index.html"; // Redirect on error
-      }
-    } else {
-      window.location.href = "index.html"; // Redirect if not signed in
-    }
+  // if (localStorage.getItem("isLoggedIn") === "true") {
+  //   console.log("Waiter localStorage called");
+  //   // User is already logged in; no need to redirect
+  //   document.body.style.display = "block";
+  //   createButtons();
+  // } else {
+  //   console.log("Waiter localStorage called from else");
+  //   onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       const userDocRef = doc(db, "users", user.uid);
+  //       try {
+  //         const userDoc = await getDoc(userDocRef);
+  //         if (userDoc.exists()) {
+  //           const userData = userDoc.data();
+  //           console.log("User Role = " + userData.role);
+  //           waiterNamePlaceHolder = userData.name;
+  //           if (waiterNamePlaceHolder == null) {
+  //             waiterNamePlaceHolder = "Not available";
+  //           }
+  //           if (userData.role === "waiter") {
+  //             // Ensure the role matches what you have in Firestore
+  //             document.body.style.display = "block"; // Show the content
+  //             createButtons(); // Call createButtons now that the user is authenticated
+  //           } else {
+  //             //console.log("User Role = " + userData.role + "but not waiter");
+  //             window.location.href = "index.html"; // Redirect if the role is not Waiter
+  //           }
+  //         } else {
+  //           console.error("No such user document!");
+  //           window.location.href = "index.html"; // Redirect if no user document is found
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //         window.location.href = "index.html"; // Redirect on error
+  //       }
+  //     } else {
+  //       window.location.href = "index.html"; // Redirect if not signed in
+  //     }
+  //   });
+  // }
+
+  checkUserRole("waiter", () => {
+    // Action specific to waiter
+    createButtons(); // Run waiter-specific code
   });
 
-  function logout() {
-    console.log("Logout called");
-    signOut(auth)
-      .then(() => {
-        console.log("Logout called");
-        localStorage.removeItem("isLoggedIn");
-        // window.location.href = "index.html"; // Redirect to login page after successful logout
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
-  }
+  // function logout() {
+  //   console.log("Logout called");
+  //   signOut(auth)
+  //     .then(() => {
+  //       console.log("Logout called");
+  //       console.log(
+  //         "iusLoggedIn Value check: ",
+  //         localStorage.getItem("isLoggedIn")
+  //       );
+  //       localStorage.removeItem("isLoggedIn");
+  //       localStorage.removeItem("userRole");
+  //       window.location.href = "index.html"; // Redirect to login page after successful logout
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error during logout:", error);
+  //     });
+  // }
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logout);
+  logoutButton.addEventListener("click", logOut);
 
   // Function to create buttons
   async function createButtons() {

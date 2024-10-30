@@ -12,6 +12,7 @@ import {
   get,
   push,
   child,
+  onValue,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import {
   getFirestore,
@@ -27,6 +28,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 // import * as Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
 
+import {
+  getMessaging,
+  getToken,
+  onMessage,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-messaging.js";
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -44,8 +50,40 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const messaging = getMessaging(app);
 let itemPrices;
 let itemNames;
+
+//Push notification changes start
+// Firebase Cloud Messaging (FCM) code in common.js
+// Request permission to send notifications
+// Notification.requestPermission()
+//   .then((permission) => {
+//     if (permission === "granted") {
+//       console.log("Notification permission granted.");
+
+//       // Get the token
+//       return getToken(messaging, {
+//         vapidKey:
+//           "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA",
+//       }); // Replace with your VAPID key
+//     } else {
+//       console.log("Unable to get permission to notify.");
+//     }
+//   })
+//   .then((token) => {
+//     if (token) {
+//       console.log("FCM Token:", token);
+//       // Store/send token to the server if necessary
+//     }
+//   })
+//   .catch((err) => {
+//     console.error("Error getting permission for notifications", err);
+//   });
+
+// // messaging.subscribeToTopic("allUsers").then(() => {
+// //   console.log("Subscribed to topic");
+// // }); //Push notification changes ends
 
 // Fetch data from Firestore
 async function fetchItemPrices() {
@@ -100,21 +138,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     itemPrices = await fetchItemPrices();
     itemNames = await fetchItemNames();
 
-    console.log("Item Prices:", itemPrices);
-    console.log("Item Names:", itemNames);
+    // console.log("Item Prices:", itemPrices);
+    // console.log("Item Names:", itemNames);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 });
+
+// auth.js
+
+function checkUserRole(requiredRole, onSuccess) {
+  if (
+    localStorage.getItem("isLoggedIn") === "true" &&
+    localStorage.getItem("userRole") === requiredRole
+  ) {
+    console.log(`${requiredRole} localStorage called`);
+    document.body.style.display = "block";
+    onSuccess(); // Run role-specific setup
+  } else {
+    console.log(
+      `Access denied for role: ${localStorage.getItem(
+        "userRole"
+      )}, required: ${requiredRole}`
+    );
+    window.location.href = "index.html"; // Redirect to login if roles don't match
+  }
+}
+function logOut() {
+  console.log("Logout called");
+  signOut(auth)
+    .then(() => {
+      console.log("Logout called");
+      console.log(
+        "iusLoggedIn Value check: ",
+        localStorage.getItem("isLoggedIn")
+      );
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userRole");
+      window.location.href = "index.html"; // Redirect to login page after successful logout
+    })
+    .catch((error) => {
+      console.error("Error during logout:", error);
+    });
+}
 
 export {
   app,
   database,
   auth,
   db,
+  messaging,
+  onMessage,
   itemPrices,
   itemNames,
   showAlert,
+  checkUserRole,
+  logOut,
   onAuthStateChanged,
   signOut,
   ref,
@@ -122,6 +201,7 @@ export {
   get,
   push,
   child,
+  onValue,
   doc,
   getDoc,
   getDocs,
