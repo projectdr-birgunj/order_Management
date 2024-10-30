@@ -16,6 +16,7 @@ import {
   getDoc,
 } from "../js/commonUtilityMgr.js";
 
+
 let waiterNamePlaceHolder;
 
 document.addEventListener("DOMContentLoaded", async () => {
