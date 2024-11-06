@@ -16,9 +16,10 @@ import {
   child,
   doc,
   getDoc,
+  getUserName,
 } from "../js/commonUtilityMgr.js";
 
-let waiterNamePlaceHolder;
+let waiterNamePlaceHolder = getUserName();
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
@@ -91,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Function to create buttons
   async function createButtons() {
+    console.log("Waiter.js:createButtons() Enter");
     const buttonsContainer = document.getElementById("buttonsContainer");
 
     const dbRef = ref(database);
@@ -105,6 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       button.classList.add("table-btn");
 
       if (orders) {
+        console.log("Waiter.js:createButtons() Orders are present");
         if (!(orders[tableKey].toBilling === false)) {
           // Disable the button if the table is closed
           button.classList.add("disabled-btn");
@@ -356,6 +359,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function fetchOrdersBtn(button) {
+    console.log("Waiter.js:fetchOrdersBtn() Enter");
     try {
       const orderId = button.getAttribute("data-table-no");
       const tableID = orderId.toLowerCase();

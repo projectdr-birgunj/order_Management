@@ -1,6 +1,10 @@
 // Import Firebase libraries
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
+  getFunctions,
+  httpsCallable,
+} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-functions.js";
+import {
   getAuth,
   onAuthStateChanged,
   signOut,
@@ -51,8 +55,11 @@ const database = getDatabase(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const messaging = getMessaging(app);
+const functions = getFunctions(app);
 let itemPrices;
 let itemNames;
+let userName;
+let userUid;
 
 //Push notification changes start
 // Firebase Cloud Messaging (FCM) code in common.js
@@ -145,25 +152,84 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+function getUserName() {
+  return userName;
+}
+
+function setUserName(a_userName) {
+  userName = a_userName;
+}
+
+function getUserUid() {
+  return userUid;
+}
+
+function setUserUid(a_userUid) {
+  userUid = a_userUid;
+}
+
 // auth.js
 
-function checkUserRole(requiredRole, onSuccess) {
-  if (
-    localStorage.getItem("isLoggedIn") === "true" &&
-    localStorage.getItem("userRole") === requiredRole
-  ) {
-    console.log(`${requiredRole} localStorage called`);
-    document.body.style.display = "block";
-    onSuccess(); // Run role-specific setup
-  } else {
-    console.log(
-      `Access denied for role: ${localStorage.getItem(
-        "userRole"
-      )}, required: ${requiredRole}`
-    );
-    window.location.href = "index.html"; // Redirect to login if roles don't match
-  }
+// function checkUserRole(requiredRole, onSuccess)
+async function checkUserRole(
+  requiredRole,
+  onSuccess,
+  redirectPage = "index.html"
+) {
+  console.log("commonUtilityMgr:checkUserRole() called");
+  onAuthStateChanged(auth, async (user) => {
+    console.log("commonUtilityMgr:checkUserRole() onAuthStateChanged called");
+    if (user) {
+      const uid = user.uid;
+
+      try {
+        // Retrieve the user role from Firestore
+        const userDocRef = doc(db, "users", uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const role = userDoc.data().role;
+
+          const vapidKey =
+            "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
+          const fcmToken = await getToken(messaging, { vapidKey });
+
+          if (fcmToken) {
+            // Call the saveToken function to store the FCM token
+            const saveToken = httpsCallable(functions, "saveToken");
+            await saveToken({ token: fcmToken });
+            // console.log("FCM token saved successfully");
+          } else {
+            console.log("No FCM token available. Permission may be required.");
+          }
+
+          // Check if role matches the required role
+          if (role !== requiredRole) {
+            console.log("It shouldn't Hit");
+            alert(
+              `Access denied for ${requiredRole} role. Redirecting to login.`
+            );
+            window.location.href = redirectPage;
+          } else {
+            console.log("It should Hit");
+            document.body.style.display = "block";
+            onSuccess();
+          }
+        } else {
+          console.error("User document not found. Redirecting to login.");
+          window.location.href = redirectPage;
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        window.location.href = redirectPage;
+      }
+    } else {
+      // Redirect to login if not authenticated
+      window.location.href = redirectPage;
+    }
+  });
 }
+
 function logOut() {
   console.log("Logout called");
   signOut(auth)
@@ -211,4 +277,8 @@ export {
   arrayUnion,
   deleteDoc,
   arrayRemove,
+  getUserName,
+  setUserName,
+  getUserUid,
+  setUserUid,
 };
