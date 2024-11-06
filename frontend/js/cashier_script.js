@@ -51,11 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const userData = userDoc.data();
           console.log("User Role = " + userData.role);
           if (userData.role === "cashier") {
-            // Ensure the role matches what you have in Firestore
             document.body.style.display = "block"; // Show the content
             createButtons(); // Call createButtons now that the user is authenticated
           } else {
-            //console.log("User Role = " + userData.role + "but not waiter");
             window.location.href = "index.html"; // Redirect if the role is not Waiter
           }
         } else {
