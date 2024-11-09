@@ -2,3 +2,5 @@ test*
 *txt
 frontend/src/constructor.html
 *bkp*
+release/*
+google-services.json
