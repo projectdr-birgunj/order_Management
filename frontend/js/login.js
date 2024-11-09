@@ -177,6 +177,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     // Store login status in localStorage
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userRole", role);
+    localStorage.setItem("userUid", uid);
 
     window.location.href = targetPage;
   } catch (error) {
