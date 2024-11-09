@@ -32,11 +32,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 // import * as Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
 
-import {
-  getMessaging,
-  getToken,
-  onMessage,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-messaging.js";
+// import {
+//   getMessaging,
+//   getToken,
+//   onMessage,
+// } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-messaging.js";
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
@@ -54,7 +54,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const messaging = getMessaging(app);
+// const messaging = getMessaging(app);
 const functions = getFunctions(app);
 let itemPrices;
 let itemNames;
@@ -190,7 +190,7 @@ async function checkUserRole(
         if (userDoc.exists()) {
           const role = userDoc.data().role;
 
-          const permission = await Notification.requestPermission(); // Wait for the permission to be requested
+          // const permission = await Notification.requestPermission(); // Wait for the permission to be requested
 
           // Check if role matches the required role
           if (role !== requiredRole) {
@@ -208,23 +208,23 @@ async function checkUserRole(
             localStorage.setItem("userRole", requiredRole);
           }
 
-          if (permission === "granted") {
-            console.log("Notification permission granted.");
-            const vapidKey =
-              "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
-            const fcmToken = await getToken(messaging, { vapidKey });
+          // if (permission === "granted") {
+          //   console.log("Notification permission granted.");
+          //   const vapidKey =
+          //     "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
+          //   const fcmToken = await getToken(messaging, { vapidKey });
 
-            if (fcmToken) {
-              // Call the saveToken function to store the FCM token
-              const saveToken = httpsCallable(functions, "saveToken");
-              await saveToken({ token: fcmToken });
-              // console.log("FCM token saved successfully");
-            } else {
-              console.log(
-                "No FCM token available. Permission may be required."
-              );
-            }
-          }
+          //   if (fcmToken) {
+          //     // Call the saveToken function to store the FCM token
+          //     const saveToken = httpsCallable(functions, "saveToken");
+          //     await saveToken({ token: fcmToken });
+          //     // console.log("FCM token saved successfully");
+          //   } else {
+          //     console.log(
+          //       "No FCM token available. Permission may be required."
+          //     );
+          //   }
+          // }
         } else {
           console.error("User document not found. Redirecting to login.");
           window.location.href = redirectPage;
@@ -240,25 +240,25 @@ async function checkUserRole(
   });
 }
 
-function getAccessToken() {
-  return new Promise(function (resolve, reject) {
-    const key = require("../placeholders/service-account.json");
-    const jwtClient = new google.auth.JWT(
-      key.client_email,
-      null,
-      key.private_key,
-      SCOPES,
-      null
-    );
-    jwtClient.authorize(function (err, tokens) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(tokens.access_token);
-    });
-  });
-}
+// function getAccessToken() {
+//   return new Promise(function (resolve, reject) {
+//     const key = require("../placeholders/service-account.json");
+//     const jwtClient = new google.auth.JWT(
+//       key.client_email,
+//       null,
+//       key.private_key,
+//       SCOPES,
+//       null
+//     );
+//     jwtClient.authorize(function (err, tokens) {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
+//       resolve(tokens.access_token);
+//     });
+//   });
+// }
 
 function logOut() {
   console.log("Logout called");
@@ -283,8 +283,7 @@ export {
   database,
   auth,
   db,
-  messaging,
-  onMessage,
+  // messaging,
   itemPrices,
   itemNames,
   showAlert,
