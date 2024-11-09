@@ -265,12 +265,10 @@ function logOut() {
   signOut(auth)
     .then(() => {
       console.log("Logout called");
-      console.log(
-        "iusLoggedIn Value check: ",
-        localStorage.getItem("isLoggedIn")
-      );
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userRole");
+      localStorage.clear();
+      if (window.AndroidInterface) {
+        window.AndroidInterface.onUserLoggedOut();
+      }
       window.location.href = "index.html"; // Redirect to login page after successful logout
     })
     .catch((error) => {
