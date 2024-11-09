@@ -190,30 +190,40 @@ async function checkUserRole(
         if (userDoc.exists()) {
           const role = userDoc.data().role;
 
-          const vapidKey =
-            "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
-          const fcmToken = await getToken(messaging, { vapidKey });
-
-          if (fcmToken) {
-            // Call the saveToken function to store the FCM token
-            const saveToken = httpsCallable(functions, "saveToken");
-            await saveToken({ token: fcmToken });
-            // console.log("FCM token saved successfully");
-          } else {
-            console.log("No FCM token available. Permission may be required.");
-          }
+          const permission = await Notification.requestPermission(); // Wait for the permission to be requested
 
           // Check if role matches the required role
           if (role !== requiredRole) {
             console.log("It shouldn't Hit");
-            alert(
-              `Access denied for ${requiredRole} role. Redirecting to login.`
-            );
+            // alert(
+            //   `Access denied for ${requiredRole} role. Redirecting to login.`
+            // );
+            localStorage.clear();
             window.location.href = redirectPage;
           } else {
             console.log("It should Hit");
             document.body.style.display = "block";
             onSuccess();
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userRole", requiredRole);
+          }
+
+          if (permission === "granted") {
+            console.log("Notification permission granted.");
+            const vapidKey =
+              "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
+            const fcmToken = await getToken(messaging, { vapidKey });
+
+            if (fcmToken) {
+              // Call the saveToken function to store the FCM token
+              const saveToken = httpsCallable(functions, "saveToken");
+              await saveToken({ token: fcmToken });
+              // console.log("FCM token saved successfully");
+            } else {
+              console.log(
+                "No FCM token available. Permission may be required."
+              );
+            }
           }
         } else {
           console.error("User document not found. Redirecting to login.");
@@ -227,6 +237,26 @@ async function checkUserRole(
       // Redirect to login if not authenticated
       window.location.href = redirectPage;
     }
+  });
+}
+
+function getAccessToken() {
+  return new Promise(function (resolve, reject) {
+    const key = require("../placeholders/service-account.json");
+    const jwtClient = new google.auth.JWT(
+      key.client_email,
+      null,
+      key.private_key,
+      SCOPES,
+      null
+    );
+    jwtClient.authorize(function (err, tokens) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(tokens.access_token);
+    });
   });
 }
 
