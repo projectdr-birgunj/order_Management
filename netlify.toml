@@ -1,0 +1,11 @@
+[build.environment]
+  API_KEY = "${API_KEY}"  # Use Netlify's environment variable (API_KEY)
+  AUTH_DOMAIN = "${AUTH_DOMAIN}"
+  DB_URL = "${DB_URL}"
+  PROJECT_ID = "${PROJECT_ID}"
+  STORAGE_BUCKET = "${STORAGE_BUCKET}"
+  MSG_SNDR_ID = "${MSG_SNDR_ID}"
+  APP_ID = "${APP_ID}"
+  MEASURE_ID = "${MEASURE_ID}"
+
+
