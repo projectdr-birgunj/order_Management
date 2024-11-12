@@ -269,6 +269,15 @@ footer {
   position: fixed;
   bottom: 0;
 }
-main {
-  padding-bottom: 100px; /* Adjust this value based on the footer height */
+
+#tableContainer {
+  padding-bottom: 20px;
+}
+
+/* Media query for screen sizes below 500px */
+@media screen and (max-width: 500px) {
+  .table-btn {
+    font-size: 12px; /* Adjust button text size for smaller screens */
+  }
+  /* Add more styles as needed */
 }

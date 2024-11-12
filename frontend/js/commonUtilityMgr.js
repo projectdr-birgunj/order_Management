@@ -1,10 +1,6 @@
 // Import Firebase libraries
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
-  getFunctions,
-  httpsCallable,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-functions.js";
-import {
   getAuth,
   onAuthStateChanged,
   signOut,
@@ -30,67 +26,14 @@ import {
   deleteDoc,
   arrayRemove,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
-// import * as Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
-
-// import {
-//   getMessaging,
-//   getToken,
-//   onMessage,
-// } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-messaging.js";
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
-  authDomain: "resturant-order-1d2b3.firebaseapp.com",
-  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
-  projectId: "resturant-order-1d2b3",
-  storageBucket: "resturant-order-1d2b3.appspot.com",
-  messagingSenderId: "971852262554",
-  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
-  measurementId: "G-4TS2JLW1BY",
-};
+import firebaseConfig from "../js/config.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-// const messaging = getMessaging(app);
-const functions = getFunctions(app);
-let itemPrices;
-let itemNames;
-let userName;
 let userUid;
-
-//Push notification changes start
-// Firebase Cloud Messaging (FCM) code in common.js
-// Request permission to send notifications
-// Notification.requestPermission()
-//   .then((permission) => {
-//     if (permission === "granted") {
-//       console.log("Notification permission granted.");
-
-//       // Get the token
-//       return getToken(messaging, {
-//         vapidKey:
-//           "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA",
-//       }); // Replace with your VAPID key
-//     } else {
-//       console.log("Unable to get permission to notify.");
-//     }
-//   })
-//   .then((token) => {
-//     if (token) {
-//       console.log("FCM Token:", token);
-//       // Store/send token to the server if necessary
-//     }
-//   })
-//   .catch((err) => {
-//     console.error("Error getting permission for notifications", err);
-//   });
-
-// // messaging.subscribeToTopic("allUsers").then(() => {
-// //   console.log("Subscribed to topic");
-// // }); //Push notification changes ends
 
 // Fetch data from Firestore
 async function fetchItemPrices() {
@@ -108,6 +51,7 @@ async function fetchItemPrices() {
 }
 
 async function fetchItemNames() {
+  console.log("fetchItemNames called");
   try {
     const docRef = doc(db, "itemNames", "names");
     const docSnap = await getDoc(docRef);
@@ -124,7 +68,6 @@ async function fetchItemNames() {
   }
 }
 
-// SweetAlert2 utility function
 function showAlert(title, text, shouldReload = true) {
   Swal.fire({
     title: title,
@@ -138,26 +81,13 @@ function showAlert(title, text, shouldReload = true) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  console.log("DOM fully loaded and parsed");
-
-  try {
-    itemPrices = await fetchItemPrices();
-    itemNames = await fetchItemNames();
-
-    // console.log("Item Prices:", itemPrices);
-    // console.log("Item Names:", itemNames);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-});
-
 function getUserName() {
-  return userName;
+  console.log("UserName: " + localStorage.getItem("username"));
+  return localStorage.getItem("username");
 }
 
 function setUserName(a_userName) {
-  userName = a_userName;
+  localStorage.setItem("username", a_userName);
 }
 
 function getUserUid() {
@@ -168,9 +98,6 @@ function setUserUid(a_userUid) {
   userUid = a_userUid;
 }
 
-// auth.js
-
-// function checkUserRole(requiredRole, onSuccess)
 async function checkUserRole(
   requiredRole,
   onSuccess,
@@ -189,42 +116,18 @@ async function checkUserRole(
 
         if (userDoc.exists()) {
           const role = userDoc.data().role;
-
-          // const permission = await Notification.requestPermission(); // Wait for the permission to be requested
-
           // Check if role matches the required role
           if (role !== requiredRole) {
             console.log("It shouldn't Hit");
-            // alert(
-            //   `Access denied for ${requiredRole} role. Redirecting to login.`
-            // );
             localStorage.clear();
             window.location.href = redirectPage;
           } else {
-            console.log("It should Hit");
+            // console.log("It should Hit");
             document.body.style.display = "block";
             onSuccess();
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("userRole", requiredRole);
           }
-
-          // if (permission === "granted") {
-          //   console.log("Notification permission granted.");
-          //   const vapidKey =
-          //     "BFr_X_p8nTC6jBjWTHfkcSxp0pIv8r11UyEOaTYXdUfS_SjdsFAHdzsnrxxl6Zygt-UtToeYBs3v4ZVuTKheBnA"; // Replace with your actual VAPID key
-          //   const fcmToken = await getToken(messaging, { vapidKey });
-
-          //   if (fcmToken) {
-          //     // Call the saveToken function to store the FCM token
-          //     const saveToken = httpsCallable(functions, "saveToken");
-          //     await saveToken({ token: fcmToken });
-          //     // console.log("FCM token saved successfully");
-          //   } else {
-          //     console.log(
-          //       "No FCM token available. Permission may be required."
-          //     );
-          //   }
-          // }
         } else {
           console.error("User document not found. Redirecting to login.");
           window.location.href = redirectPage;
@@ -239,26 +142,6 @@ async function checkUserRole(
     }
   });
 }
-
-// function getAccessToken() {
-//   return new Promise(function (resolve, reject) {
-//     const key = require("../placeholders/service-account.json");
-//     const jwtClient = new google.auth.JWT(
-//       key.client_email,
-//       null,
-//       key.private_key,
-//       SCOPES,
-//       null
-//     );
-//     jwtClient.authorize(function (err, tokens) {
-//       if (err) {
-//         reject(err);
-//         return;
-//       }
-//       resolve(tokens.access_token);
-//     });
-//   });
-// }
 
 function logOut() {
   console.log("Logout called");
@@ -276,14 +159,78 @@ function logOut() {
     });
 }
 
+async function createButtons(fetchOrderDetails, containerId) {
+  console.log("Inside createButtons");
+  const buttonsContainer = document.getElementById(containerId);
+
+  const dbRef = ref(database);
+  const snapshot = await get(child(dbRef, "orders/"));
+  let orders = snapshot.val();
+
+  for (let i = 1; i <= 12; i++) {
+    let tableKey = "Table-" + i;
+    const button = document.createElement("button");
+    button.textContent = `Table ${i}`;
+    button.setAttribute("data-table-no", `Table-${i}`);
+    button.classList.add("table-btn");
+    if (orders) {
+      if (!(orders[tableKey].toBilling === false)) {
+        // Disable the button if the table is closed
+        button.classList.add("disabled-btn");
+        button.disabled = true;
+      }
+    } else {
+      alert("Cannot fetch Order ID, Contact Developer");
+    }
+
+    // button.onclick = function () {
+    //   const allButtons = document.querySelectorAll(".table-btn");
+    //   allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+    //   // Add active class to the clicked button
+    //   button.classList.add("active-btn");
+    //   fetchOrderDetails(button);
+    // };
+    button.onclick = async function () {
+      showJsonContainer();
+      // Remove active class from all buttons
+      const allButtons = document.querySelectorAll(".table-btn");
+      allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+      // Add active class to the clicked button
+      button.classList.add("active-btn");
+
+      // Show loading indicator
+      const originalText = button.textContent;
+      button.textContent = "Loading...";
+      button.disabled = true;
+
+      try {
+        await fetchOrderDetails(button); // Execute the async function
+      } finally {
+        // Revert button text and re-enable it
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    };
+    buttonsContainer.appendChild(button);
+  }
+}
+
+function showJsonContainer() {
+  const jsonContainer = document.getElementById("json-container");
+  if (jsonContainer) {
+    jsonContainer.style.display = "block"; // Show container when a button is clicked
+  }
+}
+
 export {
   app,
   database,
   auth,
   db,
-  // messaging,
-  itemPrices,
-  itemNames,
+  fetchItemPrices,
+  fetchItemNames,
   showAlert,
   checkUserRole,
   logOut,
@@ -308,4 +255,5 @@ export {
   setUserName,
   getUserUid,
   setUserUid,
+  createButtons,
 };
