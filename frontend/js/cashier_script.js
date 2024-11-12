@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("Orders: \n" + JSON.stringify(orders, null, 2));
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 12; i++) {
       let tableKey = "Table-" + i;
       const button = document.createElement("button");
       button.textContent = "Table " + i;

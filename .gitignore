@@ -4,3 +4,5 @@ frontend/src/constructor.html
 *bkp*
 release/*
 google-services.json
+# Local Netlify folder
+.netlify

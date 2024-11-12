@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+      rel="stylesheet"
+    />
     <title>OrderFlow - Chef</title>
-    <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
     <link rel="stylesheet" type="text/css" href="../css/chef.css" />
+    <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
     <script src="../js/chef_script.js" type="module" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <!-- <script src="../js/auth.js"></script>Include the auth.js script -->
@@ -18,14 +27,12 @@
       <h1>Chef - Dining Tables</h1>
       <button type="button" id="logout" class="logout-btn">Logout</button>
     </header>
-    <main>
-      <h2>Select a Dining Table</h2>
-      <div id="order-list" class="table-buttons"></div>
-      <!-- <div id="order-details" class="orderDetails"></div> -->
-      <div id="tableContainer"></div>
-    </main>
-    <footer>
+    <h2>Select a Dining Table</h2>
+    <div id="order-list"></div>
+    <!-- <div id="order-details" class="orderDetails"></div> -->
+    <div id="tableContainer"></div>
+    <!-- <footer>
       <p>&copy; 2024 OrderFlow</p>
-    </footer>
+    </footer> -->
   </body>
 </html>

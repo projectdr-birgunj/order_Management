@@ -1,210 +1,89 @@
 import {
   database,
-  auth,
-  db,
-  // messaging,
-  // onMessage,
-  itemPrices,
-  itemNames,
+  fetchItemPrices,
+  fetchItemNames,
   checkUserRole,
   logOut,
-  onAuthStateChanged,
-  signOut,
   ref,
   update,
   get,
   child,
-  doc,
-  getDoc,
   getUserName,
+  createButtons,
 } from "../js/commonUtilityMgr.js";
 
 let waiterNamePlaceHolder = getUserName();
+let itemNames;
+let itemPrices;
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
 
-  // if (localStorage.getItem("isLoggedIn") === "true") {
-  //   console.log("Waiter localStorage called");
-  //   // User is already logged in; no need to redirect
-  //   document.body.style.display = "block";
-  //   createButtons();
-  // } else {
-  //   console.log("Waiter localStorage called from else");
-  //   onAuthStateChanged(auth, async (user) => {
-  //     if (user) {
-  //       const userDocRef = doc(db, "users", user.uid);
-  //       try {
-  //         const userDoc = await getDoc(userDocRef);
-  //         if (userDoc.exists()) {
-  //           const userData = userDoc.data();
-  //           console.log("User Role = " + userData.role);
-  //           waiterNamePlaceHolder = userData.name;
-  //           if (waiterNamePlaceHolder == null) {
-  //             waiterNamePlaceHolder = "Not available";
-  //           }
-  //           if (userData.role === "waiter") {
-  //             // Ensure the role matches what you have in Firestore
-  //             document.body.style.display = "block"; // Show the content
-  //             createButtons(); // Call createButtons now that the user is authenticated
-  //           } else {
-  //             //console.log("User Role = " + userData.role + "but not waiter");
-  //             window.location.href = "index.html"; // Redirect if the role is not Waiter
-  //           }
-  //         } else {
-  //           console.error("No such user document!");
-  //           window.location.href = "index.html"; // Redirect if no user document is found
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching user data:", error);
-  //         window.location.href = "index.html"; // Redirect on error
-  //       }
-  //     } else {
-  //       window.location.href = "index.html"; // Redirect if not signed in
-  //     }
-  //   });
-  // }
-
-  checkUserRole("waiter", () => {
+  checkUserRole("waiter", async () => {
     // Action specific to waiter
-    createButtons(); // Run waiter-specific code
+    createButtons(fetchOrderDetails, "buttonsContainer"); // Run waiter-specific code
+    itemNames = await fetchItemNames();
+    itemPrices = await fetchItemPrices();
+    // console.log("Item names fetched:", itemNames);
   });
+  document.getElementById("loading-overlay").style.display = "none";
 
-  // function logout() {
-  //   console.log("Logout called");
-  //   signOut(auth)
-  //     .then(() => {
-  //       console.log("Logout called");
-  //       console.log(
-  //         "iusLoggedIn Value check: ",
-  //         localStorage.getItem("isLoggedIn")
-  //       );
-  //       localStorage.removeItem("isLoggedIn");
-  //       localStorage.removeItem("userRole");
-  //       window.location.href = "index.html"; // Redirect to login page after successful logout
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error during logout:", error);
-  //     });
-  // }
+  // const itemNames = await fetchItemNames();
+
   const logoutButton = document.getElementById("logout");
   logoutButton.addEventListener("click", logOut);
 
-  // Function to create buttons
-  async function createButtons() {
-    console.log("Waiter.js:createButtons() Enter");
-    const buttonsContainer = document.getElementById("buttonsContainer");
+  // async function createButtons() {
+  //   console.log("Waiter.js:createButtons() Enter");
+  //   const buttonsContainer = document.getElementById("buttonsContainer");
 
-    const dbRef = ref(database);
-    const snapshot = await get(child(dbRef, "orders/"));
-    let orders = snapshot.val();
+  //   const dbRef = ref(database);
+  //   const snapshot = await get(child(dbRef, "orders/"));
+  //   let orders = snapshot.val();
 
-    for (let i = 1; i <= 10; i++) {
-      let tableKey = "Table-" + i;
-      const button = document.createElement("button");
-      button.textContent = "Table " + i;
-      button.setAttribute("data-table-no", "Table-" + i);
-      button.classList.add("table-btn");
+  //   for (let i = 1; i <= 12; i++) {
+  //     let tableKey = "Table-" + i;
+  //     const button = document.createElement("button");
+  //     button.textContent = "Table " + i;
+  //     button.setAttribute("data-table-no", "Table-" + i);
+  //     button.classList.add("table-btn");
 
-      if (orders) {
-        console.log("Waiter.js:createButtons() Orders are present");
-        if (!(orders[tableKey].toBilling === false)) {
-          // Disable the button if the table is closed
-          button.classList.add("disabled-btn");
-          button.disabled = true;
-        }
-      } else {
-        alert("Cannot fetch Order ID, Contact Developer");
-      }
-
-      button.onclick = function () {
-        const allButtons = document.querySelectorAll(".table-btn");
-        allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-        // Add active class to the clicked button
-        button.classList.add("active-btn");
-        fetchOrdersBtn(button);
-      };
-      buttonsContainer.appendChild(button);
-    }
-  }
-
-  // //Push Notification changes Starts
-  // function requestPermission() {
-  //   console.log("Requesting permission...");
-  //   Notification.requestPermission().then((permission) => {
-  //     if (permission === "granted") {
-  //       console.log("Notification permission granted.");
-  //       // TODO(developer): Retrieve a registration token for use with FCM.
-  //       // In many cases once an app has been granted notification permission,
-  //       // it should update its UI reflecting this.
-  //       resetUI();
+  //     if (orders) {
+  //       console.log("Waiter.js:createButtons() Orders are present");
+  //       if (!(orders[tableKey].toBilling === false)) {
+  //         // Disable the button if the table is closed
+  //         button.classList.add("disabled-btn");
+  //         button.disabled = true;
+  //       }
   //     } else {
-  //       console.log("Unable to get permission to notify.");
+  //       alert("Cannot fetch Order ID, Contact Developer");
   //     }
-  //   });
-  // }
-  // Handle incoming messages
-  // onMessage(messaging, (payload) => {
-  //   console.log("Message received. ", payload);
-  //   const notificationTitle = payload.notification.title;
-  //   const notificationOptions = {
-  //     body: payload.notification.body,
-  //   };
 
-  //   // Display notification
-  //   if (Notification.permission === "granted") {
-  //     new Notification(notificationTitle, notificationOptions);
+  // button.onclick = async function () {
+  //   showJsonContainer();
+  //   // Remove active class from all buttons
+  //   const allButtons = document.querySelectorAll(".table-btn");
+  //   allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+  //   // Add active class to the clicked button
+  //   button.classList.add("active-btn");
+
+  //   // Show loading indicator
+  //   const originalText = button.textContent;
+  //   button.textContent = "Loading...";
+  //   button.disabled = true;
+
+  //   try {
+  //     await fetchOrderDetails(button); // Execute the async function
+  //   } finally {
+  //     // Revert button text and re-enable it
+  //     button.textContent = originalText;
+  //     button.disabled = false;
   //   }
-  // });
-
-  // const functions = require("firebase-functions");
-  // const admin = require("firebase-admin");
-  // admin.initializeApp();
-
-  // exports.notifyChefStatusUpdate = functions.database
-  //   .ref("/orders/{tableId}/orderDetail/{orderDetailId}/{itemIndex}/chefStatus")
-  //   .onUpdate((change, context) => {
-  //     const beforeStatus = change.before.val(); // Previous chefStatus value
-  //     const afterStatus = change.after.val(); // Updated chefStatus value
-
-  //     // Only proceed if chefStatus was updated (change in value)
-  //     if (beforeStatus !== afterStatus) {
-  //       const tableId = context.params.tableId; // The table (e.g., "Table-1")
-  //       const itemIndex = context.params.itemIndex; // Index of the item (e.g., 0, 1, etc.)
-  //       const orderDetailId = context.params.orderDetailId; // Usually 'table-{id}' but depends on structure
-
-  //       // Get the updated order data to retrieve item details (itemName)
-  //       return admin
-  //         .database()
-  //         .ref(`/orders/${tableId}/orderDetail/${orderDetailId}/${itemIndex}`)
-  //         .once("value")
-  //         .then((snapshot) => {
-  //           const itemData = snapshot.val();
-  //           const itemName = itemData.itemName || "Unknown Item"; // Get itemName (e.g., "Milk Coffee")
-
-  //           // Create notification payload
-  //           const payload = {
-  //             notification: {
-  //               title: "Chef Status Updated",
-  //               body: `Chef status updated for ${itemName} at ${tableId}. New status: ${afterStatus}`,
-  //             },
-  //           };
-
-  //           // Send push notification (broadcasting to a topic)
-  //           return admin
-  //             .messaging()
-  //             .sendToTopic("allUsers", payload)
-  //             .then((response) => {
-  //               console.log("Notification sent successfully:", response);
-  //             })
-  //             .catch((error) => {
-  //               console.error("Error sending notification:", error);
-  //             });
-  //         });
-  //     }
-
-  //     return null; // If no update to chefStatus, do nothing
-  //   }); //Push notification changes ends
+  // };
+  //     buttonsContainer.appendChild(button);
+  //   }
+  // }
 
   // Function to add leading zeroes
   function pad(number) {
@@ -223,6 +102,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const seconds = pad(now.getSeconds());
 
     return `${year}-${month}-${day}_${hours}:${minutes}:${seconds}`;
+  }
+
+  function hideJsonContainer() {
+    const jsonContainer = document.getElementById("json-container");
+    if (jsonContainer) {
+      jsonContainer.style.display = "none"; // Hide after updating Firebase
+    }
   }
 
   async function submitData(button) {
@@ -263,18 +149,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
       i++;
-      // console.log(
-      //   "itemNameInput" +
-      //     itemName +
-      //     "\nquantityInput" +
-      //     quantity +
-      //     "\nnoteInput" +
-      //     note +
-      //     "\ndineInInput" +
-      //     dineIn +
-      //     "\nchefStatus" +
-      //     chefStatus
-      // );
       const rowData = {
         itemName: itemName || null,
         quantity: quantity,
@@ -284,22 +158,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         rate: rate !== 0 ? rate : 0,
       };
 
-      // console.log("Waiter Name +" + waiterName);
-      // console.log(`Row Data ${Object.keys(data1).length}:`, rowData); // Logs with current index
-
       // Store rowData in data1 object with numeric keys
       data1[Object.keys(data1).length] = rowData; // Assign using the current length of the object as key
     });
-
-    // Final output of data1 to show the object structure
-    // console.log("Final data1:", data1);
 
     const data = { [tableID]: data1 };
     const waiterNameVar = {
       waiterName: JSON.stringify(waiterNamePlaceHolder, null, 2),
     };
-    // console.log("Data:" + data + "\ntableID" + tableID);
-
     try {
       if (orderId) {
         const reference = ref(database, "orders/" + orderId + "/orderDetail/");
@@ -312,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           message: `A new order has been placed for ${orderId}!`,
           timestamp: Date.now(),
         });
-        location.reload(); // Reload the page
+        hideJsonContainer();
       } else {
         alert("Cannot fetch Order ID, Contact Developer");
       }
@@ -358,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  async function fetchOrdersBtn(button) {
+  async function fetchOrderDetails(button) {
     console.log("Waiter.js:fetchOrdersBtn() Enter");
     try {
       const orderId = button.getAttribute("data-table-no");
@@ -600,9 +466,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     addRowBtn.classList.add("form-btn");
     addRowBtn.classList.add("addRowBtn");
     addRowBtn.type = "button";
-    addRowBtn.addEventListener("click", function () {
-      $(".dropdown-select .list .dd-search").remove();
-      addRow();
+    addRowBtn.addEventListener("click", async function () {
+      // Show loading indicator
+      const originalText = addRowBtn.textContent;
+      addRowBtn.textContent = "Loading...";
+      addRowBtn.disabled = true;
+
+      try {
+        // Perform your function (e.g., addRow)
+        $(".dropdown-select .list .dd-search").remove();
+        addRow();
+      } finally {
+        // Revert button text and re-enable it
+        addRowBtn.textContent = originalText;
+        addRowBtn.disabled = false;
+      }
     });
 
     const submitBtn = document.createElement("button");
@@ -610,8 +488,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     submitBtn.classList.add("form-btn");
     submitBtn.classList.add("submitBtn");
     submitBtn.type = "button";
-    submitBtn.addEventListener("click", function () {
-      submitData(button);
+    submitBtn.addEventListener("click", async function () {
+      // Show loading indicator
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "Loading...";
+      submitBtn.disabled = true;
+      console.log("Inside try block");
+      try {
+        // Perform your function (e.g., submitData)
+        submitData(button);
+      } finally {
+        // Revert button text and re-enable it
+        console.log("Inside finally block" + originalText);
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
     });
 
     const toBillingBtn = document.createElement("button");
@@ -619,14 +510,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     toBillingBtn.classList.add("form-btn");
     toBillingBtn.classList.add("toBillingBtn");
     toBillingBtn.type = "button";
-    toBillingBtn.addEventListener("click", function () {
-      if (accept_billing) {
-        toBillingData(button);
-      } else {
-        // Show the popup
-        showPopup(function () {
-          toBillingData(button); // Call toBillingData if user clicks Yes
-        });
+    toBillingBtn.addEventListener("click", async function () {
+      // Show loading indicator
+      const originalText = toBillingBtn.textContent;
+      toBillingBtn.textContent = "Loading...";
+      toBillingBtn.disabled = true;
+
+      try {
+        if (accept_billing) {
+          toBillingData(button);
+        } else {
+          // Show the popup
+          showPopup(function () {
+            toBillingData(button); // Call toBillingData if user clicks Yes
+          });
+        }
+      } finally {
+        // Revert button text and re-enable it
+        toBillingBtn.textContent = originalText;
+        toBillingBtn.disabled = false;
       }
     });
 
@@ -638,7 +540,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     create_custom_dropdowns("item-name");
   }
 
-  function addRow() {
+  async function addRow() {
     const table = document.querySelector(".formTable tbody");
     const newRow = table.insertRow();
 

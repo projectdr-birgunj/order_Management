@@ -1,59 +1,21 @@
 import {
   database,
-  auth,
-  db,
   checkUserRole,
-  signOut,
   logOut,
   ref,
   update,
   get,
   child,
-  doc,
-  getDoc,
   onValue,
+  createButtons,
 } from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout");
   logoutButton.addEventListener("click", logOut);
-  // const app = initializeApp(firebaseConfig);
-  // const database = getDatabase(app);
-  // const auth = getAuth(app);
-  // const db = getFirestore(app);
-
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (user) {
-  //     const userDocRef = doc(db, "users", user.uid);
-  //     try {
-  //       const userDoc = await getDoc(userDocRef);
-  //       if (userDoc.exists()) {
-  //         const userData = userDoc.data();
-  //         console.log("User Role = " + userData.role);
-  //         if (userData.role === "chef") {
-  //           // Ensure the role matches what you have in Firestore
-  //           document.body.style.display = "block"; // Show the content
-  //           createButtons(); // Call createButtons now that the user is authenticated
-  //         } else {
-  //           // console.log("User Role = " + userData.role + "but not waiter");
-  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
-  //         }
-  //       } else {
-  //         console.error("No such user document!");
-  //         window.location.href = "index.html"; // Redirect if no user document is found
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //       window.location.href = "index.html"; // Redirect on error
-  //     }
-  //   } else {
-  //     window.location.href = "index.html"; // Redirect if not signed in
-  //   }
-  // });
 
   checkUserRole("chef", () => {
-    // Action specific to chef
-    createButtons(); // Run chef-specific code
+    createButtons(fetchOrderDetails, "order-list"); // Run chef-specific code
   });
 
   async function fetchOrderDetails(button) {
@@ -259,46 +221,40 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.play();
   }
 
-  async function createButtons() {
-    const buttonsContainer = document.getElementById("order-list");
+  // async function createButtons() {
+  //   const buttonsContainer = document.getElementById("order-list");
 
-    const dbRef = ref(database);
-    const snapshot = await get(child(dbRef, "orders/"));
-    let orders = snapshot.val();
+  //   const dbRef = ref(database);
+  //   const snapshot = await get(child(dbRef, "orders/"));
+  //   let orders = snapshot.val();
 
-    for (let i = 1; i <= 12; i++) {
-      let tableKey = "Table-" + i;
-      const button = document.createElement("button");
-      button.textContent = `Table ${i}`;
-      button.setAttribute("data-table-no", `Table-${i}`);
-      button.classList.add("table-btn");
-      if (orders) {
-        if (!(orders[tableKey].toBilling === false)) {
-          console.log(
-            "Tbale number with toBilling value" +
-              tableKey +
-              "\t" +
-              orders[tableKey].toBilling
-          );
-          // Disable the button if the table is closed
-          button.classList.add("disabled-btn");
-          button.disabled = true;
-        }
-      } else {
-        alert("Cannot fetch Order ID, Contact Developer");
-      }
+  //   for (let i = 1; i <= 12; i++) {
+  //     let tableKey = "Table-" + i;
+  //     const button = document.createElement("button");
+  //     button.textContent = `Table ${i}`;
+  //     button.setAttribute("data-table-no", `Table-${i}`);
+  //     button.classList.add("table-btn");
+  //     if (orders) {
+  //       if (!(orders[tableKey].toBilling === false)) {
+  //         // Disable the button if the table is closed
+  //         button.classList.add("disabled-btn");
+  //         button.disabled = true;
+  //       }
+  //     } else {
+  //       alert("Cannot fetch Order ID, Contact Developer");
+  //     }
 
-      button.onclick = function () {
-        const allButtons = document.querySelectorAll(".table-btn");
-        allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+  //     button.onclick = function () {
+  //       const allButtons = document.querySelectorAll(".table-btn");
+  //       allButtons.forEach((btn) => btn.classList.remove("active-btn"));
 
-        // Add active class to the clicked button
-        button.classList.add("active-btn");
-        fetchOrderDetails(button);
-      };
-      buttonsContainer.appendChild(button);
-    }
-  }
+  //       // Add active class to the clicked button
+  //       button.classList.add("active-btn");
+  //       fetchOrderDetails(button);
+  //     };
+  //     buttonsContainer.appendChild(button);
+  //   }
+  // }
 
   async function handleStatusChange(chefStatus_var, item, orderId) {
     const tableID = orderId.toLowerCase();
