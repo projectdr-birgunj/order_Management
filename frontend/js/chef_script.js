@@ -6,7 +6,6 @@ import {
   update,
   get,
   child,
-  onValue,
   createButtons,
 } from "../js/commonUtilityMgr.js";
 
@@ -14,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout");
   logoutButton.addEventListener("click", logOut);
 
-  checkUserRole("chef", () => {
-    createButtons(fetchOrderDetails, "order-list"); // Run chef-specific code
+  checkUserRole("chef", (role) => {
+    createButtons(fetchOrderDetails, "order-list", role); // Pass the role here
   });
 
   async function fetchOrderDetails(button) {
@@ -184,42 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
     button.classList.add("active");
   }
   console.log("Script is running, Firebase initialized.");
-  const notificationsRef = ref(database, "notifications");
-
-  let previousTableNo = null;
-
-  onValue(
-    notificationsRef,
-    (snapshot) => {
-      console.log("Inside code");
-      const notoficationObj = snapshot.val();
-
-      if (notoficationObj.tableNo !== previousTableNo) {
-        // Check if table number has changed
-        Swal.fire({
-          title: "New Order Received",
-          text:
-            "Table number " + notoficationObj.tableNo + " has been updated.",
-          icon: "info",
-          showConfirmButton: true,
-          // timer: 30000,
-        });
-        console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
-
-        playNotificationSound();
-
-        previousTableNo = notoficationObj.tableNo; // Update previousTableNo for subsequent checks
-      }
-    },
-    (error) => {
-      console.error("Error listening for changes:", error);
-    }
-  );
-
-  function playNotificationSound() {
-    const audio = new Audio("../sound/sound.mp3"); // Replace with your sound file path
-    audio.play();
-  }
 
   // async function createButtons() {
   //   const buttonsContainer = document.getElementById("order-list");

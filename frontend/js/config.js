@@ -1,11 +1,12 @@
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  databaseURL: process.env.DB_URL,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MSG_SNDR_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASURE_ID,
+  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
+  authDomain: "resturant-order-1d2b3.firebaseapp.com",
+  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
+  projectId: "resturant-order-1d2b3",
+  storageBucket: "resturant-order-1d2b3.firebasestorage.app",
+  messagingSenderId: "971852262554",
+  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
+  measurementId: "G-4TS2JLW1BY",
 };
+
 export default firebaseConfig;

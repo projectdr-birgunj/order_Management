@@ -19,9 +19,9 @@ let itemPrices;
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
 
-  checkUserRole("waiter", async () => {
+  checkUserRole("waiter", async (role) => {
     // Action specific to waiter
-    createButtons(fetchOrderDetails, "buttonsContainer"); // Run waiter-specific code
+    createButtons(fetchOrderDetails, "buttonsContainer", role); // Run waiter-specific code
     itemNames = await fetchItemNames();
     itemPrices = await fetchItemPrices();
     // console.log("Item names fetched:", itemNames);
@@ -164,20 +164,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = { [tableID]: data1 };
     const waiterNameVar = {
-      waiterName: JSON.stringify(waiterNamePlaceHolder, null, 2),
+      waiterName: waiterNamePlaceHolder, // Directly store the value, no need for JSON.stringify
     };
     try {
       if (orderId) {
         const reference = ref(database, "orders/" + orderId + "/orderDetail/");
         const waiterNameRef = ref(database, "orders/" + orderId);
-        const notificationRef = ref(database, "notifications");
         await update(reference, data);
         await update(waiterNameRef, waiterNameVar);
-        await update(notificationRef, {
-          tableNo: orderId,
-          message: `A new order has been placed for ${orderId}!`,
-          timestamp: Date.now(),
-        });
         hideJsonContainer();
       } else {
         alert("Cannot fetch Order ID, Contact Developer");
