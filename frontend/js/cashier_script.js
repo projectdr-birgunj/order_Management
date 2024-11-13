@@ -1,89 +1,66 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
-import {
-  getDatabase,
+  database,
+  checkUserRole,
+  logOut,
   ref,
   update,
   get,
-  set,
   child,
-  remove,
-  onValue,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
-import { itemPrices } from "./item_price.js";
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDcUrYx_eLswtcKPBpgJVyPWdyveDZLSyk",
-  authDomain: "resturant-order-1d2b3.firebaseapp.com",
-  databaseURL: "https://resturant-order-1d2b3-default-rtdb.firebaseio.com",
-  projectId: "resturant-order-1d2b3",
-  storageBucket: "resturant-order-1d2b3.appspot.com",
-  messagingSenderId: "971852262554",
-  appId: "1:971852262554:web:fefe99d0997f56f79e0323",
-  measurementId: "G-4TS2JLW1BY",
-};
+  createButtons,
+  fetchItemPrices,
+} from "../js/commonUtilityMgr.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded and parsed");
 
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     const userDocRef = doc(db, "users", user.uid);
+  //     try {
+  //       const userDoc = await getDoc(userDocRef);
+  //       if (userDoc.exists()) {
+  //         const userData = userDoc.data();
+  //         console.log("User Role = " + userData.role);
+  //         if (userData.role === "cashier") {
+  //           document.body.style.display = "block"; // Show the content
+  //           createButtons(); // Call createButtons now that the user is authenticated
+  //         } else {
+  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
+  //         }
+  //       } else {
+  //         console.error("No such user document!");
+  //         window.location.href = "index.html"; // Redirect if no user document is found
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       //window.location.href = "index.html"; // Redirect on error
+  //     }
+  //   } else {
+  //     window.location.href = "index.html"; // Redirect if not signed in
+  //   }
+  // });
+  let itemPrices;
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log("User Role = " + userData.role);
-          if (userData.role === "cashier") {
-            document.body.style.display = "block"; // Show the content
-            createButtons(); // Call createButtons now that the user is authenticated
-          } else {
-            window.location.href = "index.html"; // Redirect if the role is not Waiter
-          }
-        } else {
-          console.error("No such user document!");
-          window.location.href = "index.html"; // Redirect if no user document is found
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        //window.location.href = "index.html"; // Redirect on error
-      }
-    } else {
-      window.location.href = "index.html"; // Redirect if not signed in
-    }
+  checkUserRole("cashier", async (role) => {
+    createButtons(fetchOrderDetails, "buttonsContainer", role); // Pass the role here
+    itemPrices = await fetchItemPrices();
   });
 
-  function logout() {
-    console.log("Logout called");
-    signOut(auth)
-      .then(() => {
-        console.log("Logout called");
-        // window.location.href = "index.html"; // Redirect to login page after successful logout
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
-  }
+  // function logout() {
+  //   console.log("Logout called");
+  //   signOut(auth)
+  //     .then(() => {
+  //       console.log("Logout called");
+  //       // window.location.href = "index.html"; // Redirect to login page after successful logout
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error during logout:", error);
+  //     });
+  // }
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logout);
+  logoutButton.addEventListener("click", logOut);
 
-  async function fetchOrders(button) {
+  async function fetchOrderDetails(button) {
     try {
       const orderId = button.getAttribute("data-table-no");
       // console.log("Inside orderID if:", tableID);
@@ -117,48 +94,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function createButtons() {
-    // Function to create buttons
-    const buttonsContainer = document.getElementById("buttonsContainer");
+  // async function createButtons() {
+  //   // Function to create buttons
+  //   const buttonsContainer = document.getElementById("buttonsContainer");
 
-    const dbRef = ref(database);
-    const snapshot = await get(child(dbRef, "orders/"));
-    let orders = snapshot.val();
+  //   const dbRef = ref(database);
+  //   const snapshot = await get(child(dbRef, "orders/"));
+  //   let orders = snapshot.val();
 
-    console.log("Orders: \n" + JSON.stringify(orders, null, 2));
+  //   console.log("Orders: \n" + JSON.stringify(orders, null, 2));
 
-    for (let i = 1; i <= 12; i++) {
-      let tableKey = "Table-" + i;
-      const button = document.createElement("button");
-      button.textContent = "Table " + i;
-      button.setAttribute("data-table-no", "Table-" + i);
-      button.classList.add("table-btn");
+  //   for (let i = 1; i <= 12; i++) {
+  //     let tableKey = "Table-" + i;
+  //     const button = document.createElement("button");
+  //     button.textContent = "Table " + i;
+  //     button.setAttribute("data-table-no", "Table-" + i);
+  //     button.classList.add("table-btn");
 
-      console.log(
-        "orders[tableKey].tableClosed: " + orders[tableKey].toBilling
-      );
+  //     console.log(
+  //       "orders[tableKey].tableClosed: " + orders[tableKey].toBilling
+  //     );
 
-      if (orders) {
-        if (!(orders[tableKey].toBilling === true)) {
-          // Disable the button if the table is closed
-          button.classList.add("disabled-btn");
-          button.disabled = true;
-        }
-      } else {
-        alert("Cannot fetch Order ID, Contact Developer");
-      }
+  //     if (orders) {
+  //       if (!(orders[tableKey].toBilling === true)) {
+  //         // Disable the button if the table is closed
+  //         button.classList.add("disabled-btn");
+  //         button.disabled = true;
+  //       }
+  //     } else {
+  //       alert("Cannot fetch Order ID, Contact Developer");
+  //     }
 
-      button.onclick = function () {
-        const allButtons = document.querySelectorAll(".table-btn");
-        allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-        console.log("Inside button clicked");
-        // Add active class to the clicked button
-        button.classList.add("active-btn");
-        fetchOrders(button);
-      };
-      buttonsContainer.appendChild(button);
-    }
-  }
+  //     button.onclick = function () {
+  //       const allButtons = document.querySelectorAll(".table-btn");
+  //       allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+  //       console.log("Inside button clicked");
+  //       // Add active class to the clicked button
+  //       button.classList.add("active-btn");
+  //       fetchOrderDetails(button);
+  //     };
+  //     buttonsContainer.appendChild(button);
+  //   }
+  // }
 
   // window.onload = createButtons;
 
@@ -594,42 +571,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const notificationsRef = ref(database, "notificationsToCashier");
+  // const notificationsRef = ref(database, "notificationsToCashier");
 
-  let previousTableNo = null;
+  // let previousTableNo = null;
 
-  onValue(
-    notificationsRef,
-    (snapshot) => {
-      console.log("Inside code");
-      const notoficationObj = snapshot.val();
+  // onValue(
+  //   notificationsRef,
+  //   (snapshot) => {
+  //     console.log("Inside code");
+  //     const notoficationObj = snapshot.val();
 
-      if (notoficationObj.tableNo !== previousTableNo) {
-        // Check if table number has changed
-        Swal.fire({
-          title: "Bill Generated",
-          text:
-            "Table number " + notoficationObj.tableNo + " has been generated.",
-          icon: "info",
-          showConfirmButton: true,
-          // timer: 30000,
-        });
-        console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
+  //     if (notoficationObj.tableNo !== previousTableNo) {
+  //       // Check if table number has changed
+  //       Swal.fire({
+  //         title: "Bill Generated",
+  //         text:
+  //           "Table number " + notoficationObj.tableNo + " has been generated.",
+  //         icon: "info",
+  //         showConfirmButton: true,
+  //         // timer: 30000,
+  //       });
+  //       console.log("tableNo !== previousTableNo" + notoficationObj.tableNo);
 
-        playNotificationSound();
+  //       playNotificationSound();
 
-        previousTableNo = notoficationObj.tableNo; // Update previousTableNo for subsequent checks
-      }
-    },
-    (error) => {
-      console.error("Error listening for changes:", error);
-    }
-  );
+  //       previousTableNo = notoficationObj.tableNo; // Update previousTableNo for subsequent checks
+  //     }
+  //   },
+  //   (error) => {
+  //     console.error("Error listening for changes:", error);
+  //   }
+  // );
 
-  function playNotificationSound() {
-    const audio = new Audio("../sound/ting_only.mp3"); // Replace with your sound file path
-    audio.play();
-  }
+  // function playNotificationSound() {
+  //   const audio = new Audio("../sound/ting_only.mp3"); // Replace with your sound file path
+  //   audio.play();
+  // }
 
   document
     .getElementById("generate-bill")

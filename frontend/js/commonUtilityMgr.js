@@ -116,6 +116,7 @@ async function checkUserRole(
 
         if (userDoc.exists()) {
           const role = userDoc.data().role;
+          console.log("Role " + role + "\tUserRole :" + requiredRole);
           // Check if role matches the required role
           if (role !== requiredRole) {
             console.log("It shouldn't Hit");
@@ -124,20 +125,23 @@ async function checkUserRole(
           } else {
             // console.log("It should Hit");
             document.body.style.display = "block";
-            onSuccess();
+            onSuccess(role);
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("userRole", requiredRole);
           }
         } else {
+          localStorage.clear(); // Clear storage if user is not authenticated
           console.error("User document not found. Redirecting to login.");
           window.location.href = redirectPage;
         }
       } catch (error) {
         console.error("Error checking user role:", error);
+        localStorage.clear(); // Clear storage if user is not authenticated
         window.location.href = redirectPage;
       }
     } else {
       // Redirect to login if not authenticated
+      localStorage.clear(); // Clear storage if user is not authenticated
       window.location.href = redirectPage;
     }
   });
@@ -159,12 +163,12 @@ function logOut() {
     });
 }
 
-async function createButtons(fetchOrderDetails, containerId) {
+async function createButtons(fetchOrderDetails, containerId, userRole) {
   console.log("Inside createButtons");
   const buttonsContainer = document.getElementById(containerId);
 
-  const dbRef = ref(database);
-  const snapshot = await get(child(dbRef, "orders/"));
+  const dbRef = ref(database, "orders");
+  const snapshot = await get(dbRef);
   let orders = snapshot.val();
 
   for (let i = 1; i <= 12; i++) {
@@ -173,24 +177,30 @@ async function createButtons(fetchOrderDetails, containerId) {
     button.textContent = `Table ${i}`;
     button.setAttribute("data-table-no", `Table-${i}`);
     button.classList.add("table-btn");
+
     if (orders) {
-      if (!(orders[tableKey].toBilling === false)) {
-        // Disable the button if the table is closed
-        button.classList.add("disabled-btn");
-        button.disabled = true;
+      console.log("userRole: " + userRole);
+      const tableData = orders[tableKey];
+      if (userRole === "cashier") {
+        // Change toBilling check for chef role
+        if (!(tableData.toBilling === true)) {
+          // Disable the button if the table is not to be billed
+          button.classList.add("disabled-btn");
+          button.disabled = true;
+        }
+      } else {
+        // Default check for other roles
+        if (!(tableData.toBilling === false)) {
+          // Disable the button if the table is closed
+          button.classList.add("disabled-btn");
+          button.disabled = true;
+        }
       }
     } else {
-      alert("Cannot fetch Order ID, Contact Developer");
+      button.classList.add("disabled-btn");
+      button.disabled = true;
     }
 
-    // button.onclick = function () {
-    //   const allButtons = document.querySelectorAll(".table-btn");
-    //   allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-
-    //   // Add active class to the clicked button
-    //   button.classList.add("active-btn");
-    //   fetchOrderDetails(button);
-    // };
     button.onclick = async function () {
       showJsonContainer();
       // Remove active class from all buttons
