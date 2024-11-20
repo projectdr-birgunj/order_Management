@@ -186,6 +186,91 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false); // Stop the refreshing animation
             }
         });
+
+        webView.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY == 0) {
+                // Enable swipe refresh when WebView is scrolled to the top
+                swipeRefreshLayout.setEnabled(true);
+            } else {
+                // Disable swipe refresh when WebView is not at the top
+                swipeRefreshLayout.setEnabled(false);
+            }
+        });
+    }
+
+    private void requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+        } else {
+            // Permission already granted
+//            Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+//                Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Notification permission not granted", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Notification permission denied.");
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void initializeFCM(String uid) {
+//        Log.e("token","initializeFCM is called");
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("token", "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+                    String token = task.getResult();
+//                    Log.d(TAG, "FCM Token: " + token);
+                    callFCMSaveToken(token, uid)
+                            .addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    if (!task.isSuccessful()) {
+                                        Exception e = task.getException();
+                                        if (e instanceof FirebaseFunctionsException) {
+                                            FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                            FirebaseFunctionsException.Code code = ffe.getCode();
+                                            Object details = ffe.getDetails();
+                                        }
+                                    }
+                                }
+                            });
+                });
+    }
+
+    private Task<String> callFCMSaveToken(String token, String userUid) {
+        // Create the arguments to the callable function.
+        Log.e("token", "callFCMSaveToken Enter with token = " + token);
+        Log.e("token", "callFCMSaveToken checking uid = " + userUid);
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", token);
+        data.put("uid", userUid);
+
+        FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
+        return mFunctions
+                .getHttpsCallable("saveToken")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        String result = (String) task.getResult().getData();
+                        return result;
+                    }
+                });
     }
 
     private void requestNotificationPermission() {
