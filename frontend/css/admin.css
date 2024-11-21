@@ -167,6 +167,20 @@ select:focus {
   /* width: 150px; */
 }
 
+.delete-btn {
+  background-color: #12cbc4;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+  /* width: 150px; */
+}
+
 .statusBtn {
   background-color: #12cbc4;
   border: none;
@@ -374,4 +388,59 @@ select:focus {
 
 .editButtonContainer {
   display: block;
+}
+
+/* General styling for the container */
+.orderDetailsContainer {
+  padding: 20px;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2#orderIDHeader {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styling for each order detail */
+.orderDetailsContainer p {
+  font-size: 18px;
+  color: #555;
+  margin: 8px 0;
+}
+
+.orderDetailsContainer .detail-value {
+  font-weight: bold;
+  color: #333;
+  padding-left: 10px;
+}
+
+/* Add hover effect for better user interaction */
+.orderDetailsContainer p:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+  padding-left: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Optional: Styling for responsive design */
+@media screen and (max-width: 600px) {
+  .orderDetailsContainer {
+    padding: 15px;
+    margin: 10px;
+    max-width: 90%;
+  }
+
+  h2#orderIDHeader {
+    font-size: 20px;
+  }
+
+  .orderDetailsContainer p {
+    font-size: 16px;
+  }
 }

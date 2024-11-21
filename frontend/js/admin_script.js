@@ -4,8 +4,9 @@ import {
   onAuthStateChanged,
   signOut,
   db,
-  itemPrices,
-  itemNames,
+  fetchItemNames,
+  fetchItemPrices,
+  checkUserRole,
   ref,
   update,
   get,
@@ -20,64 +21,59 @@ import {
   arrayRemove,
   showAlert,
   collection,
+  logOut,
 } from "../js/commonUtilityMgr.js";
 
+let itemNames;
+let itemPrices;
+
 document.addEventListener("DOMContentLoaded", () => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      try {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          if (userData.role === "admin") {
-            // Ensure the role matches what you have in Firestore
-            document.body.style.display = "block"; // Show the content
-            // createButtons(); // Call createButtons now that the user is authenticated
-          } else {
-            //console.log("User Role = " + userData.role + "but not waiter");
-            window.location.href = "index.html"; // Redirect if the role is not Waiter
-          }
-        } else {
-          console.error("No such user document!");
-          window.location.href = "index.html"; // Redirect if no user document is found
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        window.location.href = "index.html"; // Redirect on error
-      }
-    } else {
-      window.location.href = "index.html"; // Redirect if not signed in
-    }
+  checkUserRole("admin", async (role) => {
+    // Action specific to waiter
+    //createButtons(fetchOrderDetails, "buttonsContainer", role); // Run waiter-specific code
+    itemNames = await fetchItemNames();
+    itemPrices = await fetchItemPrices();
+    // console.log("Item names fetched:", itemNames);
   });
 
-  function logout() {
-    console.log("Logout called");
-    signOut(auth)
-      .then(() => {
-        console.log("Logout called");
-        // window.location.href = "index.html"; // Redirect to login page after successful logout
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
-  }
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     const userDocRef = doc(db, "users", user.uid);
+  //     try {
+  //       const userDoc = await getDoc(userDocRef);
+  //       if (userDoc.exists()) {
+  //         const userData = userDoc.data();
+  //         if (userData.role === "admin") {
+  //           // Ensure the role matches what you have in Firestore
+  //           document.body.style.display = "block"; // Show the content
+  //           // createButtons(); // Call createButtons now that the user is authenticated
+  //         } else {
+  //           //console.log("User Role = " + userData.role + "but not waiter");
+  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
+  //         }
+  //       } else {
+  //         console.error("No such user document!");
+  //         window.location.href = "index.html"; // Redirect if no user document is found
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //       window.location.href = "index.html"; // Redirect on error
+  //     }
+  //   } else {
+  //     window.location.href = "index.html"; // Redirect if not signed in
+  //   }
+  // });
+
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", function () {
-    console.log("Logout clicked");
-    logout();
-  });
+  logoutButton.addEventListener("click", logOut);
 
   document
     .getElementById("chefStatusButton")
     .addEventListener("click", function () {
-      // Call the createButtons function
-      // Remove display: none to show the containers
       document.getElementById("buttonsContainer").classList.remove("hidden");
       document.getElementById("ordersContainer").classList.remove("hidden");
       document.getElementById("ordersHistoryContainer").classList.add("hidden");
       document.getElementById("changeItemContainer").classList.add("hidden");
-      // Call the createButtons function
       createButtons();
     });
 
@@ -100,7 +96,21 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("ordersContainer").classList.add("hidden");
       document.getElementById("ordersHistoryContainer").classList.add("hidden");
       document.getElementById("changeItemContainer").classList.remove("hidden");
+      document.getElementById("editUserListContainer").classList.add("hidden");
       displayChangeItem();
+    });
+
+  document
+    .getElementById("editUserListButton")
+    .addEventListener("click", function () {
+      document.getElementById("buttonsContainer").classList.add("hidden");
+      document.getElementById("ordersContainer").classList.add("hidden");
+      document.getElementById("ordersHistoryContainer").classList.add("hidden");
+      document.getElementById("changeItemContainer").classList.add("hidden");
+      document
+        .getElementById("editUserListContainer")
+        .classList.remove("hidden");
+      displayUserList();
     });
 
   const collectionSelect = document.getElementById("collectionSelect");
@@ -109,12 +119,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to populate the select options with collection paths
   async function displayOrderHistory() {
     try {
+      console.log("orderHistoryButton: displayOrderHistory Entered");
       // Get all collections in the Firestore database
       const collectionsSnapshot = await getDocs(collection(db, "orders"));
-      if (collectionsSnapshot.empty) {
-        console.log("No documents in 'orders' collection.");
-        return;
-      }
+      // if (collectionsSnapshot.empty) {
+      //   console.log("No documents in 'orders' collection.");
+      //   return;
+      // }
+      collectionsSnapshot.forEach((doc) => {
+        console.log(`Order ID: ${doc.id}`, doc.data());
+      });
       collectionsSnapshot.forEach((doc) => {
         // Create an option element for each collection
         const option = document.createElement("option");
@@ -204,28 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
   async function createButtons() {
     const buttonsContainer = document.getElementById("buttonsContainer");
     buttonsContainer.innerHTML = "";
-
-    // const dbRef = ref(database);
-    // const snapshot = await get(child(dbRef, "orders/"));
-    // let orders = snapshot.val();
-
     for (let i = 1; i <= 10; i++) {
-      // let tableKey = "Table-" + i;
       const button = document.createElement("button");
       button.textContent = "Table " + i;
       button.setAttribute("data-table-no", "Table-" + i);
       button.classList.add("table-btn");
-
-      // if (orders) {
-      //   if (!(orders[tableKey].toBilling === true)) {
-      //     // Disable the button if the table is not closed
-      //     button.classList.add("disabled-btn");
-      //     button.disabled = true;
-      //   }
-      // } else {
-      //   alert("Cannot fetch Order ID, Contact Developer");
-      // }
-
       button.onclick = function () {
         const allButtons = document.querySelectorAll(".table-btn");
         allButtons.forEach((btn) => btn.classList.remove("active-btn"));
@@ -247,19 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const snapshot = await get(child(dbRef, "orders/" + orderId));
         let order = snapshot.val();
         if (order) {
-          // console.log("Inside orders if:", orders);
-          // const to_billing_var = order["toBilling"];
-          // console.log("to_billing", to_billing_var);
-          // if (to_billing_var != "true") {
-          //   alert("Table not cleared yet! Please wait");
-          //   location.reload(); // Reload the page
-          //   return;
-          // } else if (to_billing_var == "true") {
           displayBillDetails(order, orderId, button);
-          // }
-          //  else {
-          //   alert("This should not show. Please contact Developer!!");
-          // }
         } else {
           order = null;
           displayBillDetails(order, orderId, button);
@@ -299,24 +284,27 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Display order details
     const { custName, tableClosed, timeStamp, waiterName, toBilling } = order;
     // Display customer and order details
     const h2Element = document.createElement("h2");
     h2Element.id = "orderIDHeader";
     h2Element.textContent = `Order Details for : ${orderId}`;
+
     const orderDetailsContainer = document.createElement("div");
     orderDetailsContainer.classList.add("orderDetailsContainer");
+
     displayArea.appendChild(h2Element);
-    orderDetailsContainer.innerHTML += `<p>Customer Name: ${custName}</p>`;
-    orderDetailsContainer.innerHTML += `<p>Table Closed: ${tableClosed}</p>`;
-    orderDetailsContainer.innerHTML += `<p>Time Stamp: ${timeStamp}</p>`;
-    // displayArea.innerHTML += `<p>To Billing: ${toBilling}</p>`;
-    orderDetailsContainer.innerHTML += `<p>Waiter Name: ${waiterName}</p>`;
+
+    orderDetailsContainer.innerHTML += `<p>Customer Name: <span class="detail-value">${custName}</span></p>`;
+    orderDetailsContainer.innerHTML += `<p>Table Closed: <span class="detail-value">${tableClosed}</span></p>`;
+    orderDetailsContainer.innerHTML += `<p>Time Stamp: <span class="detail-value">${timeStamp}</span></p>`;
+    orderDetailsContainer.innerHTML += `<p>Waiter Name: <span class="detail-value">${waiterName}</span></p>`;
+
     displayArea.appendChild(orderDetailsContainer);
 
     // Create a table element
     const table = document.createElement("table");
+    table.classList.add("orderTable");
 
     // Create the table header
     const thead = document.createElement("thead");
@@ -325,10 +313,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const headers = [
       "Item Name",
       "Quantity",
-      "Note",
-      "Dine In",
-      "Rate",
+      // "Note",
+      // "Dine In",
+      // "Rate",
       "Price",
+      "Chef Status",
+      "Billing",
     ];
     headers.forEach((headerText) => {
       const th = document.createElement("th");
@@ -358,17 +348,17 @@ document.addEventListener("DOMContentLoaded", () => {
       quantityCell.textContent = item.quantity;
       row.appendChild(quantityCell);
 
-      const noteCell = document.createElement("td");
-      noteCell.textContent = item.note;
-      row.appendChild(noteCell);
+      // const noteCell = document.createElement("td");
+      // noteCell.textContent = item.note;
+      // row.appendChild(noteCell);
 
-      const dineInCell = document.createElement("td");
-      dineInCell.textContent = item.dineIn;
-      row.appendChild(dineInCell);
+      // const dineInCell = document.createElement("td");
+      // dineInCell.textContent = item.dineIn;
+      // row.appendChild(dineInCell);
 
-      const rateCell = document.createElement("td");
-      rateCell.textContent = item.rate; //itemPrices[item.itemName] || 0;
-      row.appendChild(rateCell);
+      // const rateCell = document.createElement("td");
+      // rateCell.textContent = item.rate; //itemPrices[item.itemName] || 0;
+      // row.appendChild(rateCell);
 
       // Calculate the price and create a cell for it
       // Get the price from itemPrices based on item name
@@ -383,7 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const toChefStatusChange = document.createElement("button");
       toChefStatusChange.id = "showPopupButton";
-      toChefStatusChange.textContent = "Change Chef status to default";
+      toChefStatusChange.textContent = "Set Default";
       toChefStatusChange.classList.add("form-btn");
       toChefStatusChange.type = "button";
       toChefStatusChange.addEventListener("click", function () {
@@ -409,8 +399,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      row.appendChild(toChefStatusChange);
-      row.appendChild(tobillingStatusChange);
+      const chefCell = document.createElement("td");
+      chefCell.appendChild(toChefStatusChange);
+
+      const billingCell = document.createElement("td");
+      billingCell.appendChild(tobillingStatusChange);
+
+      row.appendChild(chefCell);
+      row.appendChild(billingCell);
 
       tbody.appendChild(row);
       table.appendChild(tbody);
@@ -808,5 +804,80 @@ document.addEventListener("DOMContentLoaded", () => {
     editButtonContainer.innerHTML = "";
     deleteButtonContainer.innerHTML = "";
     addButtonContainer.innerHTML = "";
+  }
+
+  // Function to fetch all users and display their data
+  async function displayUserList() {
+    try {
+      // Reference to the 'users' collection
+      const usersRef = collection(db, "users");
+
+      // Fetch all documents from the 'users' collection
+      const querySnapshot = await getDocs(usersRef);
+
+      // Check if any users exist
+      if (querySnapshot.empty) {
+        alert("This should never HIT!!! Contact Developer");
+        console.log("No users found!");
+        return;
+      }
+
+      const editUserListContainer = document.getElementById(
+        "editUserListContainer"
+      );
+
+      let tableHTML = `
+      <table class="user-list-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+      // Iterate through each document in the 'users' collection
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        const userID = doc.id;
+        const email = userData.email;
+        const name = userData.name;
+        const role = userData.role;
+
+        // Add each user data as a row
+        tableHTML += `
+          <tr>
+            <td data-label="Email">${email}</td>
+            <td data-label="Name">${name}</td>
+            <td data-label="Role">${role}</td>
+            <td data-label="Delete">
+              <button class="delete-btn table-responsive" onclick="deleteUser('${userID}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tableHTML += `</tbody></table>`;
+
+      // Insert the table HTML into the container
+      editUserListContainer.innerHTML = tableHTML;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  }
+
+  async function deleteUser(userID) {
+    try {
+      await db.collection("users").doc(userID).delete();
+      alert(`User with ID: ${userID} deleted successfully!`);
+      // Reload the table after deletion
+      fetchAllUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Error deleting user.");
+    }
   }
 });
