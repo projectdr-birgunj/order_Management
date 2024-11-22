@@ -26,6 +26,7 @@ import {
 
 let itemNames;
 let itemPrices;
+let userID;
 
 document.addEventListener("DOMContentLoaded", () => {
   checkUserRole("admin", async (role) => {
@@ -842,7 +843,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Iterate through each document in the 'users' collection
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
-        const userID = doc.id;
+        userID = doc.id;
         const email = userData.email;
         const name = userData.name;
         const role = userData.role;
@@ -854,7 +855,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td data-label="Name">${name}</td>
             <td data-label="Role">${role}</td>
             <td data-label="Delete">
-              <button class="delete-btn table-responsive" onclick="deleteUser('${userID}')">Delete</button>
+              <button id="deleteUserButton" class="delete-btn table-responsive">Delete</button>
             </td>
           </tr>
         `;
@@ -864,17 +865,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Insert the table HTML into the container
       editUserListContainer.innerHTML = tableHTML;
+
+      document
+        .getElementById("deleteUserButton")
+        .addEventListener("click", function () {
+          // const userUID = "userUID_to_delete"; // Replace with actual UID
+
+          // Call the Android function via the WebView's JavaScript interface
+          if (
+            window.AndroidInterface &&
+            typeof window.AndroidInterface.triggerCloudFunction === "function"
+          ) {
+            window.AndroidInterface.triggerCloudFunction(userID); // Pass the UID to Android
+          }
+        });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   }
 
   async function deleteUser(userID) {
+    console.log("deleteUser Called");
     try {
-      await db.collection("users").doc(userID).delete();
+      const userDocRef = doc(db, "users", userID); // Reference to the document
+      console.log("User Document Reference:", userDocRef); // Print the reference
+      await deleteDoc(userDocRef); // Delete the document
+      console.log("User deleted successfully!");
       alert(`User with ID: ${userID} deleted successfully!`);
       // Reload the table after deletion
-      fetchAllUsers();
+      displayUserList();
     } catch (error) {
       console.error("Error deleting user:", error);
       alert("Error deleting user.");
