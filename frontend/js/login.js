@@ -177,9 +177,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     // Store login status in localStorage
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userRole", role);
-    if (window.AndroidInterface) {
-      window.AndroidInterface.onUserSignedIn(user.uid);
-    }
+    // if (window.AndroidInterface) {
+    //   window.AndroidInterface.onUserSignedIn(user.uid);
+    // }
 
     window.location.href = targetPage;
   } catch (error) {
