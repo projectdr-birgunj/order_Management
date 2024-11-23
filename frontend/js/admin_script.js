@@ -880,13 +880,15 @@ document.addEventListener("DOMContentLoaded", () => {
       //     }
       //   });
 
-      document.getElementById("myButton").addEventListener("click", () => {
-        const userID = "your_user_id"; // Replace with the actual user ID
-        window.postMessage(
-          { type: "triggerCloudFunction", userID: userID },
-          "*"
-        );
-      });
+      document
+        .getElementById("deleteUserButton")
+        .addEventListener("click", () => {
+          // const userID = "your_user_id"; // Replace with the actual user ID
+          window.postMessage(
+            { type: "triggerCloudFunction", userID: userID },
+            "*"
+          );
+        });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
