@@ -91,10 +91,12 @@ function setUserName(a_userName) {
 }
 
 function getUserUid() {
+  console.log("UserName: " + localStorage.getItem("userUid"));
   return localStorage.getItem("userUid");
 }
 
 function setUserUid(a_userUid) {
+  console.log("UserID: " + a_userUid);
   localStorage.setItem("userUid", a_userUid);
 }
 
@@ -147,29 +149,30 @@ async function checkUserRole(
   });
 }
 
-function logOut() {
+async function logOut(userID, role) {
   console.log("Logout called");
+
+  console.log(`Token for ${role} with userID ${userID} deleted successfully.`);
+
+  try {
+    const tokenDocRef = doc(db, `/auth/tokens/${role}/${userID}`);
+    const docSnap = await getDoc(tokenDocRef); // Get the document to check if it exists
+    if (docSnap.exists()) {
+      console.log("Document exists. Proceeding to delete...");
+      await deleteDoc(tokenDocRef);
+      console.log(
+        `Token after for ${role} with userID ${userID} deleted successfully.`
+      );
+    } else {
+      console.log("Document does not exist.");
+    }
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+  }
+
   signOut(auth)
-    .then(async () => {
-      console.log("Logout called");
-      const userID = localStorage.getItem("userUid");
-      const role = localStorage.getItem("userRole");
-
-      try {
-        // Get a reference to the document
-        // const docRef = db.doc(`/auth/tokens/${role}/${userID}`);
-        const tokenDocRef = doc(db, `auth/tokens/${role}/${userID}`);
-        console.log(tokenDocRef);
-
-        // Delete the document
-        await deleteDoc(tokenDocRef);
-
-        console.log(
-          `Token for ${role} with userID ${userID} deleted successfully.`
-        );
-      } catch (error) {
-        console.error("Error deleting document: ", error);
-      }
+    .then(() => {
+      console.log("signOut called Successfully");
       localStorage.clear();
       if (window.AndroidInterface) {
         window.AndroidInterface.onUserLoggedOut(userID);

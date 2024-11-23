@@ -10,11 +10,14 @@ import {
   child,
   getUserName,
   createButtons,
+  getUserUid,
 } from "../js/commonUtilityMgr.js";
 
 let waiterNamePlaceHolder = getUserName();
 let itemNames;
 let itemPrices;
+const userID = getUserUid();
+const userRole = localStorage.getItem("userRole");
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed");
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // const itemNames = await fetchItemNames();
 
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logOut);
+  logoutButton.addEventListener("click", () => logOut(userID, userRole));
 
   // async function createButtons() {
   //   console.log("Waiter.js:createButtons() Enter");
