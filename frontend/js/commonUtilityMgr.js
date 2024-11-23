@@ -157,7 +157,8 @@ function logOut() {
 
       try {
         // Get a reference to the document
-        const docRef = db.doc(`/auth/tokens/${role}/${userID}`);
+        // const docRef = db.doc(`/auth/tokens/${role}/${userID}`);
+        const docRef = doc(db, `auth/tokens/${role}/${userID}`);
         await deleteDoc(docRef);
         console.log(`Document deleted successfully from firestore`);
         while (true) {
