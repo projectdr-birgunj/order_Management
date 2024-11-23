@@ -158,12 +158,15 @@ function logOut() {
       try {
         // Get a reference to the document
         // const docRef = db.doc(`/auth/tokens/${role}/${userID}`);
-        const docRef = doc(db, `auth/tokens/${role}/${userID}`);
-        await deleteDoc(docRef);
-        console.log(`Document deleted successfully from firestore`);
-        while (true) {
-          console.log("Iteration:");
-        }
+        const tokenDocRef = doc(db, `auth/tokens/${role}/${userID}`);
+        console.log(tokenDocRef);
+
+        // Delete the document
+        await deleteDoc(tokenDocRef);
+
+        console.log(
+          `Token for ${role} with userID ${userID} deleted successfully.`
+        );
       } catch (error) {
         console.error("Error deleting document: ", error);
       }
@@ -171,7 +174,7 @@ function logOut() {
       if (window.AndroidInterface) {
         window.AndroidInterface.onUserLoggedOut(userID);
       }
-      // window.location.href = "index.html"; // Redirect to login page after successful logout
+      window.location.href = "index.html"; // Redirect to login page after successful logout
     })
     .catch((error) => {
       console.error("Error during logout:", error);
