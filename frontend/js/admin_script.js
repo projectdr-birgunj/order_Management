@@ -867,8 +867,14 @@ document.addEventListener("DOMContentLoaded", () => {
       editUserListContainer.innerHTML = tableHTML;
 
       editUserListContainer.addEventListener("click", (event) => {
+        console.log("Get element by ID deleteUserButton called");
         if (event.target.classList.contains("delete-btn")) {
-          const userId = event.target.dataset.userId;
+          const userId = event.target.dataset.userID;
+          console.log(
+            "Get element by ID deleteUserButton called with userId: ",
+            event.target.dataset.userID
+          );
+
           window.postMessage(
             { type: "triggerCloudFunction", userID: userId },
             "*"
