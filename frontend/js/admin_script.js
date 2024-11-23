@@ -855,7 +855,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td data-label="Name">${name}</td>
             <td data-label="Role">${role}</td>
             <td data-label="Delete">
-              <button id="deleteUserButton" class="delete-btn table-responsive">Delete</button>
+              <button id="deleteUserButton" class="delete-btn table-responsive" data-user-id="${userID}">Delete</button>
             </td>
           </tr>
         `;
@@ -865,6 +865,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Insert the table HTML into the container
       editUserListContainer.innerHTML = tableHTML;
+
+      editUserListContainer.addEventListener("click", (event) => {
+        if (event.target.classList.contains("delete-btn")) {
+          const userId = event.target.dataset.userId;
+          window.postMessage(
+            { type: "triggerCloudFunction", userID: userId },
+            "*"
+          );
+        }
+      });
 
       // document
       //   .getElementById("deleteUserButton")
@@ -880,18 +890,19 @@ document.addEventListener("DOMContentLoaded", () => {
       //     }
       //   });
 
-      document
-        .getElementById("deleteUserButton")
-        .addEventListener("click", () => {
-          // const userID = "your_user_id"; // Replace with the actual user ID
-          window.postMessage(
-            { type: "triggerCloudFunction", userID: userID },
-            "*"
-          );
-        });
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
+    //   document
+    //     .getElementById("deleteUserButton")
+    //     .addEventListener("click", () => {
+    //       console.log("Get element by ID deleteUserButton called");
+    //       // const userID = "your_user_id"; // Replace with the actual user ID
+    //       window.postMessage(
+    //         { type: "triggerCloudFunction", userID: userID },
+    //         "*"
+    //       );
+    //     });
+    // } catch (error) {
+    //   console.error("Error fetching users:", error);
+    // }
   }
 
   async function deleteUser(userID) {
