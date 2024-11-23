@@ -848,6 +848,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = userData.name;
         const role = userData.role;
 
+        console.log("Inside querySnapshot with userID: ", userID);
+
         // Add each user data as a row
         tableHTML += `
           <tr>
@@ -871,14 +873,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target.classList.contains("delete-btn")) {
           const userId = event.target.dataset.userID;
           console.log(
-            "Get element by ID deleteUserButton called with userId: ",
+            "Get element by ID deleteUserButton called with event.target.dataset.userID: ",
             event.target.dataset.userID
           );
-
-          window.postMessage(
-            { type: "triggerCloudFunction", userID: userId },
-            "*"
+          console.log(
+            "Get element by ID deleteUserButton called with userId: ",
+            userId
           );
+
+          // window.postMessage(
+          //   { type: "triggerCloudFunction", userID: userId },
+          //   "*"
+          // );
+          if (
+            window.AndroidInterface &&
+            typeof window.AndroidInterface.triggerCloudFunction === "function"
+          ) {
+            window.AndroidInterface.triggerCloudFunction(userId); // Pass the UID to Android
+          }
         }
       });
 
