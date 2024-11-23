@@ -885,6 +885,14 @@ document.addEventListener("DOMContentLoaded", () => {
           //   { type: "triggerCloudFunction", userID: userId },
           //   "*"
           // );
+          console.log("AndroidInterface:", window.AndroidInterface);
+          if (window.AndroidInterface) {
+            console.log(
+              "triggerCloudFunction exists:",
+              typeof window.AndroidInterface.triggerCloudFunction
+            );
+          }
+
           if (
             window.AndroidInterface &&
             typeof window.AndroidInterface.triggerCloudFunction === "function"
