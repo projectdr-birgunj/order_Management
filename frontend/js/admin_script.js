@@ -866,19 +866,27 @@ document.addEventListener("DOMContentLoaded", () => {
       // Insert the table HTML into the container
       editUserListContainer.innerHTML = tableHTML;
 
-      document
-        .getElementById("deleteUserButton")
-        .addEventListener("click", function () {
-          // const userUID = "userUID_to_delete"; // Replace with actual UID
+      // document
+      //   .getElementById("deleteUserButton")
+      //   .addEventListener("click", function () {
+      //     // const userUID = "userUID_to_delete"; // Replace with actual UID
 
-          // Call the Android function via the WebView's JavaScript interface
-          if (
-            window.AndroidInterface &&
-            typeof window.AndroidInterface.triggerCloudFunction === "function"
-          ) {
-            window.AndroidInterface.triggerCloudFunction(userID); // Pass the UID to Android
-          }
-        });
+      //     // Call the Android function via the WebView's JavaScript interface
+      //     if (
+      //       window.AndroidInterface &&
+      //       typeof window.AndroidInterface.triggerCloudFunction === "function"
+      //     ) {
+      //       window.AndroidInterface.triggerCloudFunction(userID); // Pass the UID to Android
+      //     }
+      //   });
+
+      document.getElementById("myButton").addEventListener("click", () => {
+        const userID = "your_user_id"; // Replace with the actual user ID
+        window.postMessage(
+          { type: "triggerCloudFunction", userID: userID },
+          "*"
+        );
+      });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
