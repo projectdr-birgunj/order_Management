@@ -899,7 +899,7 @@ document.addEventListener("DOMContentLoaded", () => {
           //   { type: "triggerCloudFunction", userID: userId },
           //   "*"
           // );
-          console.log("AndroidInterface:", window.AndroidInterface);
+          console.log("AndroidInterfaceDeleteUser:", window.AndroidInterface);
           if (window.AndroidInterface) {
             console.log(
               "triggerCloudFunction exists:",
@@ -909,7 +909,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (
             window.AndroidInterface &&
-            typeof window.AndroidInterface.triggerCloudFunction === "function"
+            //typeof window.AndroidInterface.triggerCloudFunction === "function"
           ) {
             console.log("Inside If condition");
             window.AndroidInterface.triggerCloudFunction(userId); // Pass the UID to Android

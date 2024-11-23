@@ -153,9 +153,9 @@ function logOut() {
     .then(() => {
       console.log("Logout called");
       localStorage.clear();
-      // if (window.AndroidInterface) {
-      //   window.AndroidInterface.onUserLoggedOut();
-      // }
+      if (window.AndroidInterface) {
+        window.AndroidInterface.onUserLoggedOut();
+      }
       window.location.href = "index.html"; // Redirect to login page after successful logout
     })
     .catch((error) => {
