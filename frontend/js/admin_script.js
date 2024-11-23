@@ -871,10 +871,10 @@ document.addEventListener("DOMContentLoaded", () => {
       editUserListContainer.addEventListener("click", (event) => {
         console.log("Get element by ID deleteUserButton called");
         if (event.target.classList.contains("delete-btn")) {
-          const userId = event.target.dataset.userID;
+          const userId = event.target.dataset.userId;
           console.log(
             "Get element by ID deleteUserButton called with event.target.dataset.userID: ",
-            event.target.dataset.userID
+            event.target.dataset.userId
           );
           console.log(
             "Get element by ID deleteUserButton called with userId: ",
