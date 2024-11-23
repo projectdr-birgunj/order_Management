@@ -890,19 +890,19 @@ document.addEventListener("DOMContentLoaded", () => {
       //     }
       //   });
 
-    //   document
-    //     .getElementById("deleteUserButton")
-    //     .addEventListener("click", () => {
-    //       console.log("Get element by ID deleteUserButton called");
-    //       // const userID = "your_user_id"; // Replace with the actual user ID
-    //       window.postMessage(
-    //         { type: "triggerCloudFunction", userID: userID },
-    //         "*"
-    //       );
-    //     });
-    // } catch (error) {
-    //   console.error("Error fetching users:", error);
-    // }
+      //   document
+      //     .getElementById("deleteUserButton")
+      //     .addEventListener("click", () => {
+      //       console.log("Get element by ID deleteUserButton called");
+      //       // const userID = "your_user_id"; // Replace with the actual user ID
+      //       window.postMessage(
+      //         { type: "triggerCloudFunction", userID: userID },
+      //         "*"
+      //       );
+      //     });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   }
 
   async function deleteUser(userID) {
