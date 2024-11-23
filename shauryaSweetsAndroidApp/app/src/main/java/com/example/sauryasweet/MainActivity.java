@@ -29,6 +29,7 @@ import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,6 +169,60 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("UserRole", "targetWebPage value is: "+targetWebPage);
         // Load your website
         webView.loadUrl(baseUrl + targetWebPage);
+
+        // Create an interface between JavaScript and Android
+//        webView.addJavascriptInterface(new Object() {
+//            @android.webkit.JavascriptInterface
+//            public void triggerCloudFunction(String userUID) {
+//                // When the button in the website is clicked, this function will be called
+//                callDeleteUserFunction(userUID);
+//            }
+//        }, "AndroidInterface");
+
+//        webView.addJavascriptInterface(new Object() {
+//            @JavascriptInterface
+//            public void triggerCloudFunction(String userID) {
+//                // Access the userID here
+//                Log.d("WebView", "Received userID: " + userID);
+//
+//                // Trigger Firebase Cloud Function with the userID
+//                FirebaseFunctions.getInstance()
+//                        .getHttpsCallable("deleteUserByUID")
+//                        .call(Map.of("userID", userID))
+//                        .addOnSuccessListener(result -> {
+//                            // Handle successful execution
+//
+//                        })
+//                        .addOnFailureListener(e -> {
+//                            // Handle errors
+//                        });
+//            }
+//        }, "Android");
+
+        webView.addJavascriptInterface(new Object() {
+            @JavascriptInterface
+            public void triggerCloudFunction(String userID) {
+                Log.d("WebView", "Received userID: " + userID);
+
+                // Prepare data to send to Cloud Function
+                Map<String, Object> data = new HashMap<>();
+                data.put("userID", userID);
+
+                // Trigger Firebase Cloud Function
+                FirebaseFunctions.getInstance()
+                        .getHttpsCallable("deleteUserByUID")
+                        .call(data)
+                        .addOnSuccessListener(result -> {
+                            // Handle successful execution
+                            Log.d("Firebase", "Cloud Function executed successfully.");
+                        })
+                        .addOnFailureListener(e -> {
+                            // Handle errors
+                            Log.e("Firebase", "Error executing Cloud Function: ", e);
+                        });
+            }
+        }, "AndroidInterface");
+
 
 
         // Request notification permission if Android 13 or above
@@ -357,4 +412,21 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed(); // Otherwise, exit the app
         }
     }
+
+    // Function to call the Firebase Cloud Function
+//    private void callDeleteUserFunction(String userUID) {
+//        // Call the Cloud Function to delete the user based on the UID
+//        FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
+//        mFunctions.getHttpsCallable("deleteUserByUID")
+//                .call(Collections.singletonMap("userUID", userUID))
+//                .addOnSuccessListener(result -> {
+//                    Log.d("deleteFunc", "User deleted successfull for userID: " + userUID);
+//                    // Handle successful result
+//                    Toast.makeText(MainActivity.this, "User deleted successfully!", Toast.LENGTH_SHORT).show();
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Handle failure
+//                    Toast.makeText(MainActivity.this, "Error deleting user", Toast.LENGTH_SHORT).show();
+//                });
+//    }
 }
