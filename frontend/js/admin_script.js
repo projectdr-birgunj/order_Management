@@ -908,7 +908,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           if (
-            window.AndroidInterface &&
+            window.AndroidInterface
             //typeof window.AndroidInterface.triggerCloudFunction === "function"
           ) {
             console.log("Inside If condition");
