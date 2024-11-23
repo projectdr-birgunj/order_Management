@@ -1,7 +1,7 @@
 import {
   database,
   auth,
-  onAuthStateChanged,
+  getUserUid,
   signOut,
   db,
   fetchItemNames,
@@ -26,7 +26,8 @@ import {
 
 let itemNames;
 let itemPrices;
-let userID;
+const userID = getUserUid();
+const userRole = localStorage.getItem("userRole");
 
 document.addEventListener("DOMContentLoaded", () => {
   checkUserRole("admin", async (role) => {
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
 
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logOut);
+  logoutButton.addEventListener("click", () => logOut(userID, userRole));
 
   document
     .getElementById("chefStatusButton")

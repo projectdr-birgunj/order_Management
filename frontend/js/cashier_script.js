@@ -10,6 +10,9 @@ import {
   fetchItemPrices,
 } from "../js/commonUtilityMgr.js";
 
+const userID = getUserUid();
+const userRole = localStorage.getItem("userRole");
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded and parsed");
 
@@ -58,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //     });
   // }
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logOut);
+  logoutButton.addEventListener("click", () => logOut(userID, userRole));
 
   async function fetchOrderDetails(button) {
     try {

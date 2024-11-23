@@ -9,9 +9,12 @@ import {
   createButtons,
 } from "../js/commonUtilityMgr.js";
 
+const userID = getUserUid();
+const userRole = localStorage.getItem("userRole");
+
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", logOut);
+  logoutButton.addEventListener("click", () => logOut(userID, userRole));
 
   checkUserRole("chef", (role) => {
     createButtons(fetchOrderDetails, "order-list", role); // Pass the role here
