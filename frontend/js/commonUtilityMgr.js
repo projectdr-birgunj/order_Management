@@ -33,7 +33,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-let userUid;
+// let userUid;
 
 // Fetch data from Firestore
 async function fetchItemPrices() {
@@ -91,11 +91,11 @@ function setUserName(a_userName) {
 }
 
 function getUserUid() {
-  return userUid;
+  return localStorage.getItem("userUid");
 }
 
 function setUserUid(a_userUid) {
-  userUid = a_userUid;
+  localStorage.setItem("userUid", a_userUid);
 }
 
 async function checkUserRole(
@@ -150,13 +150,27 @@ async function checkUserRole(
 function logOut() {
   console.log("Logout called");
   signOut(auth)
-    .then(() => {
+    .then(async () => {
       console.log("Logout called");
+      const userID = localStorage.getItem("userUid");
+      const role = localStorage.getItem("userRole");
+
+      try {
+        // Get a reference to the document
+        const docRef = db.doc(`/auth/tokens/${role}/${userID}`);
+        await deleteDoc(docRef);
+        console.log(`Document deleted successfully from firestore`);
+        while (true) {
+          console.log("Iteration:");
+        }
+      } catch (error) {
+        console.error("Error deleting document: ", error);
+      }
       localStorage.clear();
       if (window.AndroidInterface) {
-        window.AndroidInterface.onUserLoggedOut();
+        window.AndroidInterface.onUserLoggedOut(userID);
       }
-      window.location.href = "index.html"; // Redirect to login page after successful logout
+      // window.location.href = "index.html"; // Redirect to login page after successful logout
     })
     .catch((error) => {
       console.error("Error during logout:", error);
