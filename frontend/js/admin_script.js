@@ -889,6 +889,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.AndroidInterface &&
             typeof window.AndroidInterface.triggerCloudFunction === "function"
           ) {
+            console.log("Inside If condition");
             window.AndroidInterface.triggerCloudFunction(userId); // Pass the UID to Android
           }
         }
