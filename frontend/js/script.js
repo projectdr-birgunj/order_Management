@@ -323,9 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
     actionCell.appendChild(deleteBtn);
   }
 
-  document.getElementById("logout")?.addEventListener("click", function () {
-    localStorage.removeItem("isLoggedIn");
-    alert("You have been logged out.");
-    window.location.href = "index.html";
-  });
+  // document.getElementById("logout")?.addEventListener("click", function () {
+  //   localStorage.removeItem("isLoggedIn");
+  //   alert("You have been logged out.");
+  //   window.location.href = "index.html";
+  // });
 });
