@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("ordersContainer").classList.remove("hidden");
       document.getElementById("ordersHistoryContainer").classList.add("hidden");
       document.getElementById("changeItemContainer").classList.add("hidden");
+      document.getElementById("editUserListContainer").classList.add("hidden");
       createButtons();
     });
 
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("ordersHistoryContainer")
         .classList.remove("hidden");
       document.getElementById("changeItemContainer").classList.add("hidden");
+      document.getElementById("editUserListContainer").classList.add("hidden");
       displayOrderHistory();
     });
 
@@ -840,10 +842,18 @@ document.addEventListener("DOMContentLoaded", () => {
         <tbody>
     `;
 
+      let userFound = false;
+
       // Iterate through each document in the 'users' collection
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
         userID = doc.id;
+
+        if (userData.mainUser === "Yes") {
+          console.log(`Skipping Main user`);
+          return; // Skip this user and move to the next iteration
+        }
+        userFound = true;
         const email = userData.email;
         const name = userData.name;
         const role = userData.role;
@@ -862,6 +872,10 @@ document.addEventListener("DOMContentLoaded", () => {
           </tr>
         `;
       });
+
+      if (!userFound) {
+        tableHTML = `<p>No user found</p>`;
+      }
 
       tableHTML += `</tbody></table>`;
 
