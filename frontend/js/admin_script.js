@@ -856,6 +856,9 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log("AndroidInterface is available, calling function...");
               window.AndroidInterface.triggerCloudFunction(userId);
 
+              console.log(
+                "AndroidInterface is available, after calling function..."
+              );
               alert("User Deleted Successfully");
             } else {
               // Android interface not available
