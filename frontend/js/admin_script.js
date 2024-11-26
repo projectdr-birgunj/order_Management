@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function createButtons() {
     const buttonsContainer = document.getElementById("buttonsContainer");
     buttonsContainer.innerHTML = "";
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 12; i++) {
       const button = document.createElement("button");
       button.textContent = "Table " + i;
       button.setAttribute("data-table-no", "Table-" + i);
