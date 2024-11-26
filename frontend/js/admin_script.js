@@ -846,29 +846,26 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Get element by ID deleteUserButton called");
         if (event.target.classList.contains("delete-btn")) {
           const userId = event.target.dataset.userId;
-          console.log(
-            "Get element by ID deleteUserButton called with event.target.dataset.userID: ",
-            event.target.dataset.userId
-          );
-          console.log(
-            "Get element by ID deleteUserButton called with userId: ",
-            userId
-          );
 
-          console.log("AndroidInterfaceDeleteUser:", window.AndroidInterface);
-          if (window.AndroidInterface) {
-            console.log(
-              "triggerCloudFunction exists:",
-              typeof window.AndroidInterface.triggerCloudFunction
-            );
-          }
+          try {
+            // Check if Android interface exists
+            if (
+              window.AndroidInterface &&
+              typeof window.AndroidInterface.triggerCloudFunction === "function"
+            ) {
+              console.log("AndroidInterface is available, calling function...");
+              window.AndroidInterface.triggerCloudFunction(userId);
 
-          if (
-            window.AndroidInterface
-            //typeof window.AndroidInterface.triggerCloudFunction === "function"
-          ) {
-            console.log("Inside If condition");
-            window.AndroidInterface.triggerCloudFunction(userId); // Pass the UID to Android
+              alert("User Deleted Successfully");
+            } else {
+              // Android interface not available
+              alert("User Deletion UnSuccessfull");
+              throw new Error(
+                "Android interface not available or triggerCloudFunction not defined."
+              );
+            }
+          } catch (error) {
+            console.error("Error deleting user:", error);
           }
         }
       });
