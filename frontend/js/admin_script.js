@@ -1,8 +1,6 @@
 import {
   database,
-  auth,
   getUserUid,
-  signOut,
   db,
   fetchItemNames,
   fetchItemPrices,
@@ -26,48 +24,17 @@ import {
 
 let itemNames;
 let itemPrices;
-const userID = getUserUid();
+const userUID = getUserUid();
 const userRole = localStorage.getItem("userRole");
 
 document.addEventListener("DOMContentLoaded", () => {
   checkUserRole("admin", async (role) => {
-    // Action specific to waiter
-    //createButtons(fetchOrderDetails, "buttonsContainer", role); // Run waiter-specific code
     itemNames = await fetchItemNames();
     itemPrices = await fetchItemPrices();
-    // console.log("Item names fetched:", itemNames);
   });
 
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (user) {
-  //     const userDocRef = doc(db, "users", user.uid);
-  //     try {
-  //       const userDoc = await getDoc(userDocRef);
-  //       if (userDoc.exists()) {
-  //         const userData = userDoc.data();
-  //         if (userData.role === "admin") {
-  //           // Ensure the role matches what you have in Firestore
-  //           document.body.style.display = "block"; // Show the content
-  //           // createButtons(); // Call createButtons now that the user is authenticated
-  //         } else {
-  //           //console.log("User Role = " + userData.role + "but not waiter");
-  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
-  //         }
-  //       } else {
-  //         console.error("No such user document!");
-  //         window.location.href = "index.html"; // Redirect if no user document is found
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //       window.location.href = "index.html"; // Redirect on error
-  //     }
-  //   } else {
-  //     window.location.href = "index.html"; // Redirect if not signed in
-  //   }
-  // });
-
   const logoutButton = document.getElementById("logout");
-  logoutButton.addEventListener("click", () => logOut(userID, userRole));
+  logoutButton.addEventListener("click", () => logOut(userUID, userRole));
 
   document
     .getElementById("chefStatusButton")
@@ -114,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document
         .getElementById("editUserListContainer")
         .classList.remove("hidden");
-      displayUserList();
+      displayEditUser();
     });
 
   const collectionSelect = document.getElementById("collectionSelect");
@@ -176,48 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event listener for the select element
   collectionSelect.addEventListener("change", displayCollectionData);
-  // Fetch all orders for Table-6 on 2024-08-11
-  // async function displayOrderHistory() {
-  //   console.log("Inside displayOrderHistory");
-  //   const ordersContainer = document.getElementById("ordersHistoryContainer");
-
-  //   // Clear existing content
-  //   ordersContainer.innerHTML = "";
-
-  // const docRef = doc(
-  //   db,
-  //   "orders/data_20240811/Table-6/Table-6_20240811_231703"
-  // ); // Replace 'user123' with your document ID
-  // console.log("Document path: ", docRef.path);
-
-  //   try {
-  //     const docSnap = await getDoc(docRef);
-
-  //     if (docSnap.exists()) {
-  //       console.log("Document data:", docSnap.data());
-
-  //       const orderData = docSnap.data();
-
-  //       // Create a new div element to hold the order information
-  //       const orderDiv = document.createElement("div");
-  //       orderDiv.classList.add("order-item");
-
-  //       // Populate the div with order data
-  //       orderDiv.innerHTML = `
-  //         <p>Order ID: ${docRef.id}</p>
-  //         <p>Customer Name: ${orderData.custName}</p>
-  //         <p>Total Amount: $${orderData.totalAmount}</p>
-  //       `;
-
-  //       // Append the order div to the container
-  //       ordersContainer.appendChild(orderDiv);
-  //     } else {
-  //       console.log("No such document!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error getting document:", error);
-  //   }
-  // }
 
   async function createButtons() {
     const buttonsContainer = document.getElementById("buttonsContainer");
@@ -511,10 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("popup").style.display = "none";
   }
 
-  // import { itemNames, itemPrices } from './yourFirebaseModule'; // Import item data from Firebase
-
   const changeItemContainer = document.getElementById("changeItemContainer");
-  // const changeItemButton = document.getElementById("changeItemButton");
   const editButtonContainer = document.createElement("div");
   const deleteButtonContainer = document.createElement("div");
   const addButtonContainer = document.createElement("div");
@@ -810,8 +732,42 @@ document.addEventListener("DOMContentLoaded", () => {
     addButtonContainer.innerHTML = "";
   }
 
+  const editUserListContainer = document.getElementById(
+    "editUserListContainer"
+  );
+  const registerUserContainer = document.createElement("div");
+  const deleteUserContainer = document.createElement("div");
+
+  function displayEditUser() {
+    editUserListContainer.innerHTML = "";
+
+    // Create Register button
+    const registerUserButton = document.createElement("button");
+    registerUserButton.textContent = "Register User";
+    registerUserButton.classList.add("form-btn");
+
+    // Create Edit User button
+    const deleteUserButton = document.createElement("button");
+    deleteUserButton.textContent = "Delete User";
+    deleteUserButton.classList.add("form-btn");
+
+    editUserListContainer.appendChild(registerUserButton);
+    editUserListContainer.appendChild(deleteUserButton);
+
+    registerUserButton.addEventListener("click", () => {
+      // clearAllContainers();
+    });
+
+    deleteUserButton.addEventListener("click", () => {
+      // clearAllContainers();
+
+      // deleteUserContainer.classList = "deleteUserContainer";
+      displayUserList();
+    });
+  }
   // Function to fetch all users and display their data
   async function displayUserList() {
+    let userID;
     try {
       // Reference to the 'users' collection
       const usersRef = collection(db, "users");
@@ -826,9 +782,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const editUserListContainer = document.getElementById(
-        "editUserListContainer"
-      );
+      let deleteUserContainer = document.getElementById("deleteUserContainer");
+      if (!deleteUserContainer) {
+        deleteUserContainer = document.createElement("div");
+        deleteUserContainer.id = "deleteUserContainer";
+        editUserListContainer.appendChild(deleteUserContainer);
+      }
 
       let tableHTML = `
       <table class="user-list-table">
@@ -868,7 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td data-label="Name">${name}</td>
             <td data-label="Role">${role}</td>
             <td data-label="Delete">
-              <button id="deleteUserButton" class="delete-btn table-responsive" data-user-id="${userID}">Delete</button>
+              <button id="deleteUserButtonID" class="delete-btn table-responsive" data-user-id="${userID}">Delete</button>
             </td>
           </tr>
         `;
@@ -881,9 +840,9 @@ document.addEventListener("DOMContentLoaded", () => {
       tableHTML += `</tbody></table>`;
 
       // Insert the table HTML into the container
-      editUserListContainer.innerHTML = tableHTML;
+      deleteUserContainer.innerHTML = tableHTML;
 
-      editUserListContainer.addEventListener("click", (event) => {
+      deleteUserContainer.addEventListener("click", (event) => {
         console.log("Get element by ID deleteUserButton called");
         if (event.target.classList.contains("delete-btn")) {
           const userId = event.target.dataset.userId;
@@ -896,10 +855,6 @@ document.addEventListener("DOMContentLoaded", () => {
             userId
           );
 
-          // window.postMessage(
-          //   { type: "triggerCloudFunction", userID: userId },
-          //   "*"
-          // );
           console.log("AndroidInterfaceDeleteUser:", window.AndroidInterface);
           if (window.AndroidInterface) {
             console.log(
@@ -917,31 +872,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       });
-
-      // document
-      //   .getElementById("deleteUserButton")
-      //   .addEventListener("click", function () {
-      //     // const userUID = "userUID_to_delete"; // Replace with actual UID
-
-      //     // Call the Android function via the WebView's JavaScript interface
-      //     if (
-      //       window.AndroidInterface &&
-      //       typeof window.AndroidInterface.triggerCloudFunction === "function"
-      //     ) {
-      //       window.AndroidInterface.triggerCloudFunction(userID); // Pass the UID to Android
-      //     }
-      //   });
-
-      //   document
-      //     .getElementById("deleteUserButton")
-      //     .addEventListener("click", () => {
-      //       console.log("Get element by ID deleteUserButton called");
-      //       // const userID = "your_user_id"; // Replace with the actual user ID
-      //       window.postMessage(
-      //         { type: "triggerCloudFunction", userID: userID },
-      //         "*"
-      //       );
-      //     });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
