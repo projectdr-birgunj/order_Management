@@ -15,33 +15,6 @@ const userRole = localStorage.getItem("userRole");
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded and parsed");
-
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (user) {
-  //     const userDocRef = doc(db, "users", user.uid);
-  //     try {
-  //       const userDoc = await getDoc(userDocRef);
-  //       if (userDoc.exists()) {
-  //         const userData = userDoc.data();
-  //         console.log("User Role = " + userData.role);
-  //         if (userData.role === "cashier") {
-  //           document.body.style.display = "block"; // Show the content
-  //           createButtons(); // Call createButtons now that the user is authenticated
-  //         } else {
-  //           window.location.href = "index.html"; // Redirect if the role is not Waiter
-  //         }
-  //       } else {
-  //         console.error("No such user document!");
-  //         window.location.href = "index.html"; // Redirect if no user document is found
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //       //window.location.href = "index.html"; // Redirect on error
-  //     }
-  //   } else {
-  //     window.location.href = "index.html"; // Redirect if not signed in
-  //   }
-  // });
   let itemPrices;
 
   checkUserRole("cashier", async (role) => {
@@ -49,17 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     itemPrices = await fetchItemPrices();
   });
 
-  // function logout() {
-  //   console.log("Logout called");
-  //   signOut(auth)
-  //     .then(() => {
-  //       console.log("Logout called");
-  //       // window.location.href = "index.html"; // Redirect to login page after successful logout
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error during logout:", error);
-  //     });
-  // }
   const logoutButton = document.getElementById("logout");
   logoutButton.addEventListener("click", () => logOut(userID, userRole));
 
@@ -96,51 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error fetching data from Firebase:", error);
     }
   }
-
-  // async function createButtons() {
-  //   // Function to create buttons
-  //   const buttonsContainer = document.getElementById("buttonsContainer");
-
-  //   const dbRef = ref(database);
-  //   const snapshot = await get(child(dbRef, "orders/"));
-  //   let orders = snapshot.val();
-
-  //   console.log("Orders: \n" + JSON.stringify(orders, null, 2));
-
-  //   for (let i = 1; i <= 12; i++) {
-  //     let tableKey = "Table-" + i;
-  //     const button = document.createElement("button");
-  //     button.textContent = "Table " + i;
-  //     button.setAttribute("data-table-no", "Table-" + i);
-  //     button.classList.add("table-btn");
-
-  //     console.log(
-  //       "orders[tableKey].tableClosed: " + orders[tableKey].toBilling
-  //     );
-
-  //     if (orders) {
-  //       if (!(orders[tableKey].toBilling === true)) {
-  //         // Disable the button if the table is closed
-  //         button.classList.add("disabled-btn");
-  //         button.disabled = true;
-  //       }
-  //     } else {
-  //       alert("Cannot fetch Order ID, Contact Developer");
-  //     }
-
-  //     button.onclick = function () {
-  //       const allButtons = document.querySelectorAll(".table-btn");
-  //       allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-  //       console.log("Inside button clicked");
-  //       // Add active class to the clicked button
-  //       button.classList.add("active-btn");
-  //       fetchOrderDetails(button);
-  //     };
-  //     buttonsContainer.appendChild(button);
-  //   }
-  // }
-
-  // window.onload = createButtons;
 
   function displayBillDetails(order, orderId) {
     let billAmount = 0;

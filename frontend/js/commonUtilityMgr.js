@@ -256,65 +256,6 @@ function showJsonContainer() {
   }
 }
 
-function showPopup(title, message) {
-  const popupContainer = document.createElement("div");
-  popupContainer.className = "popup-container";
-
-  popupContainer.innerHTML = `
-      <div class="popup">
-          <h3>${title}</h3>
-          <p>${message}</p>
-          <button class="close-popup">OK</button>
-      </div>
-  `;
-
-  const style = document.createElement("style");
-  style.textContent = `
-      .popup-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-      }
-      .popup {
-          background: white;
-          padding: 20px;
-          border-radius: 8px;
-          text-align: center;
-      }
-      .popup h3 {
-          margin: 0 0 10px;
-      }
-      .popup p {
-          margin: 0 0 20px;
-      }
-      .popup .close-popup {
-          background: #007bff;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          border-radius: 4px;
-          cursor: pointer;
-      }
-      .popup .close-popup:hover {
-          background: #0056b3;
-      }
-  `;
-  document.head.appendChild(style);
-
-  document.body.appendChild(popupContainer);
-
-  popupContainer.querySelector(".close-popup").addEventListener("click", () => {
-    document.body.removeChild(popupContainer);
-  });
-}
-
 export {
   app,
   database,
@@ -348,5 +289,4 @@ export {
   getUserUid,
   setUserUid,
   createButtons,
-  showPopup,
 };
