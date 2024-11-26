@@ -20,7 +20,6 @@ import {
   showAlert,
   collection,
   logOut,
-  showPopup,
 } from "../js/commonUtilityMgr.js";
 
 let itemNames;
@@ -415,6 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showPopup(callback) {
+    console.log("Show PopUP Enter");
     // Show overlay and popup
     document.getElementById("overlay").style.display = "block";
     document.getElementById("popup").style.display = "block";
@@ -844,54 +844,41 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteUserContainer.innerHTML = tableHTML;
 
       deleteUserContainer.addEventListener("click", (event) => {
-        console.log("Get element by ID deleteUserButton called");
-        if (event.target.classList.contains("delete-btn")) {
-          const userId = event.target.dataset.userId;
-
-          try {
-            // Check if Android interface exists
-            if (
-              window.AndroidInterface &&
-              typeof window.AndroidInterface.triggerCloudFunction === "function"
-            ) {
-              console.log("AndroidInterface is available, calling function...");
-              window.AndroidInterface.triggerCloudFunction(userId);
-
-              showPopup("Success", "User Deleted Successfully");
-            } else {
-              // Android interface not available
-              showPopup(
-                "Error",
-                "User Deletion Unsuccessful. Please contact Developer."
-              );
-              throw new Error(
-                "Android interface not available or triggerCloudFunction not defined."
-              );
-            }
-          } catch (error) {
-            console.error("Error deleting user:", error);
-            showPopup("Error", `An error occurred: ${error.message}`);
-          }
-        }
+        showPopup(function () {
+          handleUserDeletion(event);
+        });
       });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   }
 
-  async function deleteUser(userID) {
-    console.log("deleteUser Called");
-    try {
-      const userDocRef = doc(db, "users", userID); // Reference to the document
-      console.log("User Document Reference:", userDocRef); // Print the reference
-      await deleteDoc(userDocRef); // Delete the document
-      console.log("User deleted successfully!");
-      alert(`User with ID: ${userID} deleted successfully!`);
-      // Reload the table after deletion
-      displayUserList();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("Error deleting user.");
+  function handleUserDeletion(event) {
+    console.log("Get element by ID deleteUserButton called");
+    if (event.target.classList.contains("delete-btn")) {
+      const userId = event.target.dataset.userId;
+
+      try {
+        // Check if Android interface exists
+        if (
+          window.AndroidInterface &&
+          typeof window.AndroidInterface.triggerCloudFunction === "function"
+        ) {
+          console.log("AndroidInterface is available, calling function...");
+          window.AndroidInterface.triggerCloudFunction(userId);
+
+          showAlert("Success", "User Deleted Successfully");
+        } else {
+          // Android interface not available
+          showAlert("Error", "User Deletion UnSuccessfull", false);
+          throw new Error(
+            "Android interface not available or triggerCloudFunction not defined."
+          );
+        }
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        showAlert("Error", `An error occurred: ${error.message}`, false);
+      }
     }
   }
 });
