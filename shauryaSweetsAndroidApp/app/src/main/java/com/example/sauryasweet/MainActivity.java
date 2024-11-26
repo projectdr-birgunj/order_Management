@@ -48,13 +48,36 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void onUserSignedIn(String uid) {
             // Trigger FCM token retrieval when user signs in
+            Log.d("AndroidInterface", "User logged out, clear any stored FCM token if necessary");
             initializeFCM(uid);
         }
 
         @JavascriptInterface
         public void onUserLoggedOut() {
             // Optionally handle logout; e.g., clear stored FCM token if needed
-            Log.d("FCM", "User logged out, clear any stored FCM token if necessary");
+            Log.d("AndroidInterface", "User logged out, clear any stored FCM token if necessary");
+        }
+
+        @JavascriptInterface
+        public void triggerCloudFunction(String userID) {
+            Log.d("AndroidInterface", "Received userID: " + userID);
+
+            // Prepare data to send to Cloud Function
+            Map<String, Object> data = new HashMap<>();
+            data.put("userID", userID);
+
+            // Trigger Firebase Cloud Function
+            FirebaseFunctions.getInstance()
+                    .getHttpsCallable("deleteUserByUID")
+                    .call(data)
+                    .addOnSuccessListener(result -> {
+                        // Handle successful execution
+                        Log.d("AndroidInterface", "Cloud Function executed successfully.");
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle errors
+                        Log.e("AndroidInterface", "Error executing Cloud Function: ", e);
+                    });
         }
     }
 
@@ -84,21 +107,13 @@ public class MainActivity extends AppCompatActivity {
                                 "})()", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String value) {
-                                // Handle the returned JSON string (value)
-                                // You might need to parse the JSON string to get individual values
                                 Log.d("WebViewData", "Data from localStorage: " + value);
-                                // Example of parsing if you use a JSON library
-                                // JSONObject jsonObject = new JSONObject(value);
-                                // Assume 'value' is the JSON string you received from localStorage
-                                //String value = "{\"isLoggedIn\": \"true\", \"userRole\": \"waiter\"}"; // Example value for testing
 
                                 try {
-                                    // Parse the JSON string to get the values
                                     JSONObject jsonObject = new JSONObject(value);
                                     String isLoggedIn = jsonObject.getString("isLoggedIn");
                                     String userRole = jsonObject.getString("userRole");
 
-                                    // Check if isLoggedIn and userRole are non-empty
                                     if (!isLoggedIn.isEmpty() && !userRole.isEmpty()) {
                                         // Handle the user role with a switch case
                                         switch (userRole) {
@@ -170,58 +185,10 @@ public class MainActivity extends AppCompatActivity {
         // Load your website
         webView.loadUrl(baseUrl + targetWebPage);
 
-        // Create an interface between JavaScript and Android
-//        webView.addJavascriptInterface(new Object() {
-//            @android.webkit.JavascriptInterface
-//            public void triggerCloudFunction(String userUID) {
-//                // When the button in the website is clicked, this function will be called
-//                callDeleteUserFunction(userUID);
-//            }
-//        }, "AndroidInterface");
-
 //        webView.addJavascriptInterface(new Object() {
 //            @JavascriptInterface
-//            public void triggerCloudFunction(String userID) {
-//                // Access the userID here
-//                Log.d("WebView", "Received userID: " + userID);
 //
-//                // Trigger Firebase Cloud Function with the userID
-//                FirebaseFunctions.getInstance()
-//                        .getHttpsCallable("deleteUserByUID")
-//                        .call(Map.of("userID", userID))
-//                        .addOnSuccessListener(result -> {
-//                            // Handle successful execution
-//
-//                        })
-//                        .addOnFailureListener(e -> {
-//                            // Handle errors
-//                        });
-//            }
-//        }, "Android");
-
-        webView.addJavascriptInterface(new Object() {
-            @JavascriptInterface
-            public void triggerCloudFunction(String userID) {
-                Log.d("WebView", "Received userID: " + userID);
-
-                // Prepare data to send to Cloud Function
-                Map<String, Object> data = new HashMap<>();
-                data.put("userID", userID);
-
-                // Trigger Firebase Cloud Function
-                FirebaseFunctions.getInstance()
-                        .getHttpsCallable("deleteUserByUID")
-                        .call(data)
-                        .addOnSuccessListener(result -> {
-                            // Handle successful execution
-                            Log.d("Firebase", "Cloud Function executed successfully.");
-                        })
-                        .addOnFailureListener(e -> {
-                            // Handle errors
-                            Log.e("Firebase", "Error executing Cloud Function: ", e);
-                        });
-            }
-        }, "AndroidInterface");
+//        }, "AndroidInterfaceDeleteUser");
 
 
 
@@ -328,81 +295,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-//    private void requestNotificationPermission() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
-//        } else {
-//            // Permission already granted
-////            Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission granted
-////                Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                // Permission denied
-//                Toast.makeText(this, "Notification permission not granted", Toast.LENGTH_SHORT).show();
-//                Log.e(TAG, "Notification permission denied.");
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
-//
-//    private void initializeFCM(String uid) {
-////        Log.e("token","initializeFCM is called");
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(task -> {
-//                    if (!task.isSuccessful()) {
-//                        Log.w("token", "Fetching FCM registration token failed", task.getException());
-//                        return;
-//                    }
-//                    String token = task.getResult();
-////                    Log.d(TAG, "FCM Token: " + token);
-//                    callFCMSaveToken(token, uid)
-//                            .addOnCompleteListener(new OnCompleteListener<String>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<String> task) {
-//                                    if (!task.isSuccessful()) {
-//                                        Exception e = task.getException();
-//                                        if (e instanceof FirebaseFunctionsException) {
-//                                            FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-//                                            FirebaseFunctionsException.Code code = ffe.getCode();
-//                                            Object details = ffe.getDetails();
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                });
-//    }
-//
-//    private Task<String> callFCMSaveToken(String token, String userUid) {
-//        // Create the arguments to the callable function.
-//        Log.e("token", "callFCMSaveToken Enter with token = " + token);
-//        Log.e("token", "callFCMSaveToken checking uid = " + userUid);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("token", token);
-//        data.put("uid", userUid);
-//
-//        FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
-//        return mFunctions
-//                .getHttpsCallable("saveToken")
-//                .call(data)
-//                .continueWith(new Continuation<HttpsCallableResult, String>() {
-//                    @Override
-//                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-//                        // This continuation runs on either success or failure, but if the task
-//                        // has failed then getResult() will throw an Exception which will be
-//                        // propagated down.
-//                        String result = (String) task.getResult().getData();
-//                        return result;
-//                    }
-//                });
-//    }
-
     @Override
     public void onBackPressed() {
         WebView webView = findViewById(R.id.webView);
@@ -413,20 +305,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Function to call the Firebase Cloud Function
-//    private void callDeleteUserFunction(String userUID) {
-//        // Call the Cloud Function to delete the user based on the UID
-//        FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
-//        mFunctions.getHttpsCallable("deleteUserByUID")
-//                .call(Collections.singletonMap("userUID", userUID))
-//                .addOnSuccessListener(result -> {
-//                    Log.d("deleteFunc", "User deleted successfull for userID: " + userUID);
-//                    // Handle successful result
-//                    Toast.makeText(MainActivity.this, "User deleted successfully!", Toast.LENGTH_SHORT).show();
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Handle failure
-//                    Toast.makeText(MainActivity.this, "Error deleting user", Toast.LENGTH_SHORT).show();
-//                });
-//    }
 }
