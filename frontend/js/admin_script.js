@@ -20,6 +20,7 @@ import {
   showAlert,
   collection,
   logOut,
+  showPopup,
 } from "../js/commonUtilityMgr.js";
 
 let itemNames;
@@ -856,16 +857,20 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log("AndroidInterface is available, calling function...");
               window.AndroidInterface.triggerCloudFunction(userId);
 
-              alert("User Deleted Successfully");
+              showPopup("Success", "User Deleted Successfully");
             } else {
               // Android interface not available
-              alert("User Deletion UnSuccessfull");
+              showPopup(
+                "Error",
+                "User Deletion Unsuccessful. Please contact Developer."
+              );
               throw new Error(
                 "Android interface not available or triggerCloudFunction not defined."
               );
             }
           } catch (error) {
             console.error("Error deleting user:", error);
+            showPopup("Error", `An error occurred: ${error.message}`);
           }
         }
       });
