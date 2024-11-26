@@ -2,7 +2,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 import {
@@ -35,40 +34,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-// Registration
-document
-  .getElementById("registerForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("registerEmail").value;
-    const password = document.getElementById("registerPassword").value;
-    const role = document.getElementById("registerRole").value;
-    const name = document.getElementById("registerName").value;
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Save user role in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        role: role,
-        name: name,
-      });
-
-      alert("User registered successfully!");
-      document.getElementById("registerForm").reset();
-    } catch (error) {
-      document.getElementById("registerErrorMessage").textContent =
-        error.message;
-    }
-  });
 
 // Login
 // document.getElementById("loginForm").addEventListener("submit", async (e) => {
