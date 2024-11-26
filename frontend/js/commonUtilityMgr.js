@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebas
 import {
   getAuth,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
 import {
@@ -266,6 +267,7 @@ export {
   checkUserRole,
   logOut,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
   signOut,
   ref,
   update,
