@@ -8,6 +8,7 @@ import {
   child,
   createButtons,
   fetchItemPrices,
+  getUserUid,
 } from "../js/commonUtilityMgr.js";
 
 const userID = getUserUid();
