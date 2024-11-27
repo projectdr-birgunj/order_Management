@@ -485,6 +485,7 @@ h2#orderIDHeader {
   padding: 20px 45px 20px 20px;
   background: transparent;
   margin: 0;
+  box-shadow: 10px 10px;
 }
 
 .input-box input::placeholder {
@@ -577,6 +578,7 @@ h2#orderIDHeader {
   background-color: transparent;
   display: inline-block !important;
   margin-left: 1rem;
+  box-shadow: 10px 10px;
 }
 
 .select-icon {
