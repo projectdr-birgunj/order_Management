@@ -1,5 +1,6 @@
 import {
   database,
+  createUserWithEmailAndPassword,
   getUserUid,
   db,
   fetchItemNames,
@@ -736,8 +737,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const editUserListContainer = document.getElementById(
     "editUserListContainer"
   );
-  const registerUserContainer = document.createElement("div");
-  const deleteUserContainer = document.createElement("div");
 
   function displayEditUser() {
     editUserListContainer.innerHTML = "";
@@ -756,16 +755,33 @@ document.addEventListener("DOMContentLoaded", () => {
     editUserListContainer.appendChild(deleteUserButton);
 
     registerUserButton.addEventListener("click", () => {
-      // clearAllContainers();
+      toggleContainerVisibility("registerUserContainer", "deleteUserContainer");
+      handleUserRegistration();
     });
 
     deleteUserButton.addEventListener("click", () => {
-      // clearAllContainers();
-
-      // deleteUserContainer.classList = "deleteUserContainer";
+      toggleContainerVisibility("deleteUserContainer", "registerUserContainer");
       displayUserList();
     });
   }
+
+  function toggleContainerVisibility(showContainerId, hideContainerId) {
+    const showContainer = document.getElementById(showContainerId);
+    const hideContainer = document.getElementById(hideContainerId);
+
+    if (hideContainer) {
+      hideContainer.classList.add("hidden");
+    } else {
+      console.error(`${hideContainerId} element not found.`);
+    }
+
+    if (showContainer) {
+      showContainer.classList.remove("hidden");
+    } else {
+      console.error(`${showContainerId} element not found.`);
+    }
+  }
+
   // Function to fetch all users and display their data
   async function displayUserList() {
     let userID;
@@ -880,5 +896,110 @@ document.addEventListener("DOMContentLoaded", () => {
         showAlert("Error", `An error occurred: ${error.message}`, false);
       }
     }
+  }
+
+  function handleUserRegistration() {
+    let registerUserContainer = document.getElementById(
+      "registerUserContainer"
+    );
+    if (!registerUserContainer) {
+      registerUserContainer = document.createElement("div");
+      registerUserContainer.id = "registerUserContainer";
+      editUserListContainer.appendChild(registerUserContainer);
+    }
+
+    registerUserContainer.innerHTML = `
+    <!-- Registration Form -->
+    <div id="registerSection" style="display: none">
+      <h1>Registration</h1>
+      <form id="registerForm">
+        <div class="input-box">
+          <input
+            type="text"
+            id="registerName"
+            name="name"
+            placeholder="Name"
+            required
+          />
+          <i class="bx bxs-user"></i>
+        </div>
+        <div class="input-box">
+          <input
+            type="email"
+            id="registerEmail"
+            name="email"
+            placeholder="Email"
+            required
+          />
+          <i class="bx bxs-envelope"></i>
+        </div>
+        <div class="input-box">
+          <input
+            type="password"
+            id="registerPassword"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <i class="bx bxs-lock-alt"></i>
+        </div>
+        <div class="form-group">
+          <label for="registerRole" class="role-label">Role:</label>
+          <div class="select-container">
+            <select id="registerRole" class="select-box">
+              <option value="waiter">Waiter</option>
+              <option value="chef">Chef</option>
+              <option value="cashier">Cashier</option>
+              <option value="admin">Admin</option>
+            </select>
+            <i class="bx bxs-chevron-down select-icon"></i>
+          </div>
+        </div>
+        <button type="submit" class="btn">Register</button>
+      </form>
+      <p id="registerErrorMessage"></p>
+    </div>
+`;
+    const registerSectionContainer = document.getElementById("registerSection");
+
+    if (registerSectionContainer) {
+      registerSectionContainer.classList.remove("hidden");
+      registerSectionContainer.style.display = "block";
+    } else {
+      console.error("deleteUserContainer element not found.");
+    }
+    // Registration
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("registerEmail").value;
+        const password = document.getElementById("registerPassword").value;
+        const role = document.getElementById("registerRole").value;
+        const name = document.getElementById("registerName").value;
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          const user = userCredential.user;
+
+          // Save user role in Firestore
+          await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: role,
+            name: name,
+          });
+
+          alert("User registered successfully!");
+          document.getElementById("registerForm").reset();
+        } catch (error) {
+          document.getElementById("registerErrorMessage").textContent =
+            error.message;
+        }
+      });
   }
 });

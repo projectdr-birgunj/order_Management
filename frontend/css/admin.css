@@ -444,3 +444,173 @@ h2#orderIDHeader {
     font-size: 16px;
   }
 }
+
+/*Registration CSS Starts*/
+#registerUserContainer {
+  width: auto;
+  background: #f8a49e;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 30px 40px;
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  /* border: 2px solid red; */
+}
+
+#registerUserContainer h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+  /* border: 2px solid red; */
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #ffffff;
+  padding: 20px 45px 20px 20px;
+  background: transparent;
+  margin: 0;
+}
+
+.input-box input::placeholder {
+  color: #000000;
+}
+
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #0f0f0f;
+  background: transparent;
+}
+
+.remember-forget {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+}
+
+.remember-forget label input {
+  accent-color: #fff;
+  margin-right: 3px;
+}
+
+.remember-forget a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.remember-forget a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  border-color: #fff;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px; /* Margin to match spacing */
+}
+
+/* Style for the label of the select box */
+.role-label {
+  font-size: 16px;
+  color: #000000;
+  white-space: nowrap; /* Prevents label from wrapping */
+}
+
+.select-container {
+  position: relative;
+  width: 100%;
+}
+/* Style for the select box */
+.select-box {
+  width: 90%;
+  height: 50px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #000000;
+  padding: 0 20px;
+  background: transparent;
+  appearance: none; /* Removes default styling */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  background-color: transparent;
+  display: inline-block !important;
+  margin-left: 1rem;
+}
+
+.select-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #fff;
+  pointer-events: none; /* Ensures clicks go to the select box */
+  background: transparent;
+}
+
+/* Optional: Adding a custom arrow to the select box */
+.select-box::after {
+  content: "\25BC"; /* Unicode for down arrow */
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #fff;
+  pointer-events: none;
+}
+
+/* Adding some styling for the select box container */
+.select-box-container {
+  position: relative;
+}
+
+.bxs-chevron-down {
+  color: #000000;
+}
+
+option {
+  background-color: #aceeac;
+}
