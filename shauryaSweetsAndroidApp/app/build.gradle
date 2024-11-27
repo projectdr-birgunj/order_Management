@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.sauryasweet'
+    namespace 'com.kathmandu.sauryasweet'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.sauryasweet"
+        applicationId "com.kathmandu.sauryasweet"
         minSdk 27
         targetSdk 34
         versionCode 1
