@@ -1,6 +1,7 @@
 import {
   database,
   createUserWithEmailAndPassword,
+  auth,
   getUserUid,
   db,
   fetchItemNames,
