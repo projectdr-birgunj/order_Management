@@ -13,66 +13,40 @@
     <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-functions.js"></script>
   </head>
   <body>
-    <!-- Added wrapper for new styles -->
-    <header>
-      <a href="index.html">
-        <img
-          src="../photos/orderflowlogo.png"
-          alt="OrderFlow Logo"
-          class="logo"
-        />
-      </a>
-      <h1>Homepage</h1>
-    </header>
-
-    <div class="wrapper">
-      <!-- Login Form -->
-      <div id="loginSection">
-        <img
-          src="../photos/orderflowlogo.png"
-          alt="OrderFlow Logo"
-          class="logo"
-        />
-        <h1>Login</h1>
-        <form id="loginForm">
-          <div class="input-box">
-            <input
-              type="email"
-              id="loginEmail"
-              name="email"
-              placeholder="Email"
-              required
-            />
-            <i class="bx bxs-envelope"></i>
-          </div>
-          <div class="input-box">
-            <input
-              type="password"
-              id="loginPassword"
-              name="password"
-              placeholder="Password"
-              required
-            />
-            <i class="bx bxs-lock-alt"></i>
-          </div>
-          <div class="remember-forget">
-            <label><input type="checkbox" name="remember" /> Remember me</label>
-            <a href="#">Forget Password?</a>
-          </div>
-          <button type="submit" class="btn">Login</button>
-          <p id="loginErrorMessage"></p>
-          <div class="register-link">
-            <p>
-              Don't have an account? <a href="#" id="showRegister">Register</a>
-            </p>
-          </div>
-        </form>
-      </div>
+    <div class="box" id="loginSection">
+      <span class="borderLine"></span>
+      <form action="" id="loginForm">
+        <h2>Sign in</h2>
+        <div class="inputBox">
+          <input
+            type="email"
+            id="loginEmail"
+            name="email"
+            placeholder="Email"
+            required
+          />
+          <span>Username</span>
+          <i></i>
+        </div>
+        <div class="inputBox">
+          <input
+            type="password"
+            id="loginPassword"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <span>Password</span>
+          <i></i>
+        </div>
+        <br />
+        <input type="submit" id="submit" value="Login" />
+      </form>
     </div>
 
-    <footer>
+    <!-- <footer>
       <p>&copy; 2024 OrderFlow</p>
-    </footer>
+    </footer> -->
 
     <!-- Linking the external JavaScript file -->
     <script src="../js/login.js" type="module" defer></script>

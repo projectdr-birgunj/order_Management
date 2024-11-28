@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 * {
   margin: 0;
@@ -9,240 +9,218 @@
 
 body {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Align items at the top */
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("../photos/loginbg.jpg") no-repeat;
-  background-size: cover;
-  background-position: center;
-  color: #fff;
+  background: #23252a;
 }
 
-header {
-  width: 100%;
-  background: transparent;
-  color: white;
-  display: flex;
-  align-items: center;
+.box {
+  position: relative;
+  width: 380px;
+  height: 450px;
+  background: #1c1c1c;
+  border-radius: 8px;
+  overflow: hidden;
   padding: 10px;
-  position: fixed; /* Fix the header to the top */
-  top: 0;
+}
+
+.box::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 380px;
+  height: 420px;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent,
+    #45f3ff,
+    #45f3ff,
+    #45f3ff
+  );
+  z-index: 1;
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+}
+
+.box::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 380px;
+  height: 420px;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent,
+    #45f3ff,
+    #45f3ff,
+    #45f3ff
+  );
+  z-index: 1;
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+  animation-delay: -3s;
+}
+
+.borderLine::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 380px;
+  height: 420px;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent,
+    #ff2770,
+    #ff2770,
+    #ff2770
+  );
+  z-index: 1;
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+  animation-delay: -1.5s;
+}
+
+.borderLine::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 380px;
+  height: 420px;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent,
+    #ff2770,
+    #ff2770,
+    #ff2770
+  );
+  z-index: 1;
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+  animation-delay: -4.5s;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.box form {
+  position: absolute;
+  inset: 4px;
+  background: #222;
+  padding: 50px 40px;
+  border-radius: 8px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.box form h2 {
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.box form .inputBox {
+  position: relative;
+  width: 300px;
+  margin-top: 35px;
+}
+
+.box form .inputBox input {
+  position: relative;
+  width: 100%;
+  padding: 20px 10px 10px;
+  background: transparent;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  color: #23242a;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
+  z-index: 10;
+}
+
+.box form .inputBox span {
+  position: absolute;
   left: 0;
-  z-index: 1000; /* Ensure the header stays above other content */
+  padding: 20px 0px 10px;
+  pointer-events: none;
+  color: #8f8f8f;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
 }
 
-.logo {
-  height: 50px;
-  margin-right: 20px;
-}
-
-header h1 {
-  flex-grow: 1;
-  margin: 0;
-}
-
-.exit-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  font-size: 20px;
-}
-
-.exit-btn:hover {
-  background-color: #ff1a1a;
-}
-
-.wrapper {
-  width: 420px;
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 30px 40px;
-  text-align: center;
-  margin-top: 100px; /* Add margin to offset the fixed header */
-}
-
-.wrapper h1 {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
-
-.input-box {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  margin: 30px 0;
-}
-
-.input-box input {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 40px;
-  font-size: 16px;
+.box form .inputBox input:valid ~ span,
+.box form .inputBox input:focus ~ span {
   color: #fff;
-  padding: 20px 45px 20px 20px;
-  background: transparent;
+  font-size: 0.75em;
+  transform: translateY((-34px));
 }
 
-.input-box input::placeholder {
-  color: #fff;
-}
-
-.input-box i {
+.box form .inputBox i {
   position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #0f0f0f;
-  background: transparent;
-}
-
-.remember-forget {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14.5px;
-  margin: -15px 0 15px;
-}
-
-.remember-forget label input {
-  accent-color: #fff;
-  margin-right: 3px;
-}
-
-.remember-forget a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.remember-forget a:hover {
-  text-decoration: underline;
-}
-
-.btn {
-  width: 100%;
-  height: 45px;
-  background: #fff;
-  border: none;
-  outline: none;
-  border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: 600;
-  margin-top: 20px;
-}
-
-.btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-  color: #fff;
-  border-color: #fff;
-}
-
-.register-link {
-  font-size: 14.5px;
-  text-align: center;
-  margin: 20px 0 15px;
-}
-
-.register-link p a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.register-link p a:hover {
-  text-decoration: underline;
-}
-
-footer {
-  width: 100%;
-  background: transparent;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  position: fixed;
+  left: 0;
   bottom: 0;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px; /* Margin to match spacing */
-}
-
-/* Style for the label of the select box */
-.role-label {
-  font-size: 16px;
-  color: #fff;
-  margin-right: 20px; /* Space between label and select box */
-  white-space: nowrap; /* Prevents label from wrapping */
-}
-
-.select-container {
-  position: relative;
   width: 100%;
-}
-/* Style for the select box */
-.select-box {
-  width: 100%;
-  height: 50px;
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 40px;
-  font-size: 16px;
-  color: #ffffff;
-  padding: 0 20px;
-  background: transparent;
-  appearance: none; /* Removes default styling */
-  -webkit-appearance: none; /* For Safari */
-  -moz-appearance: none; /* For Firefox */
-  background-color: transparent;
-}
-
-.select-icon {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #fff;
-  pointer-events: none; /* Ensures clicks go to the select box */
-  background: transparent;
-}
-
-/* Optional: Adding a custom arrow to the select box */
-.select-box::after {
-  content: "\25BC"; /* Unicode for down arrow */
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #fff;
+  height: 2px;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: 0.5s;
   pointer-events: none;
 }
 
-/* Adding some styling for the select box container */
-.select-box-container {
-  position: relative;
+.box form .inputBox input:valid ~ i,
+.box form .inputBox input:focus ~ i {
+  height: 44px;
 }
 
-.bxs-chevron-down {
-  color: #000000;
+.box form .links {
+  display: flex;
+  justify-content: space-between;
 }
 
-option {
-  background-color: #004d00;
+.box form .links a {
+  margin: 10px 0;
+  font-size: 0.75em;
+  color: #8f8f8f;
+  text-decoration: none;
+}
+
+.box form .links a:hover,
+.box form .links a:nth-child(2) {
+  color: #fff;
+}
+
+#submit {
+  border: none;
+  outline: none;
+  padding: 9px 25px;
+  cursor: pointer;
+  font-size: 0.9em;
+  border-radius: 4px;
+  font-weight: 600;
+  width: 100px;
+  margin-top: 10px;
+}
+
+#submit:active {
+  opacity: 0.8;
 }
