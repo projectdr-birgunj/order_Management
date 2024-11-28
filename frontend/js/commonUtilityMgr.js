@@ -14,6 +14,8 @@ import {
   push,
   child,
   onValue,
+  remove,
+  set,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
 import {
   getFirestore,
@@ -194,6 +196,7 @@ async function createButtons(fetchOrderDetails, containerId, userRole) {
   let orders = snapshot.val();
 
   for (let i = 1; i <= 12; i++) {
+    // console.log("userRole: " + userRole);
     let tableKey = "Table-" + i;
     const button = document.createElement("button");
     button.textContent = `Table ${i}`;
@@ -201,7 +204,7 @@ async function createButtons(fetchOrderDetails, containerId, userRole) {
     button.classList.add("table-btn");
 
     if (orders) {
-      console.log("userRole: " + userRole);
+      // console.log("userRole: " + userRole);
       const tableData = orders[tableKey];
       if (userRole === "cashier") {
         // Change toBilling check for chef role
@@ -219,6 +222,7 @@ async function createButtons(fetchOrderDetails, containerId, userRole) {
         }
       }
     } else {
+      // console.log("userRole: " + userRole);
       button.classList.add("disabled-btn");
       button.disabled = true;
     }
@@ -284,6 +288,8 @@ export {
   arrayUnion,
   deleteDoc,
   arrayRemove,
+  remove,
+  set,
   getUserName,
   setUserName,
   getUserUid,

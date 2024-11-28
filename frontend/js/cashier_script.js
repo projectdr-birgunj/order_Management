@@ -1,5 +1,8 @@
 import {
+  db,
   database,
+  setDoc,
+  doc,
   checkUserRole,
   logOut,
   ref,
@@ -9,6 +12,8 @@ import {
   createButtons,
   fetchItemPrices,
   getUserUid,
+  remove,
+  set,
 } from "../js/commonUtilityMgr.js";
 
 const userID = getUserUid();
@@ -282,10 +287,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   paymentReceivedBtn.addEventListener("click", paymentReceivedFn);
 
-  async function paymentReceivedFn(tableOneData) {
+  async function paymentReceivedFn() {
     // await moveToFirestore();
     // await initializeTableWithDeafultValues();
-    console.log("Payment Received : " + tableOneData);
+    console.log("Payment Received : ");
     const moveToFirestoreResult = await moveToFirestore();
 
     if (moveToFirestoreResult) {
@@ -375,9 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tableButton = document.querySelector(".table-btn.active-btn");
     const orderId = tableButton.dataset.tableNo;
     console.log("moveToFirestore Enter with orderID: " + orderId);
-    // const tableKey = orderId.toLowerCase();
-    // const newTableKey = `${tableKey}_somedata`;
-    const dbFirestore = getFirestore(app);
 
     try {
       // Fetch order data from Realtime Database
@@ -392,28 +394,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Format the date to YYYYMMDD
         const formattedDate = now.toISOString().split("T")[0].replace(/-/g, ""); // e.g., '20240811'
-        // const yearMonth = formattedDate.slice(0, 6); // Extract 'YYYYMM' from 'YYYYMMDD'
-        // const year = yearMonth.slice(0, 4); // Extract 'YYYYMM' from 'YYYYMMDD'
         const timeStampStr = now.toTimeString().split(" ")[0].replace(/:/g, ""); // e.g., '11:18:23'
         const dataDocName = `${orderId}_${formattedDate}_${timeStampStr}`;
 
-        // const dateDocRef = doc(
-        //   dbFirestore,
-        //   `orders/data_${formattedDate}/${orderId}`
-        // );
-
-        // await setDoc(doc(dateDocRef, dataDocName), data);
-        // console.log(
-        //   `Order data stored at: orders/data_${formattedDate}/${dataDocName}`
-        // );
-        // `orders/data_${year}/data_${yearMonth}/data_${formattedDate}/${orderId}`,
         try {
           await setDoc(
-            doc(
-              dbFirestore,
-              `orders/data_${formattedDate}/${orderId}`,
-              dataDocName
-            ),
+            doc(db, `orders/data_${formattedDate}/${orderId}`, dataDocName),
             orderData
           );
           console.log(
@@ -423,25 +409,19 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error writing document: ", error);
           return false; // Execution failed
         }
-
-        // Write the data to Firestore
-        // await setDoc(
-        //   doc(collection(dbFirestore, "orders"), newTableKey),
-        //   orderData
-        // );
-
         // Optionally, remove the original order from Realtime Database
         const entryRef = ref(database, "orders/" + orderId);
-        await remove(entryRef)
-          .then(() => {
-            console.log("Entry removed successfully");
-          })
-          .catch((error) => {
-            console.error("Error removing entry: ", error);
-          });
-
-        alert("Payment received and order moved to Firestore!");
-        return true;
+        try {
+          await remove(entryRef);
+          console.log("Entry removed successfully");
+          alert("Payment received and order moved to Firestore!");
+          return true;
+        } catch (error) {
+          console.error("Error removing entry (code):", error.code);
+          console.error("Error removing entry (message):", error.message);
+          alert(`Error: ${error.message}`);
+          return false; // Return false if removal fails
+        }
       } else {
         console.error("No data available for this table.");
         alert("No order found for this table.");
@@ -475,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
       },
       timeStamp: "2024-07-28_11:10:11",
-      waiterName: "Sumna",
+      waiterName: "",
     };
 
     try {
@@ -487,7 +467,8 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Cannot fetch Order ID, Contact Developer");
       }
     } catch (error) {
-      console.error("Error writing data to Firebase:", error);
+      console.error("Error writing data (code):", error.code);
+      console.error("Error writing data (message):", error.message);
       alert("Error submitting orders. Please try again.");
     }
   }
