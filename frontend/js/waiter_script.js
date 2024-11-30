@@ -324,11 +324,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (hasData) {
       // console.log("Inside Has Data" + data);
-      data.forEach((item) => {
+      data.forEach((item, index) => {
         console.log("Printing items: ", item);
         const row = document.createElement("tr");
 
         const itemNameCell = document.createElement("td");
+        itemNameCell.className = "row-cell-1";
         const itemNameSelect = document.createElement("select");
         itemNameSelect.name = "itemName[]";
         itemNameSelect.className = "item-name";
@@ -350,6 +351,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.appendChild(itemNameCell);
 
         const quantityCell = document.createElement("td");
+        quantityCell.className = `row-cell-2`;
         const quantityInput = document.createElement("input");
         quantityInput.type = "number";
         quantityInput.value = item.quantity;
@@ -359,6 +361,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.appendChild(quantityCell);
 
         const noteCell = document.createElement("td");
+        noteCell.className = `row-cell-3`;
         const noteInput = document.createElement("input");
         noteInput.type = "text";
         noteInput.value = item.note;
@@ -367,6 +370,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.appendChild(noteCell);
 
         const dineInCell = document.createElement("td");
+        dineInCell.className = `row-cell-4`;
         const dineInInput = document.createElement("input");
         dineInInput.type = "text";
         dineInInput.value = item.dineIn;
@@ -376,6 +380,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.appendChild(dineInCell);
 
         const statusCell = document.createElement("td");
+        statusCell.className = `row-cell-5`;
         const statusBtn = document.createElement("button");
 
         // Determine the button text based on the value of statusValue;
@@ -410,6 +415,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.appendChild(statusCell);
 
         const actionCell = document.createElement("td");
+        actionCell.className = `row-cell-6`;
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
         deleteBtn.classList.add("deleteRowBtn");
@@ -542,6 +548,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const newRow = table.insertRow();
 
     const itemCell = newRow.insertCell(0);
+    itemCell.className = `row-cell-1`;
     const itemNameSelect = document.createElement("select");
     itemNameSelect.name = "itemName[]";
     itemNameSelect.className = "item-name";
@@ -557,6 +564,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     itemCell.appendChild(itemNameSelect);
 
     const quantityCell = newRow.insertCell(1);
+    quantityCell.className = `row-cell-2`;
     const quantityInput = document.createElement("input");
     quantityInput.type = "number";
     quantityInput.required = true;
@@ -564,12 +572,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     quantityCell.appendChild(quantityInput);
 
     const noteCell = newRow.insertCell(2);
+    noteCell.className = `row-cell-3`;
     const noteInput = document.createElement("input");
     noteInput.type = "text";
     noteInput.name = "note[]";
     noteCell.appendChild(noteInput);
 
     const dineInCell = newRow.insertCell(3);
+    dineInCell.className = `row-cell-4`;
     const dineInInput = document.createElement("input");
     dineInInput.type = "text";
     dineInInput.name = "dineIn[]";
@@ -578,15 +588,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     dineInCell.appendChild(dineInInput);
 
     const statusCell = newRow.insertCell(4);
+    statusCell.className = `row-cell-5`;
     const statusBtn = document.createElement("button");
     statusBtn.textContent = "Not Started";
-    statusBtn.classList.add("form-btn");
+    statusBtn.classList.add("statusBtn");
     statusBtn.value = 100;
     statusBtn.type = "button";
     statusBtn.style.backgroundColor = "#7f8c8d";
     statusCell.appendChild(statusBtn);
 
     const actionCell = newRow.insertCell(5);
+    actionCell.className = `row-cell-6`;
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.classList.add("deleteRowBtn");
