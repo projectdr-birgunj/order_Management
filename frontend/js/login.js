@@ -139,14 +139,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
           "Invalid role or user not assigned a role.";
     }
 
+    window.location.href = targetPage;
     // Store login status in localStorage
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userRole", role);
-    if (window.AndroidInterface) {
-      window.AndroidInterface.onUserSignedIn(user.uid);
-    }
-
-    window.location.href = targetPage;
   } catch (error) {
     document.getElementById("loginErrorMessage").textContent = error.message;
   }
