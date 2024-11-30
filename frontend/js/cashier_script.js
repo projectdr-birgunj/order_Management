@@ -144,22 +144,27 @@ document.addEventListener("DOMContentLoaded", () => {
       row.className = rowClass; // Add this line
 
       const itemNameCell = document.createElement("td");
+      itemNameCell.setAttribute("data-label", "Item Name");
       itemNameCell.textContent = item.itemName;
       row.appendChild(itemNameCell);
 
       const quantityCell = document.createElement("td");
+      quantityCell.setAttribute("data-label", "Quantity");
       quantityCell.textContent = item.quantity;
       row.appendChild(quantityCell);
 
       const noteCell = document.createElement("td");
+      noteCell.setAttribute("data-label", "Note");
       noteCell.textContent = item.note;
       row.appendChild(noteCell);
 
       const dineInCell = document.createElement("td");
+      dineInCell.setAttribute("data-label", "Dine-In");
       dineInCell.textContent = item.dineIn;
       row.appendChild(dineInCell);
 
       const rateCell = document.createElement("td");
+      rateCell.setAttribute("data-label", "Rate");
       rateCell.textContent = item.rate; //itemPrices[item.itemName] || 0;
       row.appendChild(rateCell);
 
@@ -171,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
       billAmount += totalPrice;
 
       const priceCell = document.createElement("td");
+      priceCell.setAttribute("data-label", "Price");
       priceCell.textContent = `NRs. ${totalPrice.toFixed(2)}`; // Display price in fixed-point notation
       row.appendChild(priceCell);
 
@@ -288,8 +294,6 @@ document.addEventListener("DOMContentLoaded", () => {
   paymentReceivedBtn.addEventListener("click", paymentReceivedFn);
 
   async function paymentReceivedFn() {
-    // await moveToFirestore();
-    // await initializeTableWithDeafultValues();
     console.log("Payment Received : ");
     const moveToFirestoreResult = await moveToFirestore();
 
