@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MenuMate</string>
+    <string name="app_name">CuisineMate</string>
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here -->
     </style>
