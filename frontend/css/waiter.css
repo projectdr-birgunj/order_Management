@@ -13,6 +13,9 @@ header {
   padding: 20px 0;
   text-align: center;
   position: relative;
+  display: flex;
+  align-items: center; /* Vertically centers content */
+  justify-content: space-between;
 }
 
 header .logo {
@@ -22,10 +25,23 @@ header .logo {
   height: 60px;
 }
 
-header .logout-btn {
+h1#pageTitleLarge {
+  display: inline-block;
+}
+
+h1#pageTitleSmall {
+  display: none;
+}
+
+#pageTitleLarge,
+#pageTitleSmall {
+  flex-grow: 1; /* Allows the titles to take up remaining space */
+  text-align: center; /* Center the titles horizontally */
+}
+
+.logout-btn {
   position: absolute;
   right: 20px;
-  top: 20px;
   background-color: #ff4b4b;
   color: white;
   border: none;
@@ -38,6 +54,7 @@ header .logout-btn {
   cursor: pointer;
   border-radius: 12px;
   transition: background-color 0.3s;
+  margin-left: auto;
 }
 
 header .logout-btn:hover {
@@ -151,7 +168,8 @@ footer {
 select,
 input[type="text"],
 input[type="number"],
-.deleteRowBtn {
+.deleteRowBtn,
+.statusBtn {
   background-color: #fff;
   border-radius: 6px;
   border: solid 1px #eee;
@@ -166,25 +184,17 @@ input[type="number"],
 }
 
 .deleteRowBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  width: calc(100% - 10px);
-  /* margin-left: 2rem; */
+  font-size: 14px;
   background-color: #12cbc4;
   border: none;
   border-radius: 6px;
   color: #fff;
   cursor: pointer;
-  font-size: 14px;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   text-align: center;
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
   margin: 5px;
-  margin-left: 0;
-  /* width: 150px; */
 }
 
 input[type="text"]:focus,
@@ -207,7 +217,6 @@ select:focus {
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
   margin: 15px 5px 40px 5px;
-  /* width: 150px; */
 }
 
 .statusBtn {
@@ -223,7 +232,6 @@ select:focus {
   transition: background-color 0.2s ease-in-out;
   margin: 5px;
   margin-left: 0;
-  /* width: 150px; */
 }
 
 .form-btn:hover {
@@ -232,22 +240,77 @@ select:focus {
 
 .formTable {
   width: 100%;
-  table-layout: fixed;
+  /* table-layout: fixed; */
+  border-collapse: collapse;
 }
 
-.header-cell-2,
-.header-cell-4,
+/* .header-cell-1,
+.row-cell-1 {
+  width: 35%;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.header-cell-3,
+.row-cell-3 {
+  width: 20%;
+}
+
 .header-cell-5,
-.header-cell-6 {
-  width: 120px;
-  text-align: left;
-  padding-left: 10px;
+.row-cell-5 {
+  width: 15%;
+  overflow: hidden;
 }
 
-.header-cell-1,
-.header-cell-3 {
-  text-align: left;
-  padding-left: 10px;
+.header-cell-4,
+.header-cell-6,
+.header-cell-2,
+.row-cell-4,
+.row-cell-6,
+.row-cell-2 {
+  width: 10%;
+} */
+
+.formTable th:nth-child(1),
+.formTable th:nth-child(2),
+.formTable th:nth-child(3),
+.formTable th:nth-child(4),
+.formTable th:nth-child(5),
+.formTable th:nth-child(6) {
+  margin-left: 0;
+}
+
+.formTable th:nth-child(1),
+.formTable td:nth-child(1) {
+  width: 37%;
+}
+
+.formTable th:nth-child(2),
+.formTable td:nth-child(2),
+.formTable th:nth-child(4),
+.formTable td:nth-child(4),
+.formTable th:nth-child(6),
+.formTable td:nth-child(6) {
+  width: 10%;
+}
+
+.formTable th:nth-child(3),
+.formTable td:nth-child(3) {
+  width: 15%;
+}
+
+.formTable th:nth-child(5),
+.formTable td:nth-child(5) {
+  width: 18%;
+}
+
+.formTable td:nth-child(5) button {
+  vertical-align: middle;
+  width: 100%;
+}
+
+.formTable td:nth-child(6) {
+  margin: 5px;
 }
 
 @media (max-width: 600px) {
@@ -273,25 +336,20 @@ select:focus {
   .table-responsive td {
     /* border: 2px solid red; */
     position: relative;
-    padding-left: 30%;
+    padding-left: 35%; /* Change this to adjust space for Heade names like ItemName Quantity, etc*/
     text-align: right;
-    /* border-bottom: 1px solid #ddd; */
   }
 
   /* Label the data */
   .table-responsive td:before {
     position: absolute;
-    left: 10px;
-    width: 20%;
-    padding-right: 10px;
-    white-space: nowrap;
-    text-align: left;
+    left: 3px;
     font-weight: bold;
   }
 
   /* Assign label values based on their order */
   .table-responsive td:nth-of-type(1):before {
-    content: "Item Name";
+    content: "ItemName";
   }
   .table-responsive td:nth-of-type(2):before {
     content: "Quantity";
@@ -311,7 +369,6 @@ select:focus {
 
   /* Style to place the second half of the row below the first half */
   .table-responsive tr {
-    /* margin-bottom: 20px;  */
     padding-bottom: 20px;
     padding-top: 20px;
   }
@@ -322,11 +379,9 @@ select:focus {
   .table-responsive td:nth-of-type(4),
   .table-responsive td:nth-of-type(5),
   .table-responsive td:nth-of-type(6) {
-    /* border: 2px solid red; */
-    clear: both; /* Starts a new line for Dine-In, Status, and Action */
     display: flex;
     align-items: center;
-    margin: 15px 5px;
+    margin: 15px 3px;
   }
 
   .table-responsive table tbody tr:nth-child(odd) {
@@ -340,39 +395,52 @@ select:focus {
   .addRowBtn .submitBtn .toBillingBtn {
     margin-top: 20px;
   }
-}
 
-@media (min-width: 641px) {
-  form {
-    margin: 0 2rem;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  .formTable td:nth-child(1),
+  .formTable td:nth-child(2),
+  .formTable td:nth-child(3),
+  .formTable td:nth-child(4),
+  .formTable td:nth-child(5),
+  .formTable td:nth-child(6) {
+    width: auto;
+    overflow: hidden;
+  }
+
+  .formTable td:nth-child(1) div {
+    border: 2px solid red;
+    /* width: 100%; */
   }
 }
 
 @media (max-width: 640px) {
   body {
-    padding: 10px;
+    padding: 5px;
   }
   header {
     padding: 10px 0;
   }
+
+  h1#pageTitleSmall {
+    display: inline-block;
+    font-size: 2em;
+  }
+
+  h1#pageTitleLarge {
+    display: none;
+  }
+
   header .logo {
     height: 40px;
     top: 5px;
     left: 10px;
   }
-  header h1 {
-    font-size: 1.2em;
-  }
+
   header .logout-btn {
-    top: 10px;
+    /* top: 10px; */
     right: 10px;
-    padding: 5px 10px;
-    font-size: 14px;
+    font-size: 18px;
   }
+
   #editForm {
     padding: 10px;
     margin: 1rem;
@@ -380,6 +448,17 @@ select:focus {
   form input[type="submit"] {
     font-size: 14px;
     padding: 8px 16px;
+  }
+  #orderIDHeader {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 640px) {
+  header .logout-btn {
+    padding: 8px 12px;
+    right: 10px;
+    font-size: 15px;
   }
 }
 

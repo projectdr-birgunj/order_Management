@@ -4,6 +4,7 @@ import {
   getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
 import {
@@ -28,6 +29,7 @@ import {
   arrayUnion,
   deleteDoc,
   arrayRemove,
+  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-firestore.js";
 import firebaseConfig from "../js/config.js";
 
@@ -187,76 +189,146 @@ async function logOut(userID, role) {
     });
 }
 
+// async function createButtons(fetchOrderDetails, containerId, userRole) {
+//   console.log("Inside createButtons");
+//   const buttonsContainer = document.getElementById(containerId);
+
+//   const dbRef = ref(database, "orders");
+//   const snapshot = await get(dbRef);
+//   let orders = snapshot.val();
+
+//   for (let i = 1; i <= 12; i++) {
+//     // console.log("userRole: " + userRole);
+//     let tableKey = "Table-" + i;
+//     const button = document.createElement("button");
+//     button.textContent = `Table ${i}`;
+//     button.setAttribute("data-table-no", `Table-${i}`);
+//     button.classList.add("table-btn");
+
+//     if (orders) {
+//       // console.log("userRole: " + userRole);
+//       const tableData = orders[tableKey];
+//       if (userRole === "cashier") {
+//         // Change toBilling check for chef role
+//         if (!(tableData.toBilling === true)) {
+//           // Disable the button if the table is not to be billed
+//           button.classList.add("disabled-btn");
+//           button.disabled = true;
+//         }
+//       } else {
+//         // Default check for other roles
+//         if (!(tableData.toBilling === false)) {
+//           // Disable the button if the table is closed
+//           button.classList.add("disabled-btn");
+//           button.disabled = true;
+//         }
+//       }
+//     } else {
+//       // console.log("userRole: " + userRole);
+//       button.classList.add("disabled-btn");
+//       button.disabled = true;
+//     }
+
+//     button.onclick = async function () {
+//       showJsonContainer();
+//       // Remove active class from all buttons
+//       const allButtons = document.querySelectorAll(".table-btn");
+//       allButtons.forEach((btn) => btn.classList.remove("active-btn"));
+
+//       // Add active class to the clicked button
+//       button.classList.add("active-btn");
+
+//       // Show loading indicator
+//       const originalText = button.textContent;
+//       button.textContent = "Loading...";
+//       button.disabled = true;
+
+//       try {
+//         await fetchOrderDetails(button); // Execute the async function
+//       } finally {
+//         // Revert button text and re-enable it
+//         button.textContent = originalText;
+//         button.disabled = false;
+//       }
+//     };
+//     buttonsContainer.appendChild(button);
+//   }
+
+//   if (
+//     window.AndroidInterface &&
+//     typeof window.AndroidInterface.onUserSignedIn === "function"
+//   ) {
+//     window.AndroidInterface.onUserSignedIn(getUserUid());
+//   }
+// }
+
 async function createButtons(fetchOrderDetails, containerId, userRole) {
   console.log("Inside createButtons");
+
   const buttonsContainer = document.getElementById(containerId);
+  const fragment = document.createDocumentFragment(); // Batch DOM updates
 
   const dbRef = ref(database, "orders");
   const snapshot = await get(dbRef);
-  let orders = snapshot.val();
+  const orders = snapshot.val();
+
+  const isButtonDisabled = (tableData, role) => {
+    if (!tableData) return true; // Disable if no data exists for the table
+    return role === "cashier" ? !tableData.toBilling : tableData.toBilling;
+  };
 
   for (let i = 1; i <= 12; i++) {
-    // console.log("userRole: " + userRole);
-    let tableKey = "Table-" + i;
+    const tableKey = `Table-${i}`;
+    const tableData = orders ? orders[tableKey] : null;
+
     const button = document.createElement("button");
     button.textContent = `Table ${i}`;
-    button.setAttribute("data-table-no", `Table-${i}`);
+    button.setAttribute("data-table-no", tableKey);
     button.classList.add("table-btn");
 
-    if (orders) {
-      // console.log("userRole: " + userRole);
-      const tableData = orders[tableKey];
-      if (userRole === "cashier") {
-        // Change toBilling check for chef role
-        if (!(tableData.toBilling === true)) {
-          // Disable the button if the table is not to be billed
-          button.classList.add("disabled-btn");
-          button.disabled = true;
-        }
-      } else {
-        // Default check for other roles
-        if (!(tableData.toBilling === false)) {
-          // Disable the button if the table is closed
-          button.classList.add("disabled-btn");
-          button.disabled = true;
-        }
-      }
-    } else {
-      // console.log("userRole: " + userRole);
+    // Apply button state
+    if (isButtonDisabled(tableData, userRole)) {
       button.classList.add("disabled-btn");
       button.disabled = true;
     }
 
+    // Attach event listener
     button.onclick = async function () {
-      showJsonContainer();
-      // Remove active class from all buttons
-      const allButtons = document.querySelectorAll(".table-btn");
-      allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-
-      // Add active class to the clicked button
-      button.classList.add("active-btn");
-
-      // Show loading indicator
-      const originalText = button.textContent;
-      button.textContent = "Loading...";
-      button.disabled = true;
-
-      try {
-        await fetchOrderDetails(button); // Execute the async function
-      } finally {
-        // Revert button text and re-enable it
-        button.textContent = originalText;
-        button.disabled = false;
-      }
+      handleButtonClick(button, fetchOrderDetails);
     };
-    buttonsContainer.appendChild(button);
+
+    fragment.appendChild(button); // Add to fragment
   }
 
-  if (
-    window.AndroidInterface &&
-    typeof window.AndroidInterface.onUserSignedIn === "function"
-  ) {
+  buttonsContainer.appendChild(fragment); // Append all buttons at once
+
+  // Notify Android interface if available
+  if (window.AndroidInterface?.onUserSignedIn) {
     window.AndroidInterface.onUserSignedIn(getUserUid());
+  }
+}
+
+// Reusable function to handle button click
+async function handleButtonClick(button, fetchOrderDetails) {
+  showJsonContainer();
+
+  // Remove active class from all buttons
+  document
+    .querySelectorAll(".table-btn")
+    .forEach((btn) => btn.classList.remove("active-btn"));
+  button.classList.add("active-btn");
+
+  // Show loading state
+  const originalText = button.textContent;
+  button.textContent = "Loading...";
+  button.disabled = true;
+
+  try {
+    await fetchOrderDetails(button); // Execute the async function
+  } finally {
+    // Restore button state
+    button.textContent = originalText;
+    button.disabled = false;
   }
 }
 
@@ -279,6 +351,7 @@ export {
   logOut,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   ref,
   update,
@@ -295,6 +368,7 @@ export {
   arrayUnion,
   deleteDoc,
   arrayRemove,
+  serverTimestamp,
   remove,
   set,
   getUserName,
