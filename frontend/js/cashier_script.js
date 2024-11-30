@@ -300,7 +300,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (moveToFirestoreResult) {
       await initializeTableWithDeafultValues();
     }
-    showConfirmationPopup();
+    location.reload();
+    // showConfirmationPopup();
   }
 
   const yesButton = document.getElementById("yesButton");
@@ -321,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event listener for Yes button
   yesButton.addEventListener("click", function () {
+    confirmationPopup.classList.add("hidden");
     printBill();
     location.reload();
   });
