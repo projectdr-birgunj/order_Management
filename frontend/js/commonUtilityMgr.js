@@ -251,6 +251,13 @@ async function createButtons(fetchOrderDetails, containerId, userRole) {
     };
     buttonsContainer.appendChild(button);
   }
+
+  if (
+    window.AndroidInterface &&
+    typeof window.AndroidInterface.onUserSignedIn === "function"
+  ) {
+    window.AndroidInterface.onUserSignedIn(getUserUid());
+  }
 }
 
 function showJsonContainer() {
