@@ -265,23 +265,23 @@ async function getTokenHere() {
   return token; // Return the retrieved token
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const registerSection = document.getElementById("registerSection");
-  const loginSection = document.getElementById("loginSection");
-  const showRegisterLink = document.getElementById("showRegister");
-  const showLoginLink = document.getElementById("showLogin");
+// document.addEventListener("DOMContentLoaded", () => {
+//   const registerSection = document.getElementById("registerSection");
+//   const loginSection = document.getElementById("loginSection");
+//   const showRegisterLink = document.getElementById("showRegister");
+//   const showLoginLink = document.getElementById("showLogin");
 
-  // Show login form and hide registration form
-  showLoginLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    registerSection.style.display = "none";
-    loginSection.style.display = "block";
-  });
+//   // Show login form and hide registration form
+//   showLoginLink.addEventListener("click", (e) => {
+//     e.preventDefault();
+//     registerSection.style.display = "none";
+//     loginSection.style.display = "block";
+//   });
 
-  // Show registration form and hide login form
-  showRegisterLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    registerSection.style.display = "block";
-    loginSection.style.display = "none";
-  });
-});
+//   // Show registration form and hide login form
+//   showRegisterLink.addEventListener("click", (e) => {
+//     e.preventDefault();
+//     registerSection.style.display = "block";
+//     loginSection.style.display = "none";
+//   });
+// });
