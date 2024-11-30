@@ -204,12 +204,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const reference = ref(database, "orders/" + orderId);
         await update(reference, data);
         await update(reference, timestamp_field);
-        const notificationRef = ref(database, "notificationsToCashier");
-        await update(notificationRef, {
-          tableNo: orderId,
-          message: `Bill Generated for ${orderId}!`,
-          timestamp: Date.now(),
-        });
         alert("Bill Generated. Plz visit cashier");
         location.reload(); // Reload the page
       } else {
