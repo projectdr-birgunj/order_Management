@@ -202,7 +202,6 @@ input[type="number"]:focus,
 select:focus {
   border-color: #12cbc4;
   box-shadow: 0 0 8px rgba(18, 203, 196, 0.5);
-  border-radius: 2px solid red;
 }
 
 .form-btn {
@@ -243,33 +242,6 @@ select:focus {
   /* table-layout: fixed; */
   border-collapse: collapse;
 }
-
-/* .header-cell-1,
-.row-cell-1 {
-  width: 35%;
-  text-align: left;
-  padding-left: 10px;
-}
-
-.header-cell-3,
-.row-cell-3 {
-  width: 20%;
-}
-
-.header-cell-5,
-.row-cell-5 {
-  width: 15%;
-  overflow: hidden;
-}
-
-.header-cell-4,
-.header-cell-6,
-.header-cell-2,
-.row-cell-4,
-.row-cell-6,
-.row-cell-2 {
-  width: 10%;
-} */
 
 .formTable th:nth-child(1),
 .formTable th:nth-child(2),
@@ -403,12 +375,6 @@ select:focus {
   .formTable td:nth-child(5),
   .formTable td:nth-child(6) {
     width: auto;
-    overflow: hidden;
-  }
-
-  .formTable td:nth-child(1) div {
-    border: 2px solid red;
-    /* width: 100%; */
   }
 }
 
@@ -454,7 +420,7 @@ select:focus {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 340px) {
   header .logout-btn {
     padding: 8px 12px;
     right: 10px;
