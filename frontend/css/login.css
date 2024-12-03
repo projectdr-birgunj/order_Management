@@ -234,3 +234,31 @@ h1 {
 #loginErrorMessage {
   color: #fff;
 }
+
+/* Ensure the loader matches the button size and is centered */
+.login-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100px; /* Adjust to match your button size */
+  height: 40px;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+.login-btn svg {
+  position: absolute;
+  display: none;
+  width: 20px; /* Adjust size as needed */
+  height: 20px;
+}
+
+/* Show loader */
+.login-btn.loading svg {
+  display: block;
+}
+
+.login-btn.loading span {
+  display: none;
+}
