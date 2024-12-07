@@ -1,31 +1,37 @@
 body {
   font-family: "Roboto", sans-serif;
-  margin: 0;
-  padding: 0;
   display: none;
   flex-direction: column;
   align-items: center;
-  background-color: #eaeaea;
+  margin: 0;
+  padding: 0;
+  background-color: #000; /* Black background */
+  /* overflow: hidden; */
+}
+
+.content {
+  min-height: calc(100vh - 60px); /* Subtracting footer height */
+  /* padding: 20px; */
 }
 
 header {
+  padding-top: 0.5rem;
   width: 100%;
-  background-color: #333;
   color: white;
   display: flex;
   align-items: center;
-  /* padding: 10px; */
+  justify-content: space-between; /* Space out the elements */
 }
 
 .logo {
   margin: 0 1rem;
   height: 50px;
-  margin-right: 20px;
 }
 
 h1 {
-  flex-grow: 1;
+  flex-grow: 1; /* Take up available space to center the h1 */
   margin: 0;
+  text-align: center;
 }
 
 .logout-btn {
@@ -77,9 +83,9 @@ h2 {
 
 #orderIDHeader {
   text-align: center;
-  margin: 4rem 0 1rem 0;
-  padding: 0;
-  /* text-align: left; */
+  /* margin: 1rem 1rem; */
+  padding: 1rem 0 0 0;
+  color: #fff;
   font-size: 1.5em;
   font-weight: bold;
 }
@@ -100,54 +106,6 @@ h2 {
   margin: 10px 0;
 }
 
-/* .order-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.order-buttons .accept-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.order-buttons .accept-btn:hover {
-  background-color: #218838;
-}
-
-.order-buttons .reject-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.order-buttons .reject-btn:hover {
-  background-color: #c82333;
-}
-
-.order-buttons .ready-btn {
-  background-color: #ffc107;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.order-buttons .ready-btn:hover {
-  background-color: #e0a800;
-} */
-
 table {
   margin: 0 auto; /* Centers the table */
   border-collapse: collapse; /* Removes space between table cells */
@@ -164,9 +122,10 @@ td {
 }
 
 th {
-  background-color: #f0f8ff; /* Sets a light background color for header cells */
+  background-color: #444444; /* Sets a light background color for header cells */
   font-weight: bold; /* Makes header text bold */
-  text-transform: uppercase; /* Transforms text to uppercase */
+  text-transform: uppercase;
+  color: #fff;
 }
 
 /* tr:hover {
@@ -260,24 +219,50 @@ caption {
   background-color: #ffffff; /* Slightly darker gray */
 }
 
-footer {
-  width: 100%;
+/* Footer styles */
+.footer {
   background-color: #333;
-  color: white;
+  color: #fff;
   text-align: center;
-  /* padding: 10px; */
-  position: fixed;
-  bottom: 0;
+  padding: 20px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer-link:hover {
+  color: #ff9800;
+}
+
+.footer-info {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 #tableContainer {
   padding-bottom: 20px;
+  background-color: #111111;
 }
 
 /* Media query for screen sizes below 500px */
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 400px) {
   .table-btn {
     font-size: 12px; /* Adjust button text size for smaller screens */
   }
-  /* Add more styles as needed */
+
+  .logout-btn {
+    margin: 0 1rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
 }
