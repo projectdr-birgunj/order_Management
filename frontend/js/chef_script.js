@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Inside orderID if:", tableID);
     // Get the container where the table will be inserted
     const container = document.getElementById("tableContainer");
+    container.style.display = "block";
     container.innerHTML = "";
 
     const h2Element = document.createElement("h2");
