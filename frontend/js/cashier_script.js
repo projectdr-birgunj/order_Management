@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkUserRole("cashier", async (role) => {
     createButtons(fetchOrderDetails, "buttonsContainer", role); // Pass the role here
     itemPrices = await fetchItemPrices();
+    document.getElementById("loading-overlay").style.display = "none";
   });
 
   const logoutButton = document.getElementById("logout");
@@ -392,9 +393,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const dbRef = ref(database);
       const snapshot = await get(child(dbRef, "orders/" + orderId));
       let orderData = snapshot.val();
+
+      // Retrieve message from textarea
+      const messageInput = document.getElementById("messageInput").value.trim();
+
       if (orderData) {
         console.log("moveToFirestore Snapshot exists");
         console.log("Order Data: ", orderData);
+
+        // Add the message from the textarea
+        orderData.message = messageInput || "No message provided";
 
         const now = new Date();
 
@@ -452,6 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
       orderDetail: {
         [tableID]: [
           {
+            changeValue: "",
             chefStatus: 100,
             dineIn: "Yes",
             itemName: "Paneer Curry",
