@@ -19,35 +19,48 @@
     <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
     <link rel="stylesheet" type="text/css" href="../css/dropdown_search.css" />
     <link rel="stylesheet" type="text/css" href="../css/waiter.css" />
+    <link rel="stylesheet" type="text/css" href="../css/animation.css" /> 
     <script src="../js/dropdown_search.js" type="module" defer></script>
     <script src="../js/waiter_script.js" type="module" defer></script>
+    <script src="../js/animation.js" type="module" defer></script>
     <!-- <script src="../js/auth.js"></script> -->
     <title>Waiter</title>
   </head>
   <body>
-    <header>
-      <img
-        src="../photos/orderflowlogo.png"
-        alt="OrderFlow Logo"
-        class="logo"
-      />
-      <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-      </div>
-      <h1 id="pageTitleLarge">Waiter - Dining Tables</h1>
-      <h1 id="pageTitleSmall">Waiter</h1>
-      <button type="button" id="logout" class="logout-btn">Logout</button>
-    </header>
-    <div id="buttonsContainer"></div>
-    <div id="json-container" class="table-responsive"></div>
+    <div class="background-dots" id="background-dots"></div>
+    <main class="content">
+      <header>
+        <img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="logo"
+        />
+        <!-- <div id="loading-overlay">
+          <div class="spinner"></div>
+        </div> -->
+        <h1 id="pageTitleLarge">Waiter - Dining Tables</h1>
+        <h1 id="pageTitleSmall">Waiter</h1>
+        <button type="button" id="logout" class="logout-btn">Logout</button>
+      </header>
 
-    <div id="overlay"></div>
-    <!-- Popup content -->
-    <div id="popup">
-      <p>All items not delivered!! Do you still want to go for billing?</p>
-      <button id="yesBtn" class="button form-btn">Yes</button>
-      <button id="noBtn" class="button form-btn">No</button>
-    </div>
+      <div id="buttonsContainer"></div>
+
+      <div id="json-container" class="table-responsive"></div>
+
+      <div id="overlay"></div>
+      <!-- Popup content -->
+      <div id="popup">
+        <p>All items not delivered!! Do you still want to go for billing?</p>
+        <button id="yesBtn" class="button form-btn">Yes</button>
+        <button id="noBtn" class="button form-btn">No</button>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <a href="privacyPolicy.html" class="footer-link">Privacy Policy</a>
+        <span class="footer-info">&copy CuisineMate v3.0</span>
+      </div>
+    </footer>
   </body>
 </html>
