@@ -11,6 +11,7 @@ import {
   getUserName,
   createButtons,
   getUserUid,
+  showAlert,
 } from "../js/commonUtilityMgr.js";
 
 let waiterNamePlaceHolder = getUserName();
@@ -89,17 +90,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       ).value;
       const quantityInput = row.cells[1].querySelector('input[type="number"]');
       const noteInput = row.cells[2].querySelector('input[type="text"]');
-      const dineInInput = row.cells[3].querySelector('input[type="text"]');
-      console.log(itemName);
+      const dineIn = row.cells[3].querySelector(
+        'select[name="dineIn[]"]'
+      ).value;
+      console.log(dineIn);
       const quantity = quantityInput ? Number(quantityInput.value.trim()) : 0;
       const note = noteInput ? noteInput.value.trim() : "_";
-      const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
       rowData = {
         changeValue: DBChangeValue[i],
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
-        dineIn: dineIn || null,
+        dineIn: dineIn || "null",
         itemName: itemName || null,
         note: note || null,
         quantity: quantity,
@@ -110,6 +112,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Store rowData in data1 object with numeric keys
       data1[Object.keys(data1).length] = rowData; // Assign using the current length of the object as key
     });
+
+    if (data1 == undefined) {
+      showAlert("No data present", "Error:No data present to submit", false);
+      hideJsonContainer();
+      return;
+    }
     let formDataArray = Object.values(data1);
 
     data1 = compareData(tableOneData, formDataArray);
@@ -118,10 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Data from rowData: " + JSON.stringify(rowData));
     console.log("Data from formDataArray: " + JSON.stringify(formDataArray));
     console.log("Data from data1: " + JSON.stringify(data1));
-
-    // Example usage:
-
-    alert("Checking");
 
     if (JSON.stringify(formDataArray) !== JSON.stringify(tableOneData)) {
       console.log("SHould hit");
