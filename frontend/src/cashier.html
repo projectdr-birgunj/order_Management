@@ -6,9 +6,10 @@
     <title>OrderFlow - Cashier</title>
     <link rel="stylesheet" type="text/css" href="../css/cashier.css" />
     <link rel="stylesheet" type="text/css" href="../css/buttons.css" />
+    <link rel="stylesheet" type="text/css" href="../css/animation.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="../js/cashier_script.js" type="module" defer></script>
-    <!-- <script src="../js/auth.js"></script> -->
+    <script src="../js/animation.js"></script>
     <!-- Include the auth.js script -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
@@ -16,20 +17,25 @@
     />
   </head>
   <body>
-    <header>
-      <img
-        src="../photos/orderflowlogo.png"
-        alt="OrderFlow Logo"
-        class="logo"
-      />
-      <h1>Cashier - Dining Tables</h1>
-      <button type="button" id="logout" class="logout-btn">Logout</button>
-    </header>
-    <div>
+    <div class="background-dots" id="background-dots"></div>
+    <main class="content">
+      <header>
+        <img
+          src="../photos/orderflowlogo.png"
+          alt="OrderFlow Logo"
+          class="logo"
+        />
+        <div id="loading-overlay">
+          <div class="spinner"></div>
+        </div>
+        <h1 id="pageTitleLarge">Cashier - Dining Tables</h1>
+        <h1 id="pageTitleSmall">Cashier</h1>
+        <button type="button" id="logout" class="logout-btn">Logout</button>
+      </header>
       <div id="buttonsContainer"></div>
       <div id="ordersContainer"></div>
 
-      <div class="popup-overlay hidden" id="popupOverlay">Testing Div</div>
+      <div class="popup-overlay hidden" id="popupOverlay"></div>
       <div class="popup hidden" id="paymentPopup">
         <h2>Payment Details</h2>
         <table class="popup-table">
@@ -45,13 +51,13 @@
         </table>
         <img src="../photos/payment_qr.jpg" alt="QR Code" id="qrCodeImage" />
         <!-- <div>
-          <label for="messageInput">Message:</label>
-          <input
-            type="text"
-            id="messageInput"
-            placeholder="Enter your message here"
-          />
-        </div> -->
+      <label for="messageInput">Message:</label>
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Enter your message here"
+      />
+    </div> -->
         <!-- Message Section -->
         <div class="message-section">
           <label for="orderMessage">Write a message:</label>
@@ -77,10 +83,14 @@
           <button id="noButton" class="form-btn">No</button>
         </div>
       </div>
-    </div>
-    <!-- <footer>
-      <p>&copy; 2024 OrderFlow</p>
-    </footer> -->
-    <script src="../js/cashier_script.js" type="module"></script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <a href="privacyPolicy.html" class="footer-link">Privacy Policy</a>
+        <span class="footer-info">&copy CuisineMate v3.0</span>
+      </div>
+    </footer>
   </body>
 </html>
