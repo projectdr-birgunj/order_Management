@@ -98,12 +98,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const note = noteInput ? noteInput.value.trim() : "_";
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
+      const changeValue = "";
       rowData = {
-        changeValue: DBChangeValue[i],
+        changeValue: DBChangeValue[i] || changeValue,
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
-        dineIn: dineIn || "null",
+        dineIn: dineIn || "Undefined",
         itemName: itemName || null,
-        note: note || null,
+        note: note || "None",
         quantity: quantity,
         rate: rate !== 0 ? rate : 0,
       };
@@ -183,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Update changeValue if differences found
       if (changes.length > 0) {
-        newItem.changeValue += changes.join(", ");
+        newItem.changeValue += changes.join(",        ");
       } else {
       }
     });
