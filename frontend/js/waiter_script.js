@@ -27,66 +27,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     createButtons(fetchOrderDetails, "buttonsContainer", role); // Run waiter-specific code
     itemNames = await fetchItemNames();
     itemPrices = await fetchItemPrices();
-    // console.log("Item names fetched:", itemNames);
   });
-  document.getElementById("loading-overlay").style.display = "none";
-
-  // const itemNames = await fetchItemNames();
 
   const logoutButton = document.getElementById("logout");
   logoutButton.addEventListener("click", () => logOut(userID, userRole));
-
-  // async function createButtons() {
-  //   console.log("Waiter.js:createButtons() Enter");
-  //   const buttonsContainer = document.getElementById("buttonsContainer");
-
-  //   const dbRef = ref(database);
-  //   const snapshot = await get(child(dbRef, "orders/"));
-  //   let orders = snapshot.val();
-
-  //   for (let i = 1; i <= 12; i++) {
-  //     let tableKey = "Table-" + i;
-  //     const button = document.createElement("button");
-  //     button.textContent = "Table " + i;
-  //     button.setAttribute("data-table-no", "Table-" + i);
-  //     button.classList.add("table-btn");
-
-  //     if (orders) {
-  //       console.log("Waiter.js:createButtons() Orders are present");
-  //       if (!(orders[tableKey].toBilling === false)) {
-  //         // Disable the button if the table is closed
-  //         button.classList.add("disabled-btn");
-  //         button.disabled = true;
-  //       }
-  //     } else {
-  //       alert("Cannot fetch Order ID, Contact Developer");
-  //     }
-
-  // button.onclick = async function () {
-  //   showJsonContainer();
-  //   // Remove active class from all buttons
-  //   const allButtons = document.querySelectorAll(".table-btn");
-  //   allButtons.forEach((btn) => btn.classList.remove("active-btn"));
-
-  //   // Add active class to the clicked button
-  //   button.classList.add("active-btn");
-
-  //   // Show loading indicator
-  //   const originalText = button.textContent;
-  //   button.textContent = "Loading...";
-  //   button.disabled = true;
-
-  //   try {
-  //     await fetchOrderDetails(button); // Execute the async function
-  //   } finally {
-  //     // Revert button text and re-enable it
-  //     button.textContent = originalText;
-  //     button.disabled = false;
-  //   }
-  // };
-  //     buttonsContainer.appendChild(button);
-  //   }
-  // }
 
   // Function to add leading zeroes
   function pad(number) {
@@ -117,23 +61,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function submitData(button) {
     const orderId = button.getAttribute("data-table-no");
     const tableID = orderId.toLowerCase();
+    var tableOneData;
+    let is_data_same = true;
     let chefStatuses;
+    let DBChangeValue;
     if (orderId) {
-      // console.log("Inside orderID if:", orderId);
       const dbRef = ref(database);
       const snapshot = await get(child(dbRef, "orders/" + orderId));
       let orders = snapshot.val();
       if (orders) {
-        // console.log("Inside orders if:", orders);
         const orderDetails = orders["orderDetail"];
-        var tableOneData = orderDetails[tableID];
+        tableOneData = orderDetails[tableID];
         chefStatuses = tableOneData.map((order) => order.chefStatus);
+        DBChangeValue = tableOneData.map((order) => order.changeValue);
       }
     }
 
     const form = document.querySelector(".formTable tbody");
     const row1 = Array.from(form.rows);
-    const data1 = {};
+    let rowData;
+    let data1 = {};
     let i = 0;
 
     row1.forEach((row) => {
@@ -144,45 +91,100 @@ document.addEventListener("DOMContentLoaded", async () => {
       const noteInput = row.cells[2].querySelector('input[type="text"]');
       const dineInInput = row.cells[3].querySelector('input[type="text"]');
       console.log(itemName);
-      //   const itemName = itemNameInput ? itemNameInput.value.trim() : null;
-      // console.log("itemName" + itemName);
       const quantity = quantityInput ? Number(quantityInput.value.trim()) : 0;
       const note = noteInput ? noteInput.value.trim() : "_";
       const dineIn = dineInInput ? dineInInput.value.trim() : null;
       const chefStatus = chefStatuses[i];
       const rate = itemPrices[itemName] || 0;
-      i++;
-      const rowData = {
-        itemName: itemName || null,
-        quantity: quantity,
-        note: note || null,
-        dineIn: dineIn || null,
+      rowData = {
+        changeValue: DBChangeValue[i],
         chefStatus: chefStatus !== undefined ? chefStatus : 100,
+        dineIn: dineIn || null,
+        itemName: itemName || null,
+        note: note || null,
+        quantity: quantity,
         rate: rate !== 0 ? rate : 0,
       };
+      i++;
 
       // Store rowData in data1 object with numeric keys
       data1[Object.keys(data1).length] = rowData; // Assign using the current length of the object as key
     });
+    let formDataArray = Object.values(data1);
+
+    data1 = compareData(tableOneData, formDataArray);
+
+    console.log("Data from reltimeDB: " + JSON.stringify(tableOneData));
+    console.log("Data from rowData: " + JSON.stringify(rowData));
+    console.log("Data from formDataArray: " + JSON.stringify(formDataArray));
+    console.log("Data from data1: " + JSON.stringify(data1));
+
+    // Example usage:
+
+    alert("Checking");
+
+    if (JSON.stringify(formDataArray) !== JSON.stringify(tableOneData)) {
+      console.log("SHould hit");
+      is_data_same = false;
+    }
 
     const data = { [tableID]: data1 };
     const waiterNameVar = {
       waiterName: waiterNamePlaceHolder, // Directly store the value, no need for JSON.stringify
     };
     try {
-      if (orderId) {
-        const reference = ref(database, "orders/" + orderId + "/orderDetail/");
-        const waiterNameRef = ref(database, "orders/" + orderId);
-        await update(reference, data);
-        await update(waiterNameRef, waiterNameVar);
-        hideJsonContainer();
+      if (!is_data_same) {
+        if (orderId) {
+          const reference = ref(
+            database,
+            "orders/" + orderId + "/orderDetail/"
+          );
+          const waiterNameRef = ref(database, "orders/" + orderId);
+          await update(reference, data);
+          await update(waiterNameRef, waiterNameVar);
+          alert("Data Updated");
+          hideJsonContainer();
+        } else {
+          alert("Cannot fetch Order ID, Contact Developer");
+        }
       } else {
-        alert("Cannot fetch Order ID, Contact Developer");
+        console.log("Data is same");
       }
     } catch (error) {
       console.error("Error writing data to Firebase:", error);
       alert("Error submitting orders. Please try again.");
     }
+  }
+
+  function compareData(oldData, newData) {
+    if (oldData.length !== newData.length) {
+      console.log("Data length mismatch!");
+      return;
+    }
+
+    newData.forEach((newItem, index) => {
+      const oldItem = oldData[index];
+      const changes = [];
+
+      // Compare each key in the old and new items
+      for (const key in oldItem) {
+        if (
+          oldItem[key] !== newItem[key] &&
+          key !== "changeValue" &&
+          key !== "rate"
+        ) {
+          changes.push(`${key}:${oldItem[key]}-->${key}:${newItem[key]}, `);
+        }
+      }
+
+      // Update changeValue if differences found
+      if (changes.length > 0) {
+        newItem.changeValue += changes.join(", ");
+      } else {
+      }
+    });
+
+    return newData;
   }
 
   async function toBillingData(button) {
@@ -365,12 +367,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const dineInCell = document.createElement("td");
         dineInCell.className = `row-cell-4`;
-        const dineInInput = document.createElement("input");
-        dineInInput.type = "text";
-        dineInInput.value = item.dineIn;
-        dineInInput.name = "dineIn[]";
-        quantityInput.required = true;
-        dineInCell.appendChild(dineInInput);
+
+        // Create select dropdown for dineIn
+        const dineInSelect = document.createElement("select");
+        dineInSelect.name = "dineIn[]";
+        dineInSelect.required = true;
+        dineInSelect.className = "dineInSelect";
+        const yesOption = document.createElement("option");
+        yesOption.value = "Yes";
+        yesOption.textContent = "Yes";
+        if (item.dineIn === "Yes") {
+          yesOption.selected = true; // Set default value if "Yes"
+        }
+        const noOption = document.createElement("option");
+        noOption.value = "No";
+        noOption.textContent = "No";
+        if (item.dineIn === "No") {
+          noOption.selected = true; // Set default value if "No"
+        }
+        dineInSelect.appendChild(yesOption);
+        dineInSelect.appendChild(noOption);
+        dineInCell.appendChild(dineInSelect);
         row.appendChild(dineInCell);
 
         const statusCell = document.createElement("td");
@@ -574,12 +591,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const dineInCell = newRow.insertCell(3);
     dineInCell.className = `row-cell-4`;
-    const dineInInput = document.createElement("input");
-    dineInInput.type = "text";
-    dineInInput.name = "dineIn[]";
-    dineInInput.value = "Yes";
-    dineInInput.placeholder = "Yes"; // Placeholder for user guidance
-    dineInCell.appendChild(dineInInput);
+
+    // Create select dropdown for dineIn
+    const dineInSelect = document.createElement("select");
+    dineInSelect.name = "dineIn[]";
+    dineInSelect.required = true;
+    dineInSelect.className = "dineInSelect";
+
+    // Create "Yes" option
+    const yesOption = document.createElement("option");
+    yesOption.value = "Yes";
+    yesOption.textContent = "Yes";
+
+    // Create "No" option
+    const noOption = document.createElement("option");
+    noOption.value = "No";
+    noOption.textContent = "No";
+
+    // Append options to the select dropdown
+    dineInSelect.appendChild(yesOption);
+    dineInSelect.appendChild(noOption);
+
+    // Append the select dropdown to the cell
+    dineInCell.appendChild(dineInSelect);
 
     const statusCell = newRow.insertCell(4);
     statusCell.className = `row-cell-5`;
