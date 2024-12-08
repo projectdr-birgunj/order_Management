@@ -22,14 +22,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.functions.FirebaseFunctionsException;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+
+                if (url.contains("privacypolicy")) {
+                    return;
+                }
 
                 // Retrieve values from localStorage
                 view.evaluateJavascript(

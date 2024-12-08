@@ -90,6 +90,11 @@ h2 {
   font-weight: bold;
 }
 
+.changeValueContainer {
+  padding: 0 10%;
+  color: #fff;
+}
+
 .orderDetails {
   margin: 3rem 2rem;
   background-color: #fff;

@@ -79,6 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
     h2Element.textContent = `Order Details for : ${orderId}`;
     container.appendChild(h2Element);
 
+    const changeValueContainer = document.createElement("div");
+    changeValueContainer.className = "changeValueContainer";
+
+    const h3Element = document.createElement("h3");
+    h3Element.id = "changeValue";
+    h3Element.textContent = `Order Change History ${orderId}`;
+    changeValueContainer.appendChild(h3Element);
+    container.appendChild(changeValueContainer);
+
     // Create a table element
     const table = document.createElement("table");
 
@@ -102,9 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let pairCounter = 0; // Add this line
 
     orders.forEach((item, index) => {
-      // console.log("pairCounter vefore: " + pairCounter);
-      const rowClass = pairCounter % 2 === 1 ? "second-pair" : "first-pair"; // Modified line
-      // console.log("pairCounter after: " + pairCounter);
+      const rowClass = pairCounter % 2 === 1 ? "second-pair" : "first-pair";
       const row = document.createElement("tr");
       row.className = rowClass; // Add this line
 
@@ -123,6 +130,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const dineInCell = document.createElement("td");
       dineInCell.textContent = item.dineIn;
       row.appendChild(dineInCell);
+
+      const changeValue = document.createElement("p");
+      changeValue.className = "changeValueClass";
+      let changeValuetext = item.changeValue;
+
+      changeValuetext = changeValuetext.replace(
+        /-->(.*?)\,/g,
+        (match, p1) => `--> <strong>${p1}</strong>,`
+      );
+      changeValue.innerHTML = changeValuetext;
+      changeValueContainer.appendChild(changeValue);
 
       tbody.appendChild(row);
 
